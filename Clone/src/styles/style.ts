@@ -6,4 +6,6 @@ import "./base.scss";
 import "./logo.scss";
 import "./dropdown.scss";
 import "./header.scss";
+import "./landing.scss";
+import "./animation.scss";
 import "./footer.scss";
