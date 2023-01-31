@@ -1,0 +1,12 @@
+@import 'constants';
+@import 'mixins';
+@import 'placeholder';
+
+.logo {
+  &__img {
+    @extend %transition;
+    width: 200px;
+    vertical-align: middle;
+    border-style: none;
+  }
+}

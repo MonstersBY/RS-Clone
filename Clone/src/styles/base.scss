@@ -1,0 +1,82 @@
+@import "resetStyles";
+@import "constants";
+@import "mixins";
+@import "placeholder";
+
+
+html {
+  font-size: 10px;
+}
+
+body {
+	@extend %font-primary;
+  @include font($size: 1.6rem, $height: 120%, $weight: 400);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+	background: url('../assets/images/pageBG.png') center center/cover no-repeat;
+  color: $color-primary-light;
+}
+
+.main-content {
+  flex: 1 1 auto;
+}
+
+.container {
+  max-width: $content-width;
+  margin: 0 auto;
+  padding: 0 20px;
+	@include min-media-desktop {
+		max-width: 100%;
+	}
+  @include max-media-small-desktop {
+    max-width: 1000px;
+  }
+
+  @include max-media-tablet {
+    max-width: 740px;
+    padding: 0 20px;
+  }
+  @include max-media-mobile {
+    max-width: 500px;
+    padding: 0 10px;
+  }
+}
+
+.link {
+  @include font(1.8rem, 120%, 700);
+  color: $color-primary-light;
+}
+
+.btn {
+	@extend %transition;
+  @include font(1.6rem, 120%);
+
+	&:hover {
+
+	}
+
+}
+
+.ico {
+  padding: -2px;
+}
+.hidden {
+  display: none;
+}
+
+.active {
+  border-bottom: 1px solid $color-secondary;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-bs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
