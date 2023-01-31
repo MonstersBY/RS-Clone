@@ -49,9 +49,55 @@
   @include font(1.8rem, 130%, 700);
   margin: 0 1.6rem 0 0.8rem;
 }
+.header-login__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.header-icon__wrap {
+  height: 3rem;
+}
+
+.player__icon {
+  height: 3rem;
+}
+.player__icon-membership {
+  display: none;
+  position: relative;
+  top: -1.5rem;
+  right: -3rem;
+  width: 2rem;
+  height: 2rem;
+}
 
 .menu {
   &__link {
     padding: 1rem 2rem;
   }
+}
+.login__container {
+  cursor: pointer;
+}
+.nickname {
+  @include font(1.6rem, 120%, 700);
+}
+
+.login__btn {
+  position: relative;
+  bottom: 0;
+  padding: 0 1rem;
+  width: 13.7rem;
+  height: 4rem;
+  margin: 0 auto;
+  color: $color-primary-light;
+  z-index: 0;
+  border: 0;
+  border-radius: 8px;
+  background-color: $color-btn-secondary;
+  background-size: contain;
+  overflow: hidden;
+  &:hover {
+    background-color: darken($color-btn-secondary, 20%);
+	}
 }

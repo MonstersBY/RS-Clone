@@ -17,21 +17,21 @@
   align-items: center;
   gap: 15px;
   &__link {
-    color: $color-text;
+    color: $color-primary;
     text-transform: capitalize;
   }
 }
 .footer__copirate {
   @include font(1.6rem, 120%, 700);
   flex-basis: calc(50% - 30px);
-  color:  $color-text;
+  color:  $color-primary;
 }
 
 .rss__logo {
   @extend %transition;
   width: 80px;
   height: 50px;
-  fill:  $color-text;
+  fill:  $color-primary;
   &:hover {
     fill: darken($color-primary-dark, 20%);
   }

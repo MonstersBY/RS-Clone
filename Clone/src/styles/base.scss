@@ -25,7 +25,7 @@ body {
 .container {
   max-width: $content-width;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 1.5rem;
 	@include min-media-desktop {
 		max-width: 100%;
 	}
@@ -45,17 +45,16 @@ body {
 
 .link {
   @include font(1.8rem, 120%, 700);
+  @extend %transition;
   color: $color-primary-light;
+  &:hover {
+    color: darken($color-primary-light, 20%);
+  }
 }
 
 .btn {
 	@extend %transition;
   @include font(1.6rem, 120%);
-
-	&:hover {
-
-	}
-
 }
 
 .ico {
@@ -66,7 +65,7 @@ body {
 }
 
 .active {
-  border-bottom: 1px solid $color-secondary;
+  border-bottom: 1px solid $color-primary-light;
 }
 
 .flex-row {

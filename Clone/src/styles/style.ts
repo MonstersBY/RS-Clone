@@ -4,5 +4,6 @@ import "./mixins.scss";
 import "./placeholder.scss";
 import "./base.scss";
 import "./logo.scss";
+import "./dropdown.scss";
 import "./header.scss";
 import "./footer.scss";
