@@ -90,14 +90,5 @@
   width: 13.7rem;
   height: 4rem;
   margin: 0 auto;
-  color: $color-primary-light;
-  z-index: 0;
-  border: 0;
-  border-radius: 8px;
-  background-color: $color-btn-secondary;
-  background-size: contain;
   overflow: hidden;
-  &:hover {
-    background-color: darken($color-btn-secondary, 20%);
-	}
 }

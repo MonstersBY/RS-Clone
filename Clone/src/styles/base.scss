@@ -48,13 +48,23 @@ body {
   @extend %transition;
   color: $color-primary-light;
   &:hover {
-    color: darken($color-primary-light, 20%);
+    color: darken($color-primary-light, 40%);
   }
 }
 
 .btn {
 	@extend %transition;
   @include font(1.6rem, 120%);
+  color: $color-primary-light;
+  border: 0;
+  border-radius: 8px;
+  background-size: contain;
+  background-color: $color-btn-secondary;
+  cursor: pointer;
+  z-index: 0;
+   &:hover {
+    background-color: darken($color-btn-secondary, 20%);
+	}
 }
 
 .ico {
