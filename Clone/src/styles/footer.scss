@@ -40,3 +40,19 @@
     fill: darken($color-primary-light, 40%);
   }
 }
+.social__icons {
+  &-wrapper {
+    display: flex;
+    justify-content: space-around;
+    max-width: 200px;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+}
+
+.social__link {
+  @include font(1.4rem, 120%, 700);
+}
+.social__ico {
+  width: 20px;
+}
