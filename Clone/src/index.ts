@@ -1,6 +1,7 @@
 import "./styles/main.scss";
 import { toModePage } from "./modules/toModePage";
-import helperNode from "./modules/helper/helper";
+import helperNode from "./modules/utils/ingamePopupHelper/helper";
+import App from "./modules/App";
 
 document.addEventListener("DOMContentLoaded", () => {
   toModePage();
@@ -21,3 +22,6 @@ helperWrapper?.addEventListener("click", (e) => {
     helperWrapper.classList.add("nobackground");
   }
 })
+
+const app = new App();
+app.init();
