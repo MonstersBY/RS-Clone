@@ -1,7 +1,3 @@
-@import 'constants';
-@import 'mixins';
-@import 'placeholder';
-
 .dropdown {
   &__menu {
     @include font(2rem, 120%);
