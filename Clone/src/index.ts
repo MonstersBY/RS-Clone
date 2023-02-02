@@ -1,12 +1,11 @@
 import "./styles/main.scss";
 import { toModePage } from "./modules/toModePage";
+import helperNode from "./modules/helper/helper";
 
 document.addEventListener("DOMContentLoaded", () => {
   toModePage();
 });
 
-
-import helperNode from "./modules/helper/helper";
 document.body.insertAdjacentHTML("beforeend", helperNode);
 const helperWrapper = document.querySelector(".helper__wrapper");
 const helperBtn = document.querySelector(".helper___button");
