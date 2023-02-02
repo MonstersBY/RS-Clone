@@ -41,16 +41,19 @@
     border-style: none;
   }
 }
+
 .header__coins-quantity {
   @include font(1.8rem, 130%, 700);
   margin: 0 1.6rem 0 0.8rem;
 }
+
 .header-login__wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
+
 .header-icon__wrap {
   height: 3rem;
 }
@@ -58,6 +61,7 @@
 .player__icon {
   height: 3rem;
 }
+
 .player__icon-membership {
   display: none;
   position: relative;
@@ -72,9 +76,11 @@
     padding: 1rem 2rem;
   }
 }
+
 .login__container {
   cursor: pointer;
 }
+
 .nickname {
   @include font(1.6rem, 120%, 700);
 }

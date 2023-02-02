@@ -1,12 +1,17 @@
-@import "resetStyles";
-@import "constants";
-@import "mixins";
-@import "placeholder";
-@import "base";
-@import "logo";
-@import "dropdown";
-@import "header";
-@import "landing";
-@import "mainPage";
-@import "animation";
-@import "footer";
+@import "abstracts/constants";
+
+@import "base/reset",
+        "base/mixins",
+        "base/placeholder",
+        "base/base";
+
+@import "layout/header",
+        "layout/landing",
+        "layout/dropdown",
+        "layout/logo",
+        "layout/start",
+        "layout/footer";
+
+@import "animation/animation";
+
+@import "../modules/helper/helper";

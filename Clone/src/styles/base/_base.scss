@@ -3,7 +3,7 @@ html {
 }
 
 body {
-	@extend %font-primary;
+  @extend %font-primary;
   @include font($size: 1.6rem, $height: 120%, $weight: 400);
   display: flex;
   flex-direction: column;
@@ -32,9 +32,9 @@ body ::-webkit-scrollbar-track {
   max-width: $content-width;
   margin: 0 auto;
   padding: 0 1.5rem;
-	@include min-media-desktop {
-		max-width: 100%;
-	}
+  @include min-media-desktop {
+    max-width: 100%;
+  }
   @include max-media-small-desktop {
     max-width: 1000px;
   }
@@ -76,6 +76,7 @@ body ::-webkit-scrollbar-track {
 .ico {
   padding: -2px;
 }
+
 .hidden {
   display: none;
 }

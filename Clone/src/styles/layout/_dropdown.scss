@@ -16,19 +16,21 @@
     padding: 1.2rem 1.6rem;
     color: $color-primary-dark;
   }
-
 }
+
 .login__dropdown-container {
   position: relative;
   display: inline-block;
   margin-left: 0.5rem;
 }
+
 .arrow__container,
 .dropdown__list-item {
   display: flex;
   align-items: center;
   height: 50px;
 }
+
 .arrow {
   margin: 0 1.6rem;
   vertical-align: middle;

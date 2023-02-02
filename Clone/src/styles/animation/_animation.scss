@@ -4,39 +4,46 @@
   transform: rotate(-60deg);
   animation: drop_2 12s .75s infinite linear,road_-60deg_drop 12s .75s infinite linear;
 }
+
 .map__road-2 {
   top: 45.125%;
   left: 18.5%;
   animation: drop_3 12s 1.5s infinite linear,road_vertical_drop 12s 1.5s infinite linear;
 }
+
 .map__road-3 {
   top: 37.75%;
   left: 57.875%;
   transform: rotate(60deg);
   animation: drop_6 12s 3.75s infinite linear,road_60deg_drop 12s 3.75s infinite linear;
 }
+
 .map__road-4 {
   top: 37.625%;
   left: 49.125%;
   transform: rotate(-60deg);
   animation: drop_7 12s 4.5s infinite linear,road_-60deg_drop 12s 4.5s infinite linear;
 }
+
 .map__road-5 {
   top: 22.5%;
   left: 40.5%;
   transform: rotate(-60deg);
   animation: drop_2 12s 6.75s infinite linear,road_-60deg_drop 12s 6.75s infinite linear;
 }
+
 .map__road-6 {
   top: 30%;
   left: 44.875%;
   animation: drop_3 12s 7.5s infinite linear,road_vertical_drop 12s 7.5s infinite linear;
 }
+
 .map__road-7 {
   top: 60.25%;
   left: 62.5%;
   animation: drop_6 12s 9.75s infinite linear,road_vertical_drop 12s 9.75s infinite linear;
 }
+
 .map__road-8 {
   top: 52.75%;
   left: 66.875%;
@@ -49,11 +56,13 @@
   left: 32.125%;
   animation: drop_1 12s 0s infinite linear,settlement_drop 12s 0s infinite linear;
 }
+
 .map__settlement-2 {
   top: 43.25%;
   left: 23.25%;
   animation: drop_4 12s 2.25s infinite linear,settlement_drop 12s 2.25s infinite linear;
 }
+
 .map__settlement-3 {
   top: 38.375%;
   left: 67.375%;
@@ -102,6 +111,7 @@
     opacity: 0;
   }
 }
+
 @keyframes drop_2 {
   0% {
     opacity: 1;
@@ -113,6 +123,7 @@
     opacity: 0;
   }
 }
+
 @keyframes drop_3 {
   0% {
     opacity: 1;
@@ -124,6 +135,7 @@
     opacity: 0;
   }
 }
+
 @keyframes drop_4 {
   0% {
     opacity: 1;
@@ -135,15 +147,14 @@
     opacity: 0;
   }
 }
+
 @keyframes drop_5 {
     0% {
         opacity: 1;
     }
-
     24% {
         opacity: 1;
     }
-
     24.5% {
         opacity: 0;
     }
@@ -160,6 +171,7 @@
     opacity: 0;
   }
 }
+
 @keyframes drop_7 {
   0% {
     opacity: 1;
@@ -171,15 +183,14 @@
     opacity: 0;
   }
 }
+
 @keyframes drop_8 {
     0% {
         opacity: 1;
     }
-
     5.25% {
         opacity: 1;
     }
-
     5.75% {
         opacity: 0;
     }
@@ -196,6 +207,7 @@
     transform: rotate(-60deg) translate(0%,0%);
   }
 }
+
 @keyframes road_60deg_drop {
   0% {
     transform: rotate(60deg) translate(-86.6%,-50%);
@@ -207,6 +219,7 @@
     transform: rotate(60deg) translate(0%,0%);
   }
 }
+
 @keyframes road_vertical_drop {
   0% {
     transform: translate(0%,-100%);
@@ -218,6 +231,7 @@
     transform: translate(0%,0%);
   }
 }
+
 @keyframes settlement_drop {
   0% {
     transform: translate(-50%, -150%);

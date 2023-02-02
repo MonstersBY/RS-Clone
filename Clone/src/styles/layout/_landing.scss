@@ -32,6 +32,7 @@
     height: 100%;
   }
 }
+
 .map-img {
   position: relative;
   align-self: center;
@@ -39,6 +40,7 @@
   max-width: 40vw;
   max-height: 70vh;
 }
+
 .map__road,
 .map__settlement {
   position: absolute;
@@ -47,6 +49,7 @@
   max-height: 7vh;
   vertical-align: middle;
 }
+
 .map__settlement {
   transform: translate(-50%,-50%);
 }
@@ -60,6 +63,7 @@
   max-width: min(max(350px,45vw),450px);
   max-height: 70vh;
 }
+
 .title {
   text-align: center;
   font-size: min(max(1.8rem,6vh),4.4rem);
@@ -67,6 +71,7 @@
   line-height: 1.5;
   font-weight: 700;
 }
+
 .buttons__wrapper {
   display: flex;
   justify-content: space-between;
@@ -78,6 +83,7 @@
   padding: 0 10%;
   justify-content: space-around;
 }
+
 .btn__left {
   @include font(1.8rem, 130%, 700);
   width: 100%;
@@ -86,6 +92,7 @@
   z-index: 0;
   filter: drop-shadow(2px 4px 4px rgba(20,20,20,0.4));
 }
+
 .play__btn {
   @include font(3rem, 130%, 700);
   width: auto;
@@ -101,6 +108,7 @@
     background-color: darken($color-btn-primary, 10%);
   }
 }
+
 .btn__span {
   @include font(1.6rem, 120%, 400);
 }
