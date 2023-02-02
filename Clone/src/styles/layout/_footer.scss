@@ -1,0 +1,55 @@
+.footer__wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @include max-media-tablet {
+    flex-direction: column-reverse;
+    gap: 20px;
+  }
+}
+
+.copirate {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  &__link {
+    @extend %transition;
+    color: $color-primary-light;
+    text-transform: capitalize;
+    &:hover {
+      color: darken($color-primary-light, 40%);
+    }
+  }
+}
+
+.footer__copirate {
+  @include font(1.6rem, 120%, 700);
+  flex-basis: calc(50% - 30px);
+  color:  $color-primary-light;
+}
+
+.rss__logo {
+  @extend %transition;
+  width: 80px;
+  height: 50px;
+  fill:  $color-primary-light;
+  &:hover {
+    fill: darken($color-primary-light, 40%);
+  }
+}
+.social__icons {
+  &-wrapper {
+    display: flex;
+    justify-content: space-around;
+    max-width: 200px;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+}
+
+.social__link {
+  @include font(1.4rem, 120%, 700);
+}
+.social__ico {
+  width: 20px;
+}
