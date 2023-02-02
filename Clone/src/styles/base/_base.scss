@@ -12,6 +12,18 @@ body {
   color: $color-primary-light;
 }
 
+body ::-webkit-scrollbar {
+  width: 5px;
+}
+body ::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background-color: $color-primary-light;
+}
+body ::-webkit-scrollbar-track {
+  border-radius: 12px;
+  background-color: rgba(0,10,20,.3);
+}
+
 .main-content {
   flex: 1 1 auto;
 }
@@ -83,4 +95,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+img {
+  vertical-align: middle;
+  border-style: none;
 }

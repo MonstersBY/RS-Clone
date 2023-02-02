@@ -1,4 +1,9 @@
 import "./styles/main.scss";
+import { toModePage } from "./modules/toModePage";
+
+document.addEventListener("DOMContentLoaded", () => {
+  toModePage();
+});
 
 
 import helperNode from "./modules/helper/helper";
