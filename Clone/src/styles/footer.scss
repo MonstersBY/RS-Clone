@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1.5rem;
   @include max-media-tablet {
     flex-direction: column-reverse;
     gap: 20px;
@@ -16,6 +17,7 @@
     @extend %transition;
     color: $color-primary-light;
     text-transform: capitalize;
+    margin-right: 1rem;
     &:hover {
       color: darken($color-primary-light, 40%);
     }
