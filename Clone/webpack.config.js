@@ -5,6 +5,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == "production";
+const pages = ["index.html", "room.html"];
 
 const stylesHandler = MiniCssExtractPlugin.loader;
 
