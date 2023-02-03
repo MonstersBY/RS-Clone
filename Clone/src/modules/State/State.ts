@@ -1,5 +1,5 @@
 import { IPlayerInfo, IHex } from "../utils/types/types";
-import MapGenerator from "../utils/mapGenerator/MapGenerator"
+import MapGenerator from "./MapGenerator"
 
 export default class State {
   constructor(
@@ -16,17 +16,27 @@ export default class State {
     initialState() {
       // generate map with generator help
       // set default parameters
-      this.generator.getRandomMap();
+      this.mapObject = this.generator.getRandomMap();
+      this.playersInfo = this.createDefaultPlayer();
     }
 
-    getMap() {
+    getFullMap() {
       return this.mapObject;
     }
 
-    createDefaultPlayer() {}
+    setDiceRoll(roll: [number, number]){}
 
-    transferTurn() {
-      this.activePlayer < this.players ? this.activePlayer += 1 : this.activePlayer = 0;
+    setRobber(player: number, coords?: Array<number>){}
+
+    setNewSettlment(player: number, coords?: Array<number>){}
+
+    setNewCity(player: number, coords?: Array<number>){}
+
+    setNewRoad(player: number, coords?: Array<number>){}
+
+    createDefaultPlayer() {
+      return [];
     }
+
 
 }

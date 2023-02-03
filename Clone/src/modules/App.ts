@@ -8,6 +8,7 @@ export default class App {
     public controller?: Controller,
     public view?: View,
     // may be another module for start pages
+    public inGame: boolean = false,
     public players: number = 4,
     public gameMode: string = "newbie",
     ) {}
@@ -30,6 +31,7 @@ export default class App {
 
       // hand over map object to render
       this.view = new View(this.state); // render map and UI for every player
+      this.view.init();
 
       // hand over view and state to controller
       this.controller = new Controller(this.view, this.state); // add listeners that set the state condition

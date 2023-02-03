@@ -5,11 +5,12 @@ export default class MapGenerator {
     ) {}
 
     public getNewbieMap() {
-      // returns simply map object
+      // return simply map object
     }
 
     public getRandomMap() {
-      // generate random map object
+      return [];
+      // return generated random map object
     }
 
     private generateHexes() {}
