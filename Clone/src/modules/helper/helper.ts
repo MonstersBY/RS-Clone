@@ -1,5 +1,5 @@
 const helperNode = `
-  <div class="helper__wrapper nobackground">
+  <div class="helper__wrapper hidden"></div>
   <button class="helper___button btn">?</button>
   <div class="helper__body hidden">
     <p>Игра рассчитана на 3-4 игроков</p>
@@ -92,7 +92,6 @@ const helperNode = `
         </li>
       </ul>
     </div>
-  </div>
 `;
 
 export default helperNode;

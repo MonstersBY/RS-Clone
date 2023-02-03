@@ -1,16 +1,17 @@
 .helper{
   &__wrapper {
     position: absolute;
-    padding: 30px;
-    padding-left: 55px;
     width: 100%;
     height: 100%;
     background-color: rgba(20, 20, 20, 0.2);
   }
   &__body {
+    position: absolute;
+    top: 20px;
+    left: 50px;
     padding: 20px;
     width: 50%;
-    height: 100%;
+    height: 90%;
     background: wheat;
     color: black;
     border-radius: 8px;
@@ -69,8 +70,4 @@
       background: black;
     }
   }
-}
-
-.nobackground {
-  background: none;
 }
