@@ -53,15 +53,12 @@
   align-items: center;
   justify-content: center;
 }
-
 .header-icon__wrap {
   height: 3rem;
 }
-
 .player__icon {
   height: 3rem;
 }
-
 .player__icon-membership {
   display: none;
   position: relative;
@@ -70,21 +67,17 @@
   width: 2rem;
   height: 2rem;
 }
-
 .menu {
   &__link {
     padding: 1rem 2rem;
   }
 }
-
 .login__container {
   cursor: pointer;
 }
-
 .nickname {
   @include font(1.6rem, 120%, 700);
 }
-
 .login__btn {
   position: relative;
   bottom: 0;
