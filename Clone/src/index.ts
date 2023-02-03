@@ -13,13 +13,13 @@ const helperWrapper = document.querySelector(".helper__wrapper");
 const helperBtn = document.querySelector(".helper___button");
 const helperBody = document.querySelector(".helper__body");
 
-helperWrapper?.addEventListener("click", (e) => {
+document.addEventListener("click", (e) => {
   if (e.target === helperBtn) {
     helperBody?.classList.toggle("hidden");
-    helperWrapper.classList.toggle("nobackground");
+    helperWrapper?.classList.toggle("hidden");
   }
   if (e.target === helperWrapper) {
     helperBody?.classList.add("hidden");
-    helperWrapper.classList.add("nobackground");
+    helperWrapper?.classList.add("hidden");
   }
-})
+});
