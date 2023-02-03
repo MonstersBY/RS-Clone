@@ -5,6 +5,7 @@ export const toRoomPage = () => {
   if (container) {
     container.addEventListener("click", (e) => {
       const target = e.target as HTMLElement;
+      console.log(target);
       if (target && target.classList.contains("create__btn")) {
         e.preventDefault();
         renderRoomPage();
@@ -12,5 +13,3 @@ export const toRoomPage = () => {
     });
   }
 }
-
-
