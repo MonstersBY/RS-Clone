@@ -7,6 +7,7 @@ export default class Controller {
   constructor(
     public view: View,
     public state: State,
+
     private timer: Timer = new Timer(),
     private master: GameMaster = new GameMaster(),
     ) {}

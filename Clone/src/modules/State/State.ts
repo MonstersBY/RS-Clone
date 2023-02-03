@@ -1,4 +1,4 @@
-import { IPlayerInfo, IHex } from "../utils/types/types";
+import { IPlayerInfo, IHex } from "../types/types";
 import MapGenerator from "./MapGenerator"
 
 export default class State {
@@ -20,19 +20,33 @@ export default class State {
       this.playersInfo = this.createDefaultPlayer();
     }
 
-    getFullMap() {
+    getFullMapObject() {
       return this.mapObject;
     }
 
-    setDiceRoll(roll: [number, number]){}
+    asd(){}
 
-    setRobber(player: number, coords?: Array<number>){}
+    getPlayerinfo(player: number) {
+      // return one playerInfo object
+    }
 
-    setNewSettlment(player: number, coords?: Array<number>){}
+    addResouses(token: number) {
+      // look at all playerinfo objects settlements with current token number
+    }
 
-    setNewCity(player: number, coords?: Array<number>){}
+    setDiceRoll(roll: [number, number]) {
+      // ?
+    }
 
-    setNewRoad(player: number, coords?: Array<number>){}
+    setRobber(coords?: Array<number>) {
+      // change robber coords
+    }
+
+    setNewSettlment(player: number, coords?: Array<number>) {}
+
+    setNewCity(player: number, coords?: Array<number>) {}
+
+    setNewRoad(player: number, coords?: Array<number>) {}
 
     createDefaultPlayer() {
       return [];

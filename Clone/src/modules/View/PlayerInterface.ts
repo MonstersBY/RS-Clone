@@ -1,4 +1,4 @@
-import { IPlayerInfo } from "../utils/types/types";
+import { IPlayerInfo } from "../types/types";
 
 export default class PlayerInterface {
   constructor(

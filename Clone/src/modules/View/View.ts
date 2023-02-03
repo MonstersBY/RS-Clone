@@ -20,11 +20,11 @@ export default class View {
     }
 
     renderFullMap(template: any) {
-      // transfer this.state.mapObject object to nodes
+      // hey, renderer, transfer this.state.mapObject object to nodes
     }
 
     renderfullUI(player: number) {
-      // transfer this.state.playersInfo[player] object to UI
+      // hey, ui, transfer this.state.playersInfo[player] object to UI
       this.renderStats();
       this.renderHand(player);
     }

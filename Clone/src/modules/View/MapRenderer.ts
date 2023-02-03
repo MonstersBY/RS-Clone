@@ -1,4 +1,4 @@
-import { IHex } from "../utils/types/types";
+import { IHex } from "../types/types";
 
 export default class MapRenderer {
   constructor(

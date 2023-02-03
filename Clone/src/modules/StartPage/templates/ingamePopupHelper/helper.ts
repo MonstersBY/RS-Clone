@@ -1,5 +1,5 @@
 const helperNode = `
-  <div class="helper__wrapper nobackground">
+  <div class="helper__wrapper hidden"></div>
   <button class="helper___button btn">?</button>
   <div class="helper__body hidden">
     <p>Игра рассчитана на 3-4 игроков</p>
@@ -92,7 +92,24 @@ const helperNode = `
         </li>
       </ul>
     </div>
-  </div>
 `;
 
-export default helperNode;
+const addHelper = () => {
+  document.body.insertAdjacentHTML("beforeend", helperNode);
+  const helperWrapper = document.querySelector(".helper__wrapper");
+  const helperBtn = document.querySelector(".helper___button");
+  const helperBody = document.querySelector(".helper__body");
+
+  document.addEventListener("click", (e) => {
+    if (e.target === helperBtn) {
+      helperBody?.classList.toggle("hidden");
+      helperWrapper?.classList.toggle("hidden");
+    }
+    if (e.target === helperWrapper) {
+      helperBody?.classList.add("hidden");
+      helperWrapper?.classList.add("hidden");
+    }
+  })
+}
+
+export default addHelper;

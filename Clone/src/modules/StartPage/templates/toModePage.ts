@@ -1,4 +1,4 @@
-import { renderModePaGe } from "../templates/renderModePage";
+import { renderModePaGe } from "./renderModePage";
 
 export const toModePage = () => {
   const modeBtns = document.querySelectorAll(".mode__page");

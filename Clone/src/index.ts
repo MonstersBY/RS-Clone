@@ -1,27 +1,12 @@
 import "./styles/main.scss";
-import { toModePage } from "./modules/toModePage";
-import helperNode from "./modules/utils/ingamePopupHelper/helper";
+import { toModePage } from "./modules/StartPage/templates/toModePage";
+import addHelper from "./modules/StartPage/templates/ingamePopupHelper/helper";
 import App from "./modules/App";
 
 document.addEventListener("DOMContentLoaded", () => {
   toModePage();
+  addHelper();
 });
-
-document.body.insertAdjacentHTML("beforeend", helperNode);
-const helperWrapper = document.querySelector(".helper__wrapper");
-const helperBtn = document.querySelector(".helper___button");
-const helperBody = document.querySelector(".helper__body");
-
-helperWrapper?.addEventListener("click", (e) => {
-  if (e.target === helperBtn) {
-    helperBody?.classList.toggle("hidden");
-    helperWrapper.classList.toggle("nobackground");
-  }
-  if (e.target === helperWrapper) {
-    helperBody?.classList.add("hidden");
-    helperWrapper.classList.add("nobackground");
-  }
-})
 
 const app = new App();
 app.init();
