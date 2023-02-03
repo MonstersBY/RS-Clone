@@ -48,11 +48,16 @@ body ::-webkit-scrollbar-track {
     padding: 0 10px;
   }
 }
+.subtitle {
+  @include font(2.4rem, 130%, 700);
+  margin: 1.2rem 0 0.8rem 0;
+}
 
 .link {
   @include font(1.8rem, 120%, 700);
   @extend %transition;
   color: $color-primary-light;
+  cursor: pointer;
   &:hover {
     color: darken($color-primary-light, 40%);
   }
