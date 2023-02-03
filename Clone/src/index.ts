@@ -1,6 +1,6 @@
 import "./styles/main.scss";
-import { toModePage } from "./modules/toModePage";
-import { toRoomPage } from "./modules/toRoomPage";
+import { toModePage } from "./modules/StartPage/templates/renderModePage";
+import { toRoomPage } from "./modules/StartPage/templates/renderRoomPage";
 import helperNode from "./modules/helper/helper";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -22,4 +22,4 @@ document.addEventListener("click", (e) => {
     helperBody?.classList.add("hidden");
     helperWrapper?.classList.add("hidden");
   }
-})
+});
