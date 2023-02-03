@@ -229,3 +229,17 @@ export const renderRoomPage = () => {
   `;
   if (container) container.append(roomPageWrap);
 }
+
+export const toRoomPage = () => {
+  const container = document.querySelector(".container");
+  if (container) {
+    container.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      console.log(target);
+      if (target && target.classList.contains("create__btn")) {
+        e.preventDefault();
+        renderRoomPage();
+      }
+    });
+  }
+};
