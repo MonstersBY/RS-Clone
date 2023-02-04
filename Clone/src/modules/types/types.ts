@@ -2,12 +2,13 @@
 interface IHex {
   type: string,
   token: number,
-  settlement_N: ISettlement,
-  road_N: number,
-  road_W: number,
-  road_S: number,
-  settlement_S: ISettlement,
+  settlement_N: ISettlement | boolean,
+  road_N: number | boolean,
+  road_W: number | boolean,
+  road_S: number | boolean,
+  settlement_S: ISettlement | boolean,
   robber: boolean,
+  harbor: boolean,
 }
 
 interface ISettlement {

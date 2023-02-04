@@ -15,6 +15,7 @@ export default class App {
 
     init() {
       // dowload initial page
+      // when we know what mode and players count we need - we can generate map and put it into State module
     }
 
     setPlayerNumber() {
@@ -26,14 +27,14 @@ export default class App {
     }
 
     startGame() {
-      // when we know what mode and players count we need - we can generate map and put it into State module
       this.state = new State(this.players, this.gameMode); // generate map with generator help
-
+      this.state.initialState();
       // hand over map object to render
       this.view = new View(this.state); // render map and UI for every player
       this.view.init();
 
       // hand over view and state to controller
       this.controller = new Controller(this.view, this.state); // add listeners that set the state condition
+      this.view?.firstRender();
     }
 }

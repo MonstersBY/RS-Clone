@@ -16,12 +16,12 @@ export default class State {
     initialState() {
       // generate map with generator help
       // set default parameters
-      this.mapObject = this.generator.getRandomMap();
+      this.mapObject = this.generator.getNewbieMap();
       this.playersInfo = this.createDefaultPlayer();
     }
 
     getFullMapObject() {
-      return this.mapObject;
+      return this.mapObject as Array<IHex>;
     }
 
     asd(){}
