@@ -2,16 +2,16 @@ import { IHex } from "../types/types";
 
 export default class MapRenderer {
   constructor(
-    public mapObject?: Array<IHex>
+    public mapObject?: Array<IHex>,
+    private HEX_COUNT = 37,
     ) {}
 
     getMapAsNodeTree(mapObject: Array<IHex>) {
       let template = ``;
-      // const counter = this.lineCounter("0000111112222223333333444444555556666"); // hex_line${counter()}
-      for (let i = 0; i < 37; i++) {
+      for (let i = 0; i < this.HEX_COUNT; i++) {
         const hex = mapObject[i]; 
         const hexNode = `
-          <div class="hex hex_${i} hex_${hex.type}">
+          <div class="hex hex_${i} hex_${hex.type} ${hex.harbor ? `harbor_"${hex.harbor}` : ""}">
               ${hex.token ? `<div class="hex__num_tocken">${hex.token}</div>` : ""}
               ${hex.settlement_N ? `<div class="hex__settlement_N"></div>` : ""}
               ${hex.road_N ? `<div class="hex__road_N"></div>` : ""}
@@ -35,7 +35,7 @@ export default class MapRenderer {
       }
     }
 
-    udateOneHex(index: number) {
+    getHexAsNode(hex: IHex) {
       // find hex with index and redraw it
     }
 }
