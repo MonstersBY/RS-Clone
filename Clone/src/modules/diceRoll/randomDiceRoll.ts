@@ -21,6 +21,7 @@ export const randomDiceRoll = () => {
 
     if ((dieOneValue >= 1 && dieOneValue <= 6) && (dieTwoValue >= 1 && dieTwoValue <= 6)) {
       roll(dieOneValue, dieTwoValue);
+      return [dieOneValue, dieTwoValue];
     } else {
       randomDice();
     }
@@ -42,8 +43,6 @@ export const randomDiceRoll = () => {
       sides.forEach((side) => {
         side.classList.add('hidden');
       })
-
-      console.log(random1, random2);
 
       const die1 = document.querySelector("#die-1")
         if(die1) die1.setAttribute("src", images[random1-1]);
