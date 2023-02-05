@@ -1,7 +1,7 @@
 const newbieMap = [
   // 0 line
   {
-    type: "sea",
+    type: "harbor",
     token: 0,
     settlement_N: false,
     road_N: false,
@@ -9,7 +9,7 @@ const newbieMap = [
     road_S: false,
     settlement_S: true,
     robber: false,
-    harbor: false,
+    harbor: true,
   },
   {
     type: "sea",
@@ -23,7 +23,7 @@ const newbieMap = [
     harbor: false,
   },
   {
-    type: "sea",
+    type: "harbor",
     token: 0,
     settlement_N: false,
     road_N: false,
@@ -90,7 +90,7 @@ const newbieMap = [
     harbor: false,
   },
   {
-    type: "sea",
+    type: "harbor",
     token: 0,
     settlement_N: false,
     road_N: false,
@@ -102,7 +102,7 @@ const newbieMap = [
   },
   // 2 line
   {
-    type: "sea",
+    type: "harbor",
     token: 0,
     settlement_N: false,
     road_N: false,
@@ -235,7 +235,7 @@ const newbieMap = [
     harbor: false,
   },
   {
-    type: "sea",
+    type: "harbor",
     token: 0,
     settlement_N: false,
     road_N: false,
@@ -247,7 +247,7 @@ const newbieMap = [
   },
   // 4 line
   {
-    type: "sea",
+    type: "harbor",
     token: 0,
     settlement_N: true,
     road_N: false,
@@ -358,7 +358,7 @@ const newbieMap = [
     harbor: false,
   },
   {
-    type: "sea",
+    type: "harbor",
     token: 0,
     settlement_N: true,
     road_N: true,
@@ -370,7 +370,7 @@ const newbieMap = [
   },
   // 6 line
   {
-    type: "sea",
+    type: "harbor",
     token: 0,
     settlement_N: true,
     road_N: false,
@@ -392,7 +392,7 @@ const newbieMap = [
     harbor: false,
   },
   {
-    type: "sea",
+    type: "harbor",
     token: 0,
     settlement_N: true,
     road_N: true,
