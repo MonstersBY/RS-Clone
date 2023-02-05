@@ -63,24 +63,6 @@
 .side:nth-child(2) {
   transform: rotateY(-180deg) translateZ(3.1em); }
 
-/* .show-1 {
-  transform: rotateX(720deg) rotateZ(-720deg); }
-
-.show-6 {
-  transform: rotateX(-900deg) rotateZ(1080deg); }
-
-.show-3 {
-  transform: rotateY(-450deg) rotateZ(-1440deg); }
-
-.show-4 {
-  transform: rotateY(810deg) rotateZ(720deg); }
-
-.show-5 {
-  transform: rotateX(-810deg) rotateZ(-1080deg); }
-
-.show-2 {
-  transform: rotateX(450deg) rotateZ(-720deg); } */
-
 .two-1, .three-1, .four-1, .five-1, .six-1 {
   top: 20%;
   left: 20%;
@@ -114,45 +96,13 @@
 .dice__img {
   position: absolute;
 }
-/* .dies.hidden {
-  display: none;
-} */
+
 .side.hidden {
   display: none;
 }
 
-p{
-  font-size: 16px;
-  margin: 30px 0;
-  font-weight: 500;
-}
-button{
-  background-color: #000000;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  padding: 15px 0;
-  width: 150px;
-  letter-spacing: 1px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.shake {
-  animation: shake 0.5s infinite;
-}
 .rolling {
   animation: rolling 0.4s infinite;
-}
-@keyframes shake{
-    0%{
-      transform: rotate(8deg);
-    }
-    50%{
-      transform: rotate(-8deg);
-    }
-    100%{
-      transform: rotate(8deg);
-    }
 }
 
 @keyframes rolling {
