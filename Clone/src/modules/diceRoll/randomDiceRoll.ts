@@ -10,6 +10,10 @@ export const randomDiceRoll = () => {
   const gameField = document.querySelector(".game");
   const diceElements = document.querySelectorAll(".dice");
 
+   const audio = new Audio();
+    audio.currentTime = 0;
+    audio.src = '../../assets/files/6f488185486f9cf.mp3';
+
 
   const randomDice = () => {
     const dieOneValue = Math.floor(Math.random() * 10);
@@ -51,6 +55,7 @@ export const randomDiceRoll = () => {
      const target = e.target as HTMLElement;
      if (target && target.closest(".dice__container")) {
        randomDice();
+       audio.play();
      }
    });
   randomDice();
