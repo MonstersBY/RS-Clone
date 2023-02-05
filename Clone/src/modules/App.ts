@@ -16,7 +16,7 @@ export default class App {
     init() {
       // dowload initial page
       // when we know what mode and players count we need - we can generate map and put it into State module
-      document.querySelector(".get-map")?.addEventListener("click", e => {
+      document.querySelector(".login__btn")?.addEventListener("click", e => {
         const main = document.querySelector(".main-content")
         if (main) {
           main.innerHTML = "";
