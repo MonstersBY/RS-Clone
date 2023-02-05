@@ -60,7 +60,7 @@ export const renderModePaGe = () => {
             <span class="span__right"><b>98,714</b> games today</span>
           </div>
           <div class="buttons__wrapper">
-            <a href="#" class="btn btn__left flex-bs">Create room</a>
+            <a href="#" class="btn btn__left flex-bs create__btn">Create room</a>
             <a href="#" class="btn btn__left flex-bs">Play vs Bots</a>
           </div>
           <a href="#" class="btn play__btn">Play
@@ -70,3 +70,14 @@ export const renderModePaGe = () => {
   `;
   if (container) container.append(landingPageWrap);
 }
+export const toModePage = () => {
+  const modeBtns = document.querySelectorAll(".mode__page");
+  if (modeBtns) {
+    modeBtns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        renderModePaGe();
+      });
+    });
+  }
+};

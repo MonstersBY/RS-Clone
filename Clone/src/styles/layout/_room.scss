@@ -1,0 +1,230 @@
+.room-page {
+  &__wrapper {
+    display: flex;
+    flex-grow: 1;
+    height: 75vh;
+    gap: 30px;
+    align-items: stretch;
+    width: 100%;
+    max-height: 600px;
+  }
+}
+.room__block {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.2rem;
+  background-color: rgba(0,0,0,.05);
+  padding: 1.8rem;
+  &_left,
+  &_right {
+    width: 300px;
+  }
+  &_mid {
+    flex-grow: 1;
+  }
+}
+.player {
+  &__list {
+    flex-grow: 1;
+    margin: 0 -0.8rem;
+    height: 13.1rem;
+    overflow-x: hidden;
+    overflow-y: auto
+  }
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  &__color {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.player__list-item {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem ;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.5rem;
+  background-color: rgba(0,0,0,.1);
+  min-height: 7.5rem;
+}
+.color__select {
+  word-wrap: normal;
+}
+.state__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  align-self: center;
+  text-align: end;
+}
+.not_ready {
+  color: #ff8e0d;
+}
+.status__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.nick {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.5rem;
+}
+.room__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.sound__icon,
+.trash__icon {
+  height: 2rem;
+  cursor: pointer;
+}
+
+.chat {
+  &__messages {
+    flex-grow: 1;
+    height: 0;
+    overflow-y: auto;
+  }
+  &__form {
+    display: flex;
+    flex-direction: row;
+  }
+  &__input {
+    @include font(1.2rem, 120%, 400);
+    padding: 0.6rem 1.2rem;
+    width: 100%;
+    overflow: visible;
+  }
+}
+.send__icon {
+  width: 1.2rem;
+}
+.form-send__btn {
+  width: 2rem;
+  border: 2px solid $color-primary-dark;
+}
+
+.message__post {
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
+  padding: 0 0.8rem;
+  word-break: break-word;
+}
+.settings__block {
+  display: flex;
+  flex-flow: column;
+  flex-grow: 1;
+  padding: 0.5rem 1.5rem;
+  height: 10rem;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.settings__footer {
+  display: flex;
+  gap: 6.4rem;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem -1.8rem -1.8rem;
+  border-radius: 0 0 1.2rem 1.2rem;
+  background-color: rgba(0,0,0,.1);
+  padding: 1.6rem;
+}
+.setting__input {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  min-height: 45px;
+  margin-bottom: 2rem;
+  &-item {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 2px;
+    border-radius: 3px;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    max-width: calc(100% - 2px*2);
+    text-align: center;
+  }
+}
+.selected {
+  background-color: rgba(63,195,192,.5);
+}
+.setting__title {
+  @include font(1.6rem, 120%, 700);
+  margin: 0 5% 1rem 0;
+  min-width: fit-content;
+  white-space: nowrap;
+}
+.settings__options {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  min-height: 55px;
+  margin-bottom: 2rem;
+}
+
+.game__mode {
+  background-color: rgba(0,0,0,.05);
+}
+.option__title {
+  justify-content: center;
+}
+.option__body {
+  margin: 0.5rem 0 0;
+  max-width: 100%;
+}
+.options__select {
+  max-width: 100%;
+  word-wrap: normal;
+}
+.ready__block {
+  @include font(2rem, 130%, 700);
+  display: inline-block;
+}
+.ready__checkbox {
+  @extend %transition;
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-block;
+  position: relative;
+  transition: box-shadow .5s;
+  border: 1px solid #CCCCCC;
+  border-radius: 3px;
+  box-shadow: 0 0 0 $color-primary-dark inset, 0 1px 0 #666;
+  background-color: $color-primary-light;
+  cursor: pointer;
+  padding: 2rem;
+  vertical-align: middle;
+  &:checked::after {
+    content: "";
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: url('../assets/images/icons/icon_check.svg') center center/cover no-repeat;
+  }
+  &:checked {
+    background-color: $color-btn-secondary;
+  }
+}
+
+.start__game {
+  width: 15rem;
+  padding: 0 1rem;
+  width: 13.7rem;
+  height: 4rem;
+}
