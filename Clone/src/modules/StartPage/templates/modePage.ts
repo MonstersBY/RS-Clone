@@ -1,11 +1,5 @@
-export const renderModePaGe = () => {
-  const container = document.querySelector(".container");
-
-  if (container) container.innerHTML = "";
-
-  const landingPageWrap = document.createElement('div');
-  landingPageWrap.classList.add('landing-page__wrapper');
-  landingPageWrap.innerHTML = `
+export const mode = `
+      <div class="landing-page__wrapper">
         <div class="ranked-block__wrapper">
           <h2 class="ranked-cards__title">Play Ranked</h2>
           <div class="ranked-cards__wrapper">
@@ -60,24 +54,12 @@ export const renderModePaGe = () => {
             <span class="span__right"><b>98,714</b> games today</span>
           </div>
           <div class="buttons__wrapper">
-            <a href="#" class="btn btn__left flex-bs create__btn">Create room</a>
+            <a href="/room" class="btn btn__left flex-bs create__btn">Create room</a>
             <a href="#" class="btn btn__left flex-bs">Play vs Bots</a>
           </div>
           <a href="#" class="btn play__btn">Play
             <span class="btn__span">Ranked / Unranked</span>
           </a>
         </div>
-  `;
-  if (container) container.append(landingPageWrap);
-}
-export const toModePage = () => {
-  const modeBtns = document.querySelectorAll(".mode__page");
-  if (modeBtns) {
-    modeBtns.forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        renderModePaGe();
-      });
-    });
-  }
-};
+      </div>
+`;

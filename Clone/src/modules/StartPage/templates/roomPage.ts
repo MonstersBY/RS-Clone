@@ -1,11 +1,5 @@
-export const renderRoomPage = () => {
-  const container = document.querySelector(".container");
-
-  if (container) container.innerHTML = "";
-
-  const roomPageWrap = document.createElement('div');
-  roomPageWrap.classList.add('room-page__wrapper');
-  roomPageWrap.innerHTML = `
+export const room = `
+    <div class="room-page__wrapper">
       <div class="room__block room__block_left">
         <h2 class="subtitle">Players (4)</h2>
         <ul class="player__list">
@@ -203,7 +197,7 @@ export const renderRoomPage = () => {
                 <p class="ready__span" hidden="">All players need to be ready for host to start the game.</p>
             </div>
             <div class="start">
-                <a href="#" class="btn start__game flex-bs">START GAME</a>
+                <a href="/game" class="btn start__game flex-bs">START GAME</a>
             </div>
         </div>
     </div>
@@ -226,20 +220,5 @@ export const renderRoomPage = () => {
             </button>
         </form>
     </div>
+    </div>
   `;
-  if (container) container.append(roomPageWrap);
-}
-
-export const toRoomPage = () => {
-  const container = document.querySelector(".container");
-  if (container) {
-    container.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement;
-      console.log(target);
-      if (target && target.classList.contains("create__btn")) {
-        e.preventDefault();
-        renderRoomPage();
-      }
-    });
-  }
-};

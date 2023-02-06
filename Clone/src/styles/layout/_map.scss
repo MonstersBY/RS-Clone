@@ -1,0 +1,236 @@
+.map__container {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  min-height: 90%;
+  height: 80vmin;
+  width: 90vmin;
+  overflow: visible;
+}
+
+.hex {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+  grid-column-end: span 2;
+
+  &:nth-child(1) {
+    grid-column-start: 4;
+  }
+  &:nth-child(2) {
+    grid-column-start: 6;
+  }
+  &:nth-child(3) {
+    grid-column-start: 8;
+  }
+  &:nth-child(4) {
+    grid-column-start: 10;
+  }
+
+  &:nth-child(5) {
+    grid-column-start: 3;
+  }
+  &:nth-child(6) {
+    grid-column-start: 5;
+  }
+  &:nth-child(7) {
+    grid-column-start: 7;
+  }
+  &:nth-child(8) {
+    grid-column-start: 9;
+  }
+  &:nth-child(9) {
+    grid-column-start: 11;
+  }
+
+  &:nth-child(10) {
+    grid-column-start: 2;
+  }
+  &:nth-child(11) {
+    grid-column-start: 4;
+  }
+  &:nth-child(12) {
+    grid-column-start: 6;
+  }
+  &:nth-child(13) {
+    grid-column-start: 8;
+  }
+  &:nth-child(14) {
+    grid-column-start: 10;
+  }
+  &:nth-child(15) {
+    grid-column-start: 12;
+  }
+
+  &:nth-child(16) {
+    grid-column-start: 1;
+  }
+  &:nth-child(17) {
+    grid-column-start: 3;
+  }
+  &:nth-child(18) {
+    grid-column-start: 5;
+  }
+  &:nth-child(19) {
+    grid-column-start: 7;
+  }
+  &:nth-child(20) {
+    grid-column-start: 9;
+  }
+  &:nth-child(21) {
+    grid-column-start: 11;
+  }
+  &:nth-child(22) {
+    grid-column-start: 13;
+  }
+
+  &:nth-child(23) {
+    grid-column-start: 2;
+  }
+  &:nth-child(24) {
+    grid-column-start: 4;
+  }
+  &:nth-child(25) {
+    grid-column-start: 6;
+  }
+  &:nth-child(26) {
+    grid-column-start: 8;
+  }
+  &:nth-child(27) {
+    grid-column-start: 10;
+  }
+
+  &:nth-child(28) {
+    grid-column-start: 12;
+  }
+  &:nth-child(29) {
+    grid-column-start: 3;
+  }
+  &:nth-child(30) {
+    grid-column-start: 5;
+  }
+  &:nth-child(31) {
+    grid-column-start: 7;
+  }
+  &:nth-child(32) {
+    grid-column-start: 9;
+  }
+  &:nth-child(33) {
+    grid-column-start: 11;
+  }
+
+  &:nth-child(34) {
+    grid-column-start: 4;
+  }
+  &:nth-child(35) {
+    grid-column-start: 6;
+  }
+  &:nth-child(36) {
+    grid-column-start: 8;
+  }  
+  &:nth-child(37) {
+    grid-column-start: 10;
+  }
+}
+
+.hex {
+  &__num_tocken {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 20%;
+    background: white; 
+    border-radius: 5%;
+    font-size: large;
+    color: black;
+  }
+  &__robber {
+    z-index: 1;
+  }
+  &__settlement {
+    &_N {
+      z-index: 1;
+      position: absolute;
+      width: 20%;
+      height: 20%;
+      border-radius: 50%;
+      top: -22%;
+      right: calc(50% - 10%);
+      background: rgba(255, 0, 0, 0.5);
+    }
+    &_S {
+      z-index: 1;
+      position: absolute;
+      width: 20%;
+      height: 20%;
+      border-radius: 50%;
+      bottom: -22%;
+      right: calc(50% - 10%);
+      background: rgba(255, 0, 0, 0.5);
+    }
+  }
+  &__road {
+    &_N {
+      z-index: 1;
+      position: absolute;
+      width: 10%;
+      height: 30%;
+      left: 21%;
+      top: -16%;
+      transform: rotate(60deg);
+      background: rgba(255, 0, 0, 0.5);
+    }
+    &_W {
+      z-index: 1;
+      position: absolute;
+      width: 10%;
+      height: 30%;
+      left: -5%;
+      top: calc(50% - 15%);
+      background: rgba(255, 0, 0, 0.5);
+    }
+    &_S {
+      z-index: 1;
+      position: absolute;
+      width: 10%;
+      height: 30%;
+      left: 21%;
+      bottom: -16%;
+      transform: rotate(-60deg);
+      background: rgba(255, 0, 0, 0.5);
+    }
+  }
+}
+
+.hex {
+  &_sea {
+    background: rgb(80, 128, 231);
+  }
+  &_forest {
+    background: rgb(15, 124, 48);
+  }
+  &_hills {
+    background: rgb(202, 92, 19);
+  }
+  &_mountains {
+    background: rgb(134, 148, 162);
+  }
+  &_pasture {
+    background: rgb(137, 208, 61);
+  }
+  &_fields {
+    background: rgb(230, 190, 28);
+  }
+  &_harbor {
+    background: rgb(67, 108, 196);
+  }
+  &_desert {
+    background: rgb(231, 212, 138);
+  }
+}
