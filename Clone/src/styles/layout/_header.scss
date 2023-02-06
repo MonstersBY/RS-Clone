@@ -3,17 +3,53 @@
     @include font(1.25rem, 120%, 700);
     flex-basis: 0;
     margin-right: 6.4rem;
+    &.hidden {
+      display: none;
+    }
   }
   &__wrapper {
+    position:relative;
     width: 100%;
     max-width: 1400px;
     padding: 0.75rem 1.5rem 0 1.5rem;
     margin: 0 auto;
   }
   &-menu {
+    @extend %transition;
+    position: relative;
+    @media(max-width: 768px) {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 320px;
+      padding: 10px 5px 5px 10px;
+      visibility: hidden;
+      opacity: 0;
+      height: 100vh;
+      z-index: 10;
+      background-color: $color-primary;
+      &.open {
+      right: 0;
+      // display: block;
+      visibility: visible;
+      opacity: 1;
+      transition: 0.5s all ease;
+    }
+  }
     &__list {
       flex-wrap: wrap;
       align-items: center;
+      &.open {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 40px;
+        padding: 5px 0 0 5px;
+        width: 300px;
+        height: 100%;
+        overflow: auto;
+        // color: $color-primary-dark;
+      }
     }
   }
   &__coin {
@@ -86,4 +122,49 @@
   height: 4rem;
   margin: 0 auto;
   overflow: hidden;
+}
+
+.open {
+  left: 0;
+  visibility: visible;
+  opacity: 1;
+  @extend %transition;
+}
+
+.header-menu.ingame {
+  position: fixed;
+  top: 0;
+  left: -320px;
+  width: 320px;
+  padding: 10px 5px 5px 10px;
+  visibility: hidden;
+  opacity: 0;
+  height: 100vh;
+  z-index: 10;
+  background-color: $color-primary;
+  &.open {
+    left: 0;
+    // display: block;
+    visibility: visible;
+    opacity: 1;
+    transition: 0.5s all ease;
+  }
+}
+.ingame {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 32rem;
+  width: calc(100% - 320px);
+  height: 100vh;
+  background: rgba(100, 98, 98, 0.6);
+  visibility: hidden;
+  z-index: 20;
+  &.open {
+    visibility: visible;
+  }
 }

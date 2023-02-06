@@ -6,3 +6,10 @@
     border-style: none;
   }
 }
+
+.burger__logo.logo {
+  display: none;
+  &.open {
+    display: block;
+  }
+}

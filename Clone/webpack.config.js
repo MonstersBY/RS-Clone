@@ -5,7 +5,8 @@ const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == "production";
-const pages = ["index.html", "room.html"];
+
+const pages = ["index.html", "ingame.html"];
 
 const stylesHandler = MiniCssExtractPlugin.loader;
 
@@ -20,8 +21,14 @@ const config = {
     historyApiFallback: true,
   },
   plugins: [
-    new HtmlWebpackPlugin({
+    /* new HtmlWebpackPlugin({
       template: "./src/index.html",
+    }), */
+    ...pages.map((item) => {
+      return new HtmlWebpackPlugin({
+        template: `src/${item}`,
+        filename: `${item}`,
+      });
     }),
     new MiniCssExtractPlugin(),
     new CleanWebpackPlugin(),
