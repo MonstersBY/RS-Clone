@@ -1,0 +1,43 @@
+.hamburger {
+  @extend %transition;
+  display: none;
+  width: 30px;
+  height: 10px;
+  margin: 8px 0 1px 0;
+  z-index: 12;
+  cursor: pointer;
+  &.open {
+    position: absolute;
+    .line:nth-child(2) {
+      opacity: 0;
+    }
+    .line:nth-child(1){
+      transform: translateY(8px) rotate(45deg);
+      width: 32px;
+      transition: all 0.9s;
+    }
+    .line:nth-child(3) {
+      transform: translateY(-5px) rotate(-45deg);
+      width: 32px;
+      transition: all 0.9s;
+    }
+    .line {
+      background: $color-btn-primary;
+    }
+  }
+  @media(max-width: 768px) {
+    display: block;
+  }
+}
+.hamburger.block {
+  display: block;
+}
+
+.line {
+  display: block;
+  width: 30px;
+  height: 4px;
+  margin: 3px auto;
+  z-index: 15;
+  background-color: $color-primary-light;
+}

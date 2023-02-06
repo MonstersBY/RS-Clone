@@ -2,10 +2,14 @@ import "./styles/main.scss";
 import { toModePage } from "./modules/StartPage/templates/renderModePage";
 import { toRoomPage } from "./modules/StartPage/templates/renderRoomPage";
 import helperNode from "./modules/helper/helper";
+import { diceRoll } from "./modules/diceRoll/diceRoll";
+
 
 document.addEventListener("DOMContentLoaded", () => {
   toModePage();
   toRoomPage();
+  diceRoll();
+
 });
 
 document.body.insertAdjacentHTML("beforeend", helperNode);
