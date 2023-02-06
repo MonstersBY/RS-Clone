@@ -5,6 +5,7 @@ import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
+import { diceRoll } from "./diceRoll/diceRoll";
 
 export default class App {
   constructor(
@@ -20,6 +21,7 @@ export default class App {
     init() {
       renderCore();
       addHelper();
+      diceRoll();
       this.setRouter();
     }
 
