@@ -7,5 +7,4 @@ export default class GameMaster {
     transferTurn() {
       this.activePlayer < this.players ? this.activePlayer += 1 : this.activePlayer = 0;
     }
-
 }
