@@ -3,8 +3,8 @@ import MapGenerator from "./MapGenerator"
 
 export default class State {
   constructor(
-    public players: number,
-    public gameMode: string,
+    public players: number = 4,
+    public gameMode: string = "newbie",
     public foundingStage: boolean = true,
     public activePlayer: number = 0,
     public diceRoll: number | undefined = undefined,

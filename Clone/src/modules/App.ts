@@ -1,29 +1,31 @@
+import Router from "./Router";
+import Room from "./Room";
 import State from "./State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
+import { renderCore } from "./StartPage/templates/core";
+import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 
 export default class App {
   constructor(
-    public state?: State,
+    public router?: any,
+    public state: State = new State(),
     public controller?: Controller,
     public view?: View,
-    // may be another module for start pages
+    public room?: Room,
+
     public inGame: boolean = false,
-    public players: number = 4,
-    public gameMode: string = "newbie",
     ) {}
 
     init() {
-      // dowload initial page
-      // when we know what mode and players count we need - we can generate map and put it into State module
-      document.querySelector(".login__btn")?.addEventListener("click", e => {
-        const main = document.querySelector(".main-content")
-        if (main) {
-          main.innerHTML = "";
-          main.insertAdjacentHTML("beforeend", `<div class="map__container" id="map"></div>`);
-        }
-        this.startGame();
-      })
+      renderCore();
+      addHelper();
+      this.setRouter();
+    }
+
+    setRouter() {
+      this.router = new Router();
+      this.router.setRoutes();
     }
 
     setPlayerNumber() {
@@ -35,12 +37,10 @@ export default class App {
     }
 
     startGame() {
-      this.state = new State(this.players, this.gameMode); // generate map with generator help
       this.state.initialState();
       // hand over map object to render
       this.view = new View(this.state); // render map and UI for every player
       this.view.init();
-
       // hand over view and state to controller
       this.controller = new Controller(this.view, this.state); // add listeners that set the state condition
     }

@@ -17,7 +17,6 @@ export default class View {
     }
 
     firstRender() {
-      console.log("first render")
       const mapContainer = document.querySelector("#map");
       console.log(mapContainer)
       if(mapContainer) {

@@ -94,7 +94,7 @@ const helperNode = `
     </div>
 `;
 
-const addHelper = () => {
+export const addHelper = () => {
   document.body.insertAdjacentHTML("beforeend", helperNode);
   const helperWrapper = document.querySelector(".helper__wrapper");
   const helperBtn = document.querySelector(".helper___button");
@@ -111,5 +111,3 @@ const addHelper = () => {
     }
   })
 }
-
-export default addHelper;

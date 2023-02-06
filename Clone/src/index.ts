@@ -1,14 +1,5 @@
 import "./styles/main.scss";
-import { toModePage } from "./modules/StartPage/templates/renderModePage";
-import { toRoomPage } from "./modules/StartPage/templates/renderRoomPage";
-import addHelper from "./modules/StartPage/templates/ingamePopupHelper/helper";
-import App from "./modules/App";
-
-document.addEventListener("DOMContentLoaded", () => {
-  toModePage();
-  toRoomPage();
-  addHelper();
-});
+import App from "./modules/App"
 
 const app = new App();
 app.init();
