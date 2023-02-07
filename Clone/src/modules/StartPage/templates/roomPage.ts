@@ -197,7 +197,7 @@ export const room = `
                 <p class="ready__span" hidden="">All players need to be ready for host to start the game.</p>
             </div>
             <div class="start">
-                <a href="/game" class="btn start__game flex-bs">START GAME</a>
+                <a id="start-game" href="/game" class="btn start__game flex-bs">START GAME</a>
             </div>
         </div>
     </div>
@@ -213,12 +213,12 @@ export const room = `
                 <b>some:</b> Hi
             </div>
         </div>
-        <form action="#" class="chat__form">
+        <div id="chat-form" class="chat__form">
             <input type="text" autocomplete="off" placeholder="Say hello" maxlength='200' aria-label="Send message input" class="chat__input">
-            <button class="form-send__btn">
+            <button class="form-send__btn" type="submit">
                 <img src="assets/images//icons/chat/icon__send.svg" alt="send icon" class="send__icon">
             </button>
-        </form>
+        </div>
     </div>
     </div>
   `;
