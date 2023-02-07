@@ -6,6 +6,8 @@ import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import { diceRoll } from "./diceRoll/diceRoll";
+import { burger } from "./hamburger/burger";
+import { changeHeader } from "./StartPage/templates/renderIngamePage";
 
 export default class App {
   constructor(
@@ -19,17 +21,25 @@ export default class App {
     ) {}
 
     init() {
-      renderCore();
+      // renderCore();
       addHelper();
       diceRoll();
-      this.setRouter();
+      changeHeader();
+      burger(
+         ".header-menu",
+         ".menu__list",
+         ".hamburger",
+         ".burger__logo",
+         ".overlay"
+       );
+      // this.setRouter();
     }
 
-    setRouter() {
+   /*  setRouter() {
       this.router = new Router();
       this.router.setRoutes();
     }
-
+ */
     setPlayerNumber() {
       // add to button listener
     }

@@ -57,7 +57,7 @@ export const mode = `
             <a href="/room" class="btn btn__left flex-bs create__btn">Create room</a>
             <a href="#" class="btn btn__left flex-bs">Play vs Bots</a>
           </div>
-          <a href="#" class="btn play__btn">Play
+          <a href="/game" class="btn play__btn">Play
             <span class="btn__span">Ranked / Unranked</span>
           </a>
         </div>
