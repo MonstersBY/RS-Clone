@@ -9,7 +9,7 @@ export const core = `
         </a>
       <ul class="menu__list header-menu__list flex-row">
           <li class="menu__list-item mode__page">
-              <a href="#" class="link menu__link active">Play Page</a>
+              <a href="/mode" class="link menu__link active">Play Page</a>
           </li>
           <li class="menu__list-item">
               <a href="#" class="link menu__link">Rules</a>
