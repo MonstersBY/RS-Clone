@@ -12,10 +12,12 @@
         "layout/start",
         "layout/room",
         'layout/playerHand',
-        "layout/footer";
+        "layout/footer",
+        "layout/map",
+        "layout/helper";
+
 
 @import "animation/animation";
 
-@import "../modules/helper/helper";
 @import "../modules/diceRoll/dice";
 @import "../modules/hamburger/hamburger";
