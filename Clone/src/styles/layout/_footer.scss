@@ -3,6 +3,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
+  &.hidden {
+    display: none;
+  }
   @include max-media-tablet {
     flex-direction: column-reverse;
     gap: 20px;

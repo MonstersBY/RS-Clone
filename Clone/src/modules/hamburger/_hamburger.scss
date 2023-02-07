@@ -1,24 +1,27 @@
 .hamburger {
   @extend %transition;
+  position: absolute;
+  left: 8rem;
+  top: 1rem;
   display: none;
-  width: 30px;
-  height: 10px;
+  width: 3rem;
+  height: 1rem;
   margin: 8px 0 1px 0;
   z-index: 12;
   cursor: pointer;
   &.open {
-    position: absolute;
+    left: 28rem;
     .line:nth-child(2) {
       opacity: 0;
     }
     .line:nth-child(1){
       transform: translateY(8px) rotate(45deg);
-      width: 32px;
+      width: 3.2rem;
       transition: all 0.9s;
     }
     .line:nth-child(3) {
-      transform: translateY(-5px) rotate(-45deg);
-      width: 32px;
+      transform: translateY(-6px) rotate(-45deg);
+      width: 3.2rem;
       transition: all 0.9s;
     }
     .line {
@@ -35,7 +38,7 @@
 
 .line {
   display: block;
-  width: 30px;
+  width: 3rem;
   height: 4px;
   margin: 3px auto;
   z-index: 15;

@@ -29,6 +29,7 @@ body ::-webkit-scrollbar-track {
 }
 
 .container {
+  position: relative;
   max-width: $content-width;
   margin: 0 auto;
   padding: 0 1.5rem;
