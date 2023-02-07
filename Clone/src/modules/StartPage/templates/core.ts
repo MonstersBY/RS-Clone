@@ -3,7 +3,10 @@ export const core = `
       <a href="/" class="logo header__logo flex-bs">
           <img src="assets/images/logo.png" alt="logo" class="logo__img">
       </a>
-  <nav class="menu header-menu">
+    <nav class="menu header-menu">
+        <a href="/" class="logo burger__logo flex-bs">
+        <img src="assets/images/logo.png" alt="logo" class="logo__img">
+        </a>
       <ul class="menu__list header-menu__list flex-row">
           <li class="menu__list-item mode__page">
               <a href="#" class="link menu__link active">Play Page</a>
@@ -12,7 +15,13 @@ export const core = `
               <a href="#" class="link menu__link">Rules</a>
           </li>
       </ul>
-  </nav>
+      <div class="overlay"></div>
+    </nav>
+    <div class="hamburger">
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+    </div>
   <div class="header__profile">
       <div class="header-login__wrapper">
           <div class="login__container flex-row">
@@ -94,7 +103,7 @@ export const core = `
       </div>
   </div>
   </footer>
-`
+`;
 
 export const renderCore = () => {
   document.body.innerHTML = "";
