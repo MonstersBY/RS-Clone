@@ -1,33 +1,32 @@
-import State from "../State/State";
+import State from "../../backend/State/State";
+import Room from "../Room";
 import { IHex } from "../types/types";
 import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
 
 export default class View {
   constructor(
-    public state: State,
     private renderer: MapRenderer = new MapRenderer(),
     private ui?: PlayerInterface, 
+    public state?: State,
     ) {}
 
     init() {
-      this.renderer = new MapRenderer(this.state.mapObject);
-      this.ui = new PlayerInterface(this.state.playersInfo);
+      this.renderer = new MapRenderer(this.state?.mapObject);
+      this.ui = new PlayerInterface(this.state?.playersInfo);
       this.firstRender();
     }
 
     firstRender() {
       const mapContainer = document.querySelector("#map");
-      console.log(mapContainer)
-      if(mapContainer) {
+      if (mapContainer) {
         mapContainer.innerHTML = "";
-        const mapTree = this.renderer?.getMapAsNodeTree(this.state.getFullMapObject()) as string;
+        const mapTree = this.renderer?.getMapAsNodeTree(this.state?.getFullMapObject() as IHex[]) as string;
         mapContainer?.insertAdjacentHTML("beforeend", mapTree);
       }
     }
 
     renderFullMap() {
-      
       // hey, renderer, transfer this.state.mapObject object to nodes
     }
 

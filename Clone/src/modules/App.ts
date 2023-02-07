@@ -1,34 +1,75 @@
 import Router from "./Router";
 import Room from "./Room";
-import State from "./State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
-import { diceRoll } from "./diceRoll/diceRoll";
+import { renderGamePage } from "./StartPage/templates/gamePage";
+import State from "../backend/State/State";
 
 export default class App {
   constructor(
-    public router?: any,
-    public state: State = new State(),
-    public controller?: Controller,
-    public view?: View,
-    public room?: Room,
+    public router: Router = new Router(),
+    public controller: Controller = new Controller(),
+    public view: View = new View(),
 
+    public state: State = new State(),
+    public room?: Room,
     public inGame: boolean = false,
     ) {}
 
     init() {
       renderCore();
       addHelper();
-      diceRoll();
-      this.setRouter();
+      this.router.setRoutes();
+      this.createRoomListener();
+      this.createStartListener();
+      this.startGameListener();
     }
 
-    setRouter() {
-      this.router = new Router();
-      this.router.setRoutes();
+    startGameListener() {
+      if (window.location.pathname == "/game") {
+        renderGamePage();
+        this.view.state = this.state;
+        this.view.state.initialState();
+        this.view.init();
+      }
     }
+    
+    createIntroListener() {
+      document.addEventListener("click", (e) => {
+        if ((e.target as HTMLButtonElement).classList.contains(".start__btn")) {
+          e.preventDefault();
+          console.log("cliсk")
+        }
+      })
+    }
+
+    createRoomListener() {
+      document.addEventListener("click", (e) => {
+        if ((e.target as HTMLButtonElement).classList.contains(".create__btn")) {
+          e.preventDefault()
+          this.createRoom();
+        }
+      })
+    }
+
+    createRoom() {
+      const room = new Room(); // создаём комнату на сервере
+      this.room = room;
+      room.init();
+    }
+
+    createStartListener() {
+      document.addEventListener("click", e => {
+        if ((e.target as HTMLButtonElement).classList.contains(".start__game")) {
+          e.preventDefault()
+          this.startGame();
+        }
+      })
+    }
+
+
 
     setPlayerNumber() {
       // add to button listener
@@ -39,11 +80,6 @@ export default class App {
     }
 
     startGame() {
-      this.state.initialState();
-      // hand over map object to render
-      this.view = new View(this.state); // render map and UI for every player
-      this.view.init();
-      // hand over view and state to controller
-      this.controller = new Controller(this.view, this.state); // add listeners that set the state condition
+      console.log("im working!")
     }
 }

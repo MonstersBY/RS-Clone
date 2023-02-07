@@ -1,11 +1,23 @@
-import State from "./State/State";
+import State from "../backend/State/State";
 
 export default class Room {
   constructor(
-    state: State,
+    // private params: string,
+    public state?: State,
     ) {}
 
-  init() {}
+  init() {
+    this.state = new State();
+    this.addStartListerer();
+  }
+
+  addStartListerer() {
+    // document.addEventListener("click", e => {
+    //   if ((e.target as Element).classList.contains(".start__game")) {
+    //     app.startGame();
+    //   }
+    // })
+  }
 
   getRandomHash() {}
 

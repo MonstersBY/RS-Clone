@@ -234,3 +234,30 @@
     background: rgb(231, 212, 138);
   }
 }
+
+.harbor {
+  &_all{
+    outline: 3px solid red;
+    // background: url("./assets/images/icons/icon_colonist_coin.svg");
+  }
+  &_brick{
+    outline: 3px solid rgb(202, 92, 19);
+    // background: url("./assets/images/icons/resourses/resourse-brick.svg");
+  }
+  &_grain{
+    outline: 3px solid rgb(230, 190, 28);
+    // background: url("./assets/images/icons/resourses/resourse-grain.svg");
+  }
+  &_lumber{
+    outline: 3px solid rgb(15, 124, 48);
+    // background: url("./assets/images/icons/resourses/resourse-lumber.svg");
+  }
+  &_ore{
+    outline: 3px solid rgb(134, 148, 162);
+    // background: url("./assets/images/icons/resourses/resourse-ore.svg");
+  }
+  &_wool{
+    outline: 3px solid white;
+    // background: url("./assets/images/icons/resourses/resourse-wool.svg");
+  }
+}

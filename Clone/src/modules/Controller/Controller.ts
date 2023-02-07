@@ -1,21 +1,21 @@
 import View from "../View/View";
-import State from "../State/State";
-import Timer from "./Timer";
-import GameMaster from "./GameMaster";
+import Room from "../Room";
+// import Timer from "./Timer";
+import GameMaster from "../../backend/GameMaster";
 
 export default class Controller {
   constructor(
-    public view: View,
-    public state: State,
+    // public view: View,
+    // public room: Room,
 
-    private timer: Timer = new Timer(),
+    // private timer: Timer = new Timer(),
     private master: GameMaster = new GameMaster(),
     ) {}
 
     startGame() {}
 
     startTurn() {
-      this.timer.setDiceTimer();
+      // this.timer.setDiceTimer();
     }
 
     setFoundingStage() {}

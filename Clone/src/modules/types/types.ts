@@ -3,27 +3,44 @@ interface IHex {
   type: string,
   token: number,
   settlement_N: ISettlement | boolean,
-  road_N: number | boolean,
-  road_W: number | boolean,
-  road_S: number | boolean,
+  road_N: IRoad | boolean,
+  road_W: IRoad | boolean,
+  road_S: IRoad | boolean,
   settlement_S: ISettlement | boolean,
   robber: boolean,
-  harbor: boolean,
+  harbor: string | boolean,
 }
 
 interface ISettlement {
-  player: number,
-  type: string,
+  id: string,
+  player: string | boolean,
+  city: boolean,
+  nextHexes: Array<number>,
+  nextNodes: Array<string>,
+}
+
+interface IRoad {
+  id: string,
+  player: string | boolean,
+  nextNodes: Array<string>,
 }
 
 // Player
 interface IPlayerInfo {
   id: number,
+  longestRoad: boolean,
+  largestArmy: boolean,
+
   hand: IPlayerHand,
-  settlements: IPlayerSettlements,
-  harbors: IPlayerHarbors,
-  roads: IPlayerRoads,
-  army: number,
+  harbors: Array<string>,
+  hexes: Array<number>,
+
+  settlements: Array<string>,
+  cities: Array<string>,
+  roads:  Array<string>,
+
+  roadChain: number,
+  armySize: number,
 }
 
 interface IPlayerHand {
@@ -42,33 +59,9 @@ interface IResources {
 interface IDevCards {
   victory: number,
   knights: number,
-  breakthrough: {
-    road: number,
-    plenty: number,
-    monopoly: number,
-  }
-}
-
-interface IPlayerSettlements {
-  [settlement: number]: {
-    isCity: boolean,
-    adjacent: [number, number, number],
-  }
-}
-
-interface IPlayerRoads {
-  [road: number]: {
-    adjacent: [number, number],
-  }
-}
-
-interface IPlayerHarbors {
-  all: boolean,
-  brick: boolean,
-  grain: boolean,
-  lumber: boolean,
-  ore: boolean,
-  wool: boolean, 
+  road: number,
+  plenty: number,
+  monopoly: number,
 }
 
 function getElementBySelector<T extends HTMLElement>(
