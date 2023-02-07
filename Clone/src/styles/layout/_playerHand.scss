@@ -1,5 +1,6 @@
 .player-hand {
   width: 19vh;
+  margin-bottom: 1rem;
   &__title {
     @include font(1.6rem, 120%, 700);
     text-transform: uppercase;

@@ -1,9 +1,9 @@
-import Router from "./Router";
+// import Router from "./Router";
 import Room from "./Room";
 import State from "./State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
-import { renderCore } from "./StartPage/templates/core";
+// import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import { diceRoll } from "./diceRoll/diceRoll";
 import { burger } from "./hamburger/burger";
