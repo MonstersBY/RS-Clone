@@ -1,15 +1,18 @@
 import "./styles/main.scss";
 import { toModePage } from "./modules/StartPage/templates/renderModePage";
 import { toRoomPage } from "./modules/StartPage/templates/renderRoomPage";
+import {changeHeader} from "./modules/StartPage//templates/renderIngamePage"
 import helperNode from "./modules/helper/helper";
 import { diceRoll } from "./modules/diceRoll/diceRoll";
+import { burger } from './modules/hamburger/burger';
 
 
 document.addEventListener("DOMContentLoaded", () => {
   toModePage();
   toRoomPage();
   diceRoll();
-
+  changeHeader();
+  burger(".header-menu",".menu__list",".hamburger", ".burger__logo", ".overlay");
 });
 
 document.body.insertAdjacentHTML("beforeend", helperNode);
