@@ -21,7 +21,7 @@ export default class App {
     ) {}
 
     init() {
-      renderCore();
+      // renderCore();
       addHelper();
       diceRoll();
       changeHeader();
@@ -32,14 +32,14 @@ export default class App {
          ".burger__logo",
          ".overlay"
        );
-      this.setRouter();
+      // this.setRouter();
     }
 
-    setRouter() {
+   /*  setRouter() {
       this.router = new Router();
       this.router.setRoutes();
     }
-
+ */
     setPlayerNumber() {
       // add to button listener
     }
