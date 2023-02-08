@@ -209,7 +209,7 @@ export const room = `
         </div>
         <div class="chat__messages">
             <div class="message__post">
-                <img src="assets/images/icons/icon_player.svg" alt="" class="nick">
+                <img src="assets/images/icons/icon_player.svg" alt="player icon" class="nick">
                 <b>some:</b> Hi
             </div>
         </div>

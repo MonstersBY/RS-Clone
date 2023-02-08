@@ -1,3 +1,9 @@
+.main__wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .construction-cost {
   @include font(1.8vh, 130%);
   position: relative;
