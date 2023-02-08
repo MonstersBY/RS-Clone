@@ -89,6 +89,8 @@
       <span class="line"></span>
       <span class="line"></span>
     </div>
+    <button class="btn trade__btn select">Trade</button>
+    <button class="btn trade__btn sea-trade__btn">Sea Trade</button>
   </header>
   <main class="main-content">
     <div class="container main__wrapper">
@@ -361,7 +363,76 @@
             </div>
           </div>
         </div>
-
+      </div>
+      <div class="modal-trade hidden">
+        <div class="modal-trade__wrap">
+          <div class="trade-container__wrap flex-row">
+            <div class="trade-offer">
+              <h4 class="trade__subtitle">Give</h4>
+              <div class="player-hand__resources">
+                <div id="player-hand_lumber" class="resource__container player-hand__resource empty flex-bs">
+                  <div class="arrow_left"></div>
+                  <div class="resource-icon icon-lumber"></div>
+                  <div id="hand-counter_lumber" class="resource-counter flex-bs">1</div>
+                </div>
+                <div id="player-hand_brick" class="resource__container player-hand__resource flex-bs empty invisible">
+                  <div class="arrow_left"></div>
+                  <div class="resource-icon icon-brick"></div>
+                  <div id="hand-counter_brick" class="resource-counter invisible flex-bs">0</div>
+                </div>
+                <div id="player-hand_wool" class="resource__container player-hand__resource flex-bs empty invisible">
+                  <div class="arrow_left"></div>
+                  <div class="resource-icon icon-wool"></div>
+                  <div id="hand-counter_wool" class="resource-counter invisible flex-bs">0</div>
+                </div>
+                <div id="player-hand_grain" class="resource__container player-hand__resource empty flex-bs">
+                  <div class="arrow_left"></div>
+                  <div class="resource-icon icon-grain"></div>
+                  <div id="hand-counter_grain" class="resource-counter flex-bs">2</div>
+                </div>
+                <div id="player-hand_ore" class="resource__container player-hand__resource flex-bs empty invisible">
+                  <div class="arrow_left"></div>
+                  <div class="resource-icon icon-ore"></div>
+                  <div id="hand-counter_ore" class="resource-counter invisible flex-bs">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="trade-wish">
+              <h4 class="trade__subtitle">Get</h4>
+              <div class="player-hand__resources">
+                <div id="player-hand_lumber" class="resource__container player-hand__resource empty flex-bs">
+                  <div class="resource-icon icon-lumber"></div>
+                  <div id="hand-counter_lumber" class="resource-counter flex-bs">1</div>
+                  <div class="arrow_right"></div>
+                </div>
+                <div id="player-hand_brick" class="resource__container player-hand__resource flex-bs empty">
+                  <div class="resource-icon icon-brick"></div>
+                  <div id="hand-counter_brick" class="resource-counter invisible flex-bs">1</div>
+                  <div class="arrow_right"></div>
+                </div>
+                <div id="player-hand_wool" class="resource__container player-hand__resource flex-bs empty">
+                  <div class="resource-icon icon-wool"></div>
+                  <div id="hand-counter_wool" class="resource-counter invisible flex-bs">1</div>
+                  <div class="arrow_right"></div>
+                </div>
+                <div id="player-hand_grain" class="resource__container player-hand__resource empty flex-bs">
+                  <div class="resource-icon icon-grain"></div>
+                  <div id="hand-counter_grain" class="resource-counter flex-bs">1</div>
+                  <div class="arrow_right"></div>
+                </div>
+                <div id="player-hand_ore" class="resource__container player-hand__resource flex-bs empty">
+                  <div class="resource-icon icon-ore"></div>
+                  <div id="hand-counter_ore" class="resource-counter invisible flex-bs">1</div>
+                  <div class="arrow_right"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="trade__btns flex-row">
+            <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon">
+            <img src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
+          </div>
+        </div>
       </div>
     </div>
   </main>
