@@ -14,6 +14,7 @@ export default class App {
     public view: View = new View(),
 
     public state: State = new State(),
+
     public room?: Room,
     public inGame: boolean = false,
     ) {}
@@ -68,8 +69,6 @@ export default class App {
         }
       })
     }
-
-
 
     setPlayerNumber() {
       // add to button listener

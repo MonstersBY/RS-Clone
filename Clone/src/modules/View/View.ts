@@ -1,6 +1,6 @@
 import State from "../../backend/State/State";
 import Room from "../Room";
-import { IHex } from "../types/types";
+import { IHex, ISettlement } from "../types/types";
 import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
 
@@ -21,7 +21,7 @@ export default class View {
       const mapContainer = document.querySelector("#map");
       if (mapContainer) {
         mapContainer.innerHTML = "";
-        const mapTree = this.renderer?.getMapAsNodeTree(this.state?.getFullMapObject() as IHex[]) as string;
+        const mapTree = this.renderer?.getMapAsNodeTree(this.state?.getFullMapObject() as Array<IHex>) as string;
         mapContainer?.insertAdjacentHTML("beforeend", mapTree);
       }
     }

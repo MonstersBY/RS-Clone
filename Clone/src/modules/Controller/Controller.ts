@@ -12,6 +12,25 @@ export default class Controller {
     private master: GameMaster = new GameMaster(),
     ) {}
 
+    init() {
+      this.addNextListener();
+    }
+
+    addNextListener() {
+      const mapContainer = document.querySelector("#map");
+      mapContainer?.addEventListener("click", e => {
+        if (e.target instanceof HTMLDivElement) {
+          if (e.target.classList.contains("hex_node")) {
+            e.target.classList.add("active");
+            const next = e.target.dataset.next?.split(",");
+            next?.forEach((e) => {
+              document.getElementById(`${e}`)?.classList.add("active");
+            })
+          }
+        }
+      })
+    }
+
     startGame() {}
 
     startTurn() {

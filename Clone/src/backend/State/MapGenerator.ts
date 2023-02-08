@@ -1,3 +1,4 @@
+import { IHex, IRoad, ISettlement } from "../../modules/types/types";
 import newbieMap from "./newbieMap"
 
 export default class MapGenerator {
@@ -9,6 +10,7 @@ export default class MapGenerator {
     ) {}
 
     public getNewbieMap() {
+      // this.checkMapObject(newbieMap);
       return newbieMap;
     }
 
@@ -38,6 +40,79 @@ export default class MapGenerator {
       }
 
       return newMap;
+    }
+
+    checkMapObject(map: any) {
+
+      function isSettlement(set: ISettlement | false): set is ISettlement {
+        const node = set as ISettlement;
+        return node.player === false && Boolean(node.id) && node.city === false && Boolean(node.nextHexes instanceof Array) && Boolean(node.nextNodes instanceof Array);
+      }
+
+      function isRoad(set: IRoad | false): set is IRoad {
+        const node = set as IRoad;
+        return node.player === false && Boolean(node.id) && Boolean(node.nextNodes instanceof Array);
+      }
+
+      map.forEach((hex: any) => {
+        const expect = ["type", "token", "settlement_N", "road_N", "road_W", "road_S", "settlement_S", "robber", "harbor"].sort().join('');
+        const have = Object.getOwnPropertyNames(hex).sort().join('');
+
+        if (expect == have) {
+          const settlement = ["id", "player", "city", "nextHexes", "nextNodes"].sort().join('');
+          if (hex.settlement_N !== false) {
+            const settlementN = Object.keys(hex.settlement_N).sort().join('');
+            console.log(isSettlement(hex.settlement_N));
+            if (settlement != settlementN) {
+              console.log("Error in settlement_N", hex);
+              console.log(expect);
+              console.log(have);
+            }
+          }
+          if (hex.settlement_S !== false) {
+            const settlementS = Object.keys(hex.settlement_S).sort().join('');
+            console.log(isSettlement(hex.settlement_S));
+            if (settlement != settlementS) {
+              console.log("Error in settlement_S", hex);
+              console.log(expect);
+              console.log(have);
+            }
+          }
+
+          const road = ["id", "player", "nextNodes"].sort().join('');
+          if (hex.road_N !== false) {
+            const roadN = Object.keys(hex.road_N).sort().join('');
+            console.log(isRoad(hex.road_N));
+            if (road != roadN) {
+              console.log("Error in road_N", hex);
+              console.log(road);
+              console.log(roadN);
+            }
+          }
+          if (hex.road_W !== false) {
+            const roadW = Object.keys(hex.road_W).sort().join('');
+            console.log(isRoad(hex.road_W));
+            if (road != roadW) {
+              console.log("Error in road_W", hex);
+              console.log(road);
+              console.log(roadW);
+            }
+          }
+          if (hex.road_S !== false) {
+            const roadS = Object.keys(hex.road_S).sort().join('');
+            console.log(isRoad(hex.road_S));
+            if (road != roadS) {
+              console.log("Error in road_S", hex);
+              console.log(road);
+              console.log(roadS);
+            }
+          }
+        } else {
+          console.log("Error in hex", hex);
+          console.log(expect);
+          console.log(have);
+        }
+      })
     }
 
     private randomNumber(min: number, max: number) {

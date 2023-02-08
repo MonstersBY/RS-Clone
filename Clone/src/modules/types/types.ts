@@ -2,18 +2,18 @@
 interface IHex {
   type: string,
   token: number,
-  settlement_N: ISettlement | boolean,
-  road_N: IRoad | boolean,
-  road_W: IRoad | boolean,
-  road_S: IRoad | boolean,
-  settlement_S: ISettlement | boolean,
+  settlement_N: ISettlement | false,
+  road_N: IRoad | false,
+  road_W: IRoad | false,
+  road_S: IRoad | false,
+  settlement_S: ISettlement | false,
   robber: boolean,
-  harbor: string | boolean,
+  harbor: string | false,
 }
 
 interface ISettlement {
   id: string,
-  player: string | boolean,
+  player: string | false,
   city: boolean,
   nextHexes: Array<number>,
   nextNodes: Array<string>,
@@ -21,7 +21,7 @@ interface ISettlement {
 
 interface IRoad {
   id: string,
-  player: string | boolean,
+  player: string | false,
   nextNodes: Array<string>,
 }
 
@@ -74,4 +74,4 @@ function getElementBySelector<T extends HTMLElement>(
   return element;
 }
 
-export { IHex, IPlayerInfo, getElementBySelector}
+export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand}
