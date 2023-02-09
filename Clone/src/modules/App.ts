@@ -1,14 +1,13 @@
-// import Router from "./Router";
+import Router from "./Router";
 import Room from "./Room";
 import State from "./State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
-// import { renderCore } from "./StartPage/templates/core";
+import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import { diceRoll } from "./diceRoll/diceRoll";
 import { burger } from "./hamburger/burger";
 import { changeHeader } from "./StartPage/templates/renderIngamePage";
-import MapRenderer from "./View/MapRenderer";
 
 export default class App {
   constructor(
@@ -22,7 +21,7 @@ export default class App {
     ) {}
 
     init() {
-      // renderCore();
+      renderCore();
       addHelper();
       diceRoll();
       changeHeader();
@@ -33,15 +32,15 @@ export default class App {
          ".burger__logo",
          ".overlay"
       );
-      
-      // this.setRouter();
+
+      this.setRouter();
     }
 
-   /*  setRouter() {
+    setRouter() {
       this.router = new Router();
       this.router.setRoutes();
     }
- */
+
     setPlayerNumber() {
       // add to button listener
     }
