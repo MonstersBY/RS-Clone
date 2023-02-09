@@ -1,20 +1,20 @@
 .game {
-  position:relative;
+  // position:relative;
   width: auto;
   height: 5rem;
 }
 
 .dice__container {
   position:absolute;
-  bottom: 0;
+  bottom: 1.5rem;
   display: inline-block;
 }
 
 .dice__container_one {
-  right:5.5rem;
+  right: 28.5rem;
 }
 .dice__container_two {
-  right: 0.5rem;
+  right: 23.5rem;
 }
 .dice {
   position: relative;

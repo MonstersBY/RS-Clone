@@ -1,3 +1,12 @@
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 1.2vh $color-background-dark;
+  }
+  100% {
+    box-shadow: 0 0 1.4vh 1.5vh $color-primary-light;
+  }
+}
+
 .map__road-1 {
   top: 52.625%;
   left: 22.625%;

@@ -22,6 +22,8 @@ export const core = `
       <span class="line"></span>
       <span class="line"></span>
     </div>
+    <button class="btn trade__btn select hidden">Trade</button>
+    <button class="btn trade__btn sea-trade__btn hidden">Sea Trade</button>
   <div class="header__profile">
       <div class="header-login__wrapper">
           <div class="login__container flex-row">
