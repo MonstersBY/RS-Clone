@@ -7,7 +7,7 @@ export default class Room {
 
   init() {
     // const room = this.getRandomHash()
-    
+
     this.AllSockets()
     this.ChatMessages()
     this.CreateMessage()
@@ -28,6 +28,8 @@ export default class Room {
       text.innerHTML = `Room: ${room}`;
       document.querySelector('.room__header')?.append(text)
     })
+
+    // Users is array
 
     socket.on('all-user-room', users => {
       const need = users.filter((user: { room: string | null; }) => user.room === room)
@@ -69,7 +71,7 @@ export default class Room {
                   </div>`
         list?.appendChild(div)
       }
-      
+
     })
   }
 
@@ -116,5 +118,5 @@ export default class Room {
     <b>${user}:</b> ${message}`;
     document.querySelector('.chat__messages')?.appendChild(div)
   }
-  
+
 }
