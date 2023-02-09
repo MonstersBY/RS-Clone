@@ -9,18 +9,20 @@ import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import { diceRoll } from "./diceRoll/diceRoll";
 import { burger } from "./hamburger/burger";
 import { changeHeader } from "./StartPage/templates/renderIngamePage";
+import { costListener } from "./GameListeners/costListener";
 
 export default class App {
   constructor(
     public router?: any,
     public state: State = new State(),
     public controller?: Controller,
-    public view?: View,
+    public view: View = new View(),
 
     public inGame: boolean = false
   ) {}
 
   init() {
+    // this.startGameListener();
     // renderCore();
     addHelper();
     diceRoll();
@@ -32,16 +34,17 @@ export default class App {
       ".burger__logo",
       ".overlay"
     );
+    costListener();
     // this.setRouter();
-    // this.CreateRoom();
+    this.CreateRoom();
     this.CreateMode();
   }
 
-  /* setRouter() {
+ /*  setRouter() {
     this.router = new Router();
     this.router.setRoutes();
-  }
- */
+  } */
+
   CreateRoom() {
     const room = new Room();
     room.init();
@@ -59,6 +62,15 @@ export default class App {
   setGameMode() {
     // add to button listener
   }
+/*   startGameListener() {
+    if (window.location.pathname == "/game") {
+      // renderGamePage();
+
+      this.view.state = this.state;
+      this.view.state.initialState();
+      this.view.init();
+    }
+  } */
 
   startGame() {
     this.state.initialState();

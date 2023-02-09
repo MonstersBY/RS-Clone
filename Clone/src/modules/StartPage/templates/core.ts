@@ -105,6 +105,7 @@ export const core = `
       </div>
   </div>
   </footer>
+  <div id="map"></div>
 `;
 
 export const renderCore = () => {
