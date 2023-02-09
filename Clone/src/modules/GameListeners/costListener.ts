@@ -3,6 +3,6 @@ export const costListener = () => {
   const constructionBlock = document.querySelector(".construction-cost");
 
   costBtn?.addEventListener("click", () => {
-    constructionBlock?.classList.toggle("cost__transform");
+    constructionBlock?.classList.toggle("cost");
   })
 }

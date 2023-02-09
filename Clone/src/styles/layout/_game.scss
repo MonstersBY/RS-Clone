@@ -7,7 +7,7 @@
 .construction-cost {
   @include font(1.8vh, 130%);
   @extend %transition;
-  position: relative;
+  position: absolute;
   left: -150%;
   bottom: 0;
   width: 38vh;
@@ -24,8 +24,8 @@
   }
 }
 
-.cost__transform {
-  left: 0;
+.cost {
+  left: 13%;
 }
 
 .construction-content {
