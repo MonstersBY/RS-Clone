@@ -8,6 +8,7 @@ import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import { diceRoll } from "./diceRoll/diceRoll";
 import { burger } from "./hamburger/burger";
 import { changeHeader } from "./StartPage/templates/renderIngamePage";
+import MapRenderer from "./View/MapRenderer";
 
 export default class App {
   constructor(
@@ -31,7 +32,8 @@ export default class App {
          ".hamburger",
          ".burger__logo",
          ".overlay"
-       );
+      );
+      
       // this.setRouter();
     }
 
