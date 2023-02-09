@@ -22,7 +22,7 @@ export default class App {
     ) {}
 
     init() {
-      // renderCore();
+      renderCore();
       addHelper();
       diceRoll();
       changeHeader();
@@ -33,15 +33,15 @@ export default class App {
          ".burger__logo",
          ".overlay"
        );
-      // this.setRouter();
+      this.setRouter();
       this.CreateRoom()
       this.CreateMode()
     }
 
-   /*  setRouter() {
+    setRouter() {
       this.router = new Router();
       this.router.setRoutes();
-    } */
+    } 
 
     CreateRoom() {
       const room = new Room()
