@@ -114,28 +114,40 @@ export default class State {
       this.diceRoll = roll;
     }
 
-    public setRobber(i: number) {
+    public setRobber(player: IPlayerInfo, id: string) {
+      const i = id.split("_")[1];
       if (this.mapObject) {
         this.mapObject.forEach((hex: IHex) => {
           hex.robber = false;
         })
         this.mapObject[i].robber = true;
       }
+      let roads = [...this.mapObject[i].settlement_N.nextNodes, ...this.mapObject[i].settlement_S.nextNodes];
+      roads = roads.filter(e => e.split("_")[2] !== "W");
+      let settlementsToRob: Array<string> = [];
+      roads.forEach(road => {
+        const hex = road.split("_")[0];
+        const hode = "road_" + road.split("_")[2];
+        settlementsToRob.push(...this.mapObject[hex][hode].nextNodes);
+      })
+      settlementsToRob = [...new Set(settlementsToRob)];
+
+      console.log(settlementsToRob);
     }
 
     public setNewSettlement(player: IPlayerInfo, id: string) { // вызывается дважды !!! ???
       // add to mapObject
       const hex = id.split("_")[0];
       const hode = "settlement_" + id.split("_")[2];
-      this.mapObject[hex][hode].player = player.color;
+      this.mapObject[hex][hode].player = String(player.color);
 
       //block near settlments
-      const nearRoads = this.mapObject[hex][hode].nextNodes;
+      const nearNodes = this.mapObject[hex][hode].nextNodes;
 
       let nearSettlments = [];
-      for (let i = 0; i < nearRoads.length; i++) {
-        const hex = nearRoads[i].split("_")[0];
-        const roadId = "road_" + nearRoads[i].split("_")[2];
+      for (let i = 0; i < nearNodes.length; i++) {
+        const hex = nearNodes[i].split("_")[0];
+        const roadId = "road_" + nearNodes[i].split("_")[2];
         nearSettlments.push(...this.mapObject[hex][roadId].nextNodes);
       }
       const nearSettlmentsSet = new Set(nearSettlments);
@@ -145,33 +157,35 @@ export default class State {
         const hex = nearSettlments[j].split("_")[0];
         const settlmentId = "settlement_" + nearSettlments[j].split("_")[2];
         if (!this.mapObject[hex][settlmentId].player) {
-          this.mapObject[hex][settlmentId] = false;
+          this.mapObject[hex][settlmentId].player = "nobody";
         }
       }
 
       // add to playerInfo
       player.settlements.push(id);
       const nextHexes = this.mapObject[hex][hode].nextHexes;
-      player.hexes.push(nextHexes);
-      player.hexes.sort();
-      player.avalible.push(...nearRoads);
-
-      console.log(player.avalible);
-      this.updateMap();
+      player.hexes.push(...nextHexes);
+      // player.hexes.sort();
+      player.avalible.push(...nearNodes);
+      // console.log(player.avalible);
     }
 
     public setNewCity(player: IPlayerInfo, id: string) {
       // add to mapObject
       const hex = id.split("_")[0];
-      const hode = "settlment_" + id.split("_")[2];
+      const hode = "settlement_" + id.split("_")[2];
       this.mapObject[hex][hode].city = true;
 
       // add to playerInfo
       player.settlements.splice(player.settlements.indexOf(id), 1);
       player.cities.push(id);
       const nextHexes = this.mapObject[hex][hode].nextHexes;
-      player.hexes.push(nextHexes);
-      player.hexes.sort();
+      player.hexes.push(...nextHexes);
+      // player.hexes.sort();
+
+      console.log(player.hexes, "hexes")
+      console.log(player.cities, "cities")
+      console.log(player.settlements, "settlements")
     }
 
     public setNewRoad(player: IPlayerInfo, id: string) {
@@ -180,8 +194,22 @@ export default class State {
       const hode = "road_" + id.split("_")[2];
       this.mapObject[hex][hode].player = player.color;
 
+      const nearNodes = this.mapObject[hex][hode].nextNodes;
+
+      let nearRoads = [];
+      for (let i = 0; i < nearNodes.length; i++) {
+        const hex = nearNodes[i].split("_")[0];
+        const settlementId = "settlement_" + nearNodes[i].split("_")[2];
+        nearRoads.push(...this.mapObject[hex][settlementId].nextNodes);
+      }
+      const nearRoadsSet = new Set(nearRoads);
+      nearRoadsSet.delete(id);
+      nearRoads = [...nearRoadsSet];
+
       // add to playerInfo
       player.roads.push(id);
+      player.avalible.push(...nearRoads, ...nearNodes);
+      // console.log(player.avalible);
     }
 
     calculateRoadChain(player: IPlayerInfo) {
