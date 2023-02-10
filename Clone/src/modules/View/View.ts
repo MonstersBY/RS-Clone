@@ -1,33 +1,34 @@
 import State from "../../backend/State/State";
-import Room from "../Room";
+import Room from "../../backend/Room";
 import { IHex, ISettlement } from "../types/types";
 import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
+import { game } from "../StartPage/templates/gamePage";
 
 export default class View {
   constructor(
     private renderer: MapRenderer = new MapRenderer(),
     private ui?: PlayerInterface, 
-    public state?: State,
     ) {}
 
-    init() {
-      this.renderer = new MapRenderer(this.state?.mapObject);
-      this.ui = new PlayerInterface(this.state?.playersInfo);
-      this.firstRender();
+    init(mapObject: any) {
+      this.renderGamePage();
+      // this.ui = new PlayerInterface(this.state?.playersInfo);
+      this.renderFullMap(mapObject);
     }
 
-    firstRender() {
+    renderGamePage() {
+      document.body.innerHTML = "";
+      document.body.insertAdjacentHTML("beforeend", game);
+    }
+
+    renderFullMap(map: Array<IHex>) {
       const mapContainer = document.querySelector("#map");
       if (mapContainer) {
         mapContainer.innerHTML = "";
-        const mapTree = this.renderer?.getMapAsNodeTree(this.state?.getFullMapObject() as Array<IHex>) as string;
+        const mapTree = this.renderer.getMapAsNodeTree(map as Array<IHex>) as string;
         mapContainer?.insertAdjacentHTML("beforeend", mapTree);
       }
-    }
-
-    renderFullMap() {
-      // hey, renderer, transfer this.state.mapObject object to nodes
     }
 
     renderfullUI(player: number) {

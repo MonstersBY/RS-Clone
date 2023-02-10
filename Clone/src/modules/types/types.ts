@@ -28,12 +28,14 @@ interface IRoad {
 // Player
 interface IPlayerInfo {
   id: number,
+  color: string,
   longestRoad: boolean,
   largestArmy: boolean,
 
   hand: IPlayerHand,
   harbors: Array<string>,
   hexes: Array<number>,
+  avalible: Array<string>,
 
   settlements: Array<string>,
   cities: Array<string>,

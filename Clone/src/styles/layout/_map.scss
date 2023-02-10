@@ -266,3 +266,22 @@
   background: whitesmoke;
   // transform: scale(1.2);
 }
+
+.city {
+  transform: scale(1.5);
+}
+
+.own {
+  &_red {
+    background: red;
+  }
+  &_blue {
+    background: blue;
+  }
+  &_green {
+    background: green;
+  }
+  &_orange {
+    background: orange;
+  }
+}

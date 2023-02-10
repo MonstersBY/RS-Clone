@@ -42,7 +42,7 @@ export default class MapGenerator {
       return newMap;
     }
 
-    checkMapObject(map: any) {
+    private checkMapObject(map: any) {
 
       function isSettlement(set: ISettlement | false): set is ISettlement {
         const node = set as ISettlement;

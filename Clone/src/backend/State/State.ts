@@ -1,84 +1,64 @@
 import { IPlayerInfo, IHex, IPlayerHand } from "../../modules/types/types";
 import MapGenerator from "./MapGenerator"
+import { getEmptyPlayer } from "./EmptyPlayer"
+import View from "../../modules/View/View";
 
 export default class State {
   constructor(
-    public players: number = 4,
+    public view?: View,
+    public playersCount: number = 4,
     public gameMode: string = "newbie",
     public foundingStage: boolean = true,
     public activePlayer: number = 0,
     public diceRoll: [number, number] = [1, 1],
     public playersInfo: Array<IPlayerInfo> = [],
-    public mapObject?: any, //IHex[]
-    private generator: MapGenerator = new MapGenerator(),
+    public mapObject: any = [],
     private HEX_COUNT = 37,
     ) {}
 
-    initialState() {
-      this.generateMap();
-      this.generatePlayers();
+    public initialState() {
+      this.mapObject = this.generateMap(this.gameMode);
+      this.playersInfo = this.generatePlayers(this.playersCount);
+      this.activePlayer = 0;
+      this.foundingStage = true;
     }
 
-    getFullMapObject() {
-      return this.mapObject
+    public updateMap() {
+      this.view?.renderFullMap(this.mapObject);
     }
 
-    generateMap() {
-      if (this.gameMode === "newbie") {
-        this.mapObject = this.generator.getNewbieMap();
-      } else if (this.gameMode === "normal") {
-        this.mapObject = this.generator.getRandomMap();
+    public mainState() {
+      this.foundingStage = false;
+    }
+
+    public getMapObject() {
+      return this.mapObject;
+    }
+
+    private generateMap(mode: string) {
+      const generator = new MapGenerator();
+      return mode === "newbie" ? generator.getNewbieMap() : generator.getRandomMap();
+    }
+
+    private generatePlayers(players: number) {
+      const colors = ["red", "blue", "green", "orange"];
+      const playersInfo = [];
+      for (let i = 0; i < players; i++) {
+        playersInfo.push(getEmptyPlayer(i, colors[i]));
       }
+      return playersInfo;
     }
 
-    generatePlayers() {
-      for (let i = 0; i < this.players; i++) {
-        this.playersInfo.push(this.getEmptyPlayer(i));
-      }
-    }
-
-    private getEmptyPlayer(i: number) {
-      return <IPlayerInfo>{
-        id: i,
-        longestRoad: false,
-        largestArmy: false,
-
-        hand: {
-          resources: {
-            brick: 0,
-            grain: 0,
-            lumber: 0,
-            ore: 0,
-            wool: 0, 
-          },
-          development: {
-            victory: 0,
-            knights: 0,
-            road: 0,
-            plenty: 0,
-            monopoly: 0,
-          },
-        },
-        harbors: [],
-        hexes: [],
-
-        settlements: [],
-        cities: [],
-        roads: [],
-
-        roadChain: 0,
-        armySize: 0,
-      }
-    }
-
-    isWinner(player: IPlayerInfo) {
+    public isWinner(player: IPlayerInfo) {
       let points = 0;
       points = player.longestRoad ? points + 2 : points;
       points = player.largestArmy ? points + 2 : points;
-      player.settlements;
+      points += player.settlements.length;
+      points += player.cities.length * 2;
+      points += player.hand.development.victory;
     }
 
-    public addResourses(dice: number) {
+    public addResoursesThisTurn(dice: number) {
       if (this.mapObject && this.playersInfo) {
 
         let currentHexes = []
@@ -114,11 +94,11 @@ export default class State {
       }
     }
 
-    isDiscount(player: IPlayerInfo, type: string) {
+    public isDiscount(player: IPlayerInfo, type: string) {
       return player.harbors.some(harbor => harbor === type);
     }
 
-    exchangeResourse(player: IPlayerInfo, lose: keyof IPlayerHand, get: keyof IPlayerHand) {
+    public exchangeResourseBank(player: IPlayerInfo, lose: keyof IPlayerHand, get: keyof IPlayerHand) {
       let number = 4;
       if (this.isDiscount(player, "all")) {
         number = 3;
@@ -126,31 +106,94 @@ export default class State {
       if (this.isDiscount(player, lose)) {
         number = 2;
       }
-
       player.hand.resources[lose as keyof typeof player.hand.resources] -= number;
       player.hand.resources[get as keyof typeof player.hand.resources] += 1;
-    } 
+    }
 
-    setDiceRoll(roll: [number, number]) {
+    public setDiceRoll(roll: [number, number]) {
       this.diceRoll = roll;
     }
 
-    setRobber(i: number) {
+    public setRobber(i: number) {
       if (this.mapObject) {
         this.mapObject.forEach((hex: IHex) => {
           hex.robber = false;
         })
-        this.mapObject[i] = true;
+        this.mapObject[i].robber = true;
       }
     }
 
-    setNewSettlment(player: number, ) {}
+    public setNewSettlement(player: IPlayerInfo, id: string) { // вызывается дважды !!! ???
+      // add to mapObject
+      const hex = id.split("_")[0];
+      const hode = "settlement_" + id.split("_")[2];
+      this.mapObject[hex][hode].player = player.color;
 
-    setNewCity(player: number, coords?: Array<number>) {}
+      //block near settlments
+      const nearRoads = this.mapObject[hex][hode].nextNodes;
 
-    setNewRoad(player: number, coords?: Array<number>) {}
+      let nearSettlments = [];
+      for (let i = 0; i < nearRoads.length; i++) {
+        const hex = nearRoads[i].split("_")[0];
+        const roadId = "road_" + nearRoads[i].split("_")[2];
+        nearSettlments.push(...this.mapObject[hex][roadId].nextNodes);
+      }
+      const nearSettlmentsSet = new Set(nearSettlments);
+      nearSettlmentsSet.delete(id);
+      nearSettlments = [...nearSettlmentsSet]
+      for (let j = 0; j < nearSettlments.length; j++) {
+        const hex = nearSettlments[j].split("_")[0];
+        const settlmentId = "settlement_" + nearSettlments[j].split("_")[2];
+        if (!this.mapObject[hex][settlmentId].player) {
+          this.mapObject[hex][settlmentId] = false;
+        }
+      }
 
-    createDefaultPlayer() {
-      return [];
+      // add to playerInfo
+      player.settlements.push(id);
+      const nextHexes = this.mapObject[hex][hode].nextHexes;
+      player.hexes.push(nextHexes);
+      player.hexes.sort();
+      player.avalible.push(...nearRoads);
+
+      console.log(player.avalible);
+      this.updateMap();
     }
+
+    public setNewCity(player: IPlayerInfo, id: string) {
+      // add to mapObject
+      const hex = id.split("_")[0];
+      const hode = "settlment_" + id.split("_")[2];
+      this.mapObject[hex][hode].city = true;
+
+      // add to playerInfo
+      player.settlements.splice(player.settlements.indexOf(id), 1);
+      player.cities.push(id);
+      const nextHexes = this.mapObject[hex][hode].nextHexes;
+      player.hexes.push(nextHexes);
+      player.hexes.sort();
+    }
+
+    public setNewRoad(player: IPlayerInfo, id: string) {
+      // add to mapObject
+      const hex = id.split("_")[0];
+      const hode = "road_" + id.split("_")[2];
+      this.mapObject[hex][hode].player = player.color;
+
+      // add to playerInfo
+      player.roads.push(id);
+    }
+
+    calculateRoadChain(player: IPlayerInfo) {
+      if (player.roads.length > 4) {
+        // better start from top-left
+      }
+    }
+
+    calculateArmySize(player: IPlayerInfo) {
+      if (player.armySize > 3) {
+        // ???
+      }
+    }
+
 }
