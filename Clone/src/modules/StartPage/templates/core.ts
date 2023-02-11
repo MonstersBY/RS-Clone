@@ -64,7 +64,7 @@ export const core = `
       </div>
   </div>
   </header>
-  <main class="main-content" >
+  <main class="main-content">
     <div class="container" id="main"></div>
   </main>
   <footer class="footer">
@@ -105,7 +105,6 @@ export const core = `
       </div>
   </div>
   </footer>
-  <div id="map"></div>
 `;
 
 export const renderCore = () => {

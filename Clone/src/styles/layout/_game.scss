@@ -23,11 +23,9 @@
     text-align: center;
   }
 }
-
 .cost {
   left: 13%;
 }
-
 .construction-content {
   &__wrap {
     display: flex;
@@ -36,13 +34,11 @@
     gap: 0.3rem;
   }
 }
-
 .construction__btn {
   @include font(1.6rem, 120%, 700);
   width: auto;
   padding: 0.5rem;
   height: 5rem;
-  margin: 2rem 10%;
   background-color: $color-btn-primary;
   filter: drop-shadow(2px 4px 4px rgba(20,20,20,0.4));
    &:hover {

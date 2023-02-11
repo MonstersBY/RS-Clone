@@ -1,14 +1,14 @@
 import Router from "./Router";
 import Room from "./Room";
 import Mode from "./Mode";
-import State from "./State/State";
+import State from "./backend/State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import { diceRoll } from "./diceRoll/diceRoll";
 import { burger } from "./hamburger/burger";
-import { changeHeader } from "./StartPage/templates/renderIngamePage";
+import { modificatePage } from "./StartPage/templates/modificateIngamePage";
 import { costListener } from "./GameListeners/costListener";
 
 export default class App {
@@ -22,11 +22,11 @@ export default class App {
   ) {}
 
   init() {
-    // this.startGameListener();
-    // renderCore();
+    this.addGameListener();
+    renderCore();
     addHelper();
     diceRoll();
-    changeHeader();
+    modificatePage();
     burger(
       ".header-menu",
       ".menu__list",
@@ -34,16 +34,16 @@ export default class App {
       ".burger__logo",
       ".overlay"
     );
-    costListener();
-    // this.setRouter();
+    // costListener();
+    this.setRouter();
     this.CreateRoom();
     this.CreateMode();
   }
 
- /*  setRouter() {
+  setRouter() {
     this.router = new Router();
     this.router.setRoutes();
-  } */
+  }
 
   CreateRoom() {
     const room = new Room();
@@ -62,9 +62,20 @@ export default class App {
   setGameMode() {
     // add to button listener
   }
-/*   startGameListener() {
+
+  addGameListener() {
+    if (window.location.pathname === "/game") {
+      this.state.view = this.view;
+      this.state.initialState();
+
+      this.view.init(this.state.getMapObject());
+      if(this.controller) this.controller.state = this.state;
+      this.controller?.init();
+    }
+  }
+ /*  startGameListener() {
     if (window.location.pathname == "/game") {
-      // renderGamePage();
+      renderGamePage();
 
       this.view.state = this.state;
       this.view.state.initialState();
@@ -72,12 +83,12 @@ export default class App {
     }
   } */
 
-  startGame() {
+  /* startGame() {
     this.state.initialState();
     // hand over map object to render
     this.view = new View(this.state); // render map and UI for every player
     this.view.init();
     // hand over view and state to controller
     this.controller = new Controller(this.view, this.state); // add listeners that set the state condition
-  }
+  } */
 }
