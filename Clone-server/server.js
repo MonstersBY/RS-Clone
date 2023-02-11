@@ -10,7 +10,7 @@ const io = require('socket.io')(http, {
 const port = process.env.PORT || 3000;
 
 let users = []
-let rooms = []
+let allrooms = []
 
 io.on('connection', (socket) => {
     // console.log(`User connected ${socket.id}`);
@@ -28,7 +28,19 @@ io.on('connection', (socket) => {
         }
         users.push(user)
         if(user.room){
-            if (!rooms.includes(room)) rooms.push(room)
+            const rooms = {
+                room,
+                count: 0,
+            }
+            const id = allrooms.findIndex(name => name.room === room)
+            if (id == -1) {
+                // rooms.count++
+                console.log(rooms);
+                allrooms.push(rooms)
+                console.log(allrooms);
+            } else {
+                // allrooms[id].count++
+            }
             console.log('room: '+ room);
             socket.join(room)
             socket.emit('create-room', room)
@@ -36,7 +48,7 @@ io.on('connection', (socket) => {
         }
 
     })
-    io.emit('room-list', rooms)
+    io.emit('room-list', allrooms)
 
     // console.log(io.sockets.adapter.rooms);
 
@@ -49,11 +61,20 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         const index = users.findIndex(user => user.id === socket.id)
-        
         if (index !== -1) {
-
+            // for (let obj of allrooms) {
+            //     if (obj.room === users[index].room) {
+            //         obj.count--
+            //         break
+            //     }
+            // }
+            // const delRoom = allrooms.findIndex(room => room.count === 0)
+            // if (delRoom !== -1) {
+            //     allrooms.splice(index, 1);
+            // }
             users.splice(index, 1);
         }
+        console.log(allrooms);
         // console.log(`Socket disconnect! ${socket.id}`);
     });
 });

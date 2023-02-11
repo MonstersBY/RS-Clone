@@ -47,7 +47,7 @@ export default class Mode {
             <img src="assets/images/icons/icon_gamemode_base.svg" alt="map icon" class="ranked-card__img">
           </div>
           <div class="ranked-card__text">
-            <h3 class="ranked-card__title">Room: <span class="room-name">${rooms[i]}</span></h3>
+            <h3 class="ranked-card__title">Room: <span class="room-name">${rooms[i].room}</span></h3>
             <div class="ranked-card__link">
               <a href="#" class="link login__link">Log in to play</a>
             </div>
@@ -88,6 +88,8 @@ export default class Mode {
       const target = e.target as Element
       if(!target.classList.contains('ranked-card')) return
       const room = target.querySelector('.room-name')?.innerHTML
+      console.log(room);
+      
       if (room) localStorage.setItem('Room', room)
     })
   }
