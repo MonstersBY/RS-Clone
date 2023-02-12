@@ -9,7 +9,8 @@ export default class State {
     public activePlayer: number = 0,
     public diceRoll: number | undefined = undefined,
     public playersInfo?: Array<IPlayerInfo>,
-    public mapObject?: Array<IHex>,
+    // public mapObject?: Array<IHex>,
+    public mapObject?: any,
     private generator: MapGenerator = new MapGenerator(),
     ) {}
 

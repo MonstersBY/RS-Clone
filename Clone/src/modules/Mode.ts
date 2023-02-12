@@ -27,7 +27,7 @@ export default class Mode {
   }
 
   CreateName() {
-    
+
   }
 
   RoomList() {
@@ -79,7 +79,7 @@ export default class Mode {
   CheckRoom() {
     const CreateRoom = document.getElementById('create-room-bot');
     CreateRoom?.addEventListener('click', () => {
-        socket.emit('getRooms')  
+        socket.emit('getRooms')
     })
   }
 
@@ -91,5 +91,5 @@ export default class Mode {
       if (room) localStorage.setItem('Room', room)
     })
   }
-  
+
 }

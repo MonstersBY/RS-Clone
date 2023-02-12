@@ -64,7 +64,7 @@ export const core = `
       </div>
   </div>
   </header>
-  <main class="main-content" >
+  <main class="main-content">
     <div class="container" id="main"></div>
   </main>
   <footer class="footer">
