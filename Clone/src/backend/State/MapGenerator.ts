@@ -115,12 +115,12 @@ export default class MapGenerator {
       })
     }
 
-    private randomNumber(min: number, max: number) {
+    public randomNumber(min: number, max: number) {
       let number = min + Math.random() * (max + 1 - min);
       return Math.floor(number);
     }
 
-    private shuffle(array: Array<any>) {
+    public shuffle(array: Array<any>) {
       for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];

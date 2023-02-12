@@ -20,13 +20,14 @@ export default class Controller {
     this.player1 = this.state?.playersInfo[0];
     this.map = document.getElementById("map") as HTMLDivElement;
     const buttons = `
-    <div style="position: absolute; top: 0; left: 0; display: flex; height: 30px; gap: 20px;">
+    <div style="position: absolute; top: 0; left: 0; display: flex; flex-direction: column; height: 30px; gap: 20px;">
     <button id="first-set">first-set<button>
     <button id="refresh">refresh<button>
     <button id="build-road">build-road<button>
     <button id="build-settlement">build-settlement<button>
     <button id="build-city">build-city<button>
     <button id="robber">robber<button>
+    <button id="random-number">random-number<button>
     </div>
     `
     document.body.insertAdjacentHTML("afterbegin", buttons);
@@ -36,7 +37,13 @@ export default class Controller {
     this.addSettlementListener();
     this.addCityListener();
     this.addRobberListener();
+
+    // this.addRandomListener();
   }
+
+  // addRandomListener() {
+  //   document.getElementById("random-number")?.addEventListener("click", () => {console.log(this.state?.chooseRandomResourse())} )// , { once: true }
+  // }
 
   addBuildFirstSettlementListener() {
     document.getElementById("first-set")?.addEventListener("click", this.buildFirstSettlementMode.bind(this))// , { once: true }
@@ -60,6 +67,21 @@ export default class Controller {
 
   addRobberListener() {
     document.getElementById("robber")?.addEventListener("click", () => { this.setRobber(this.player1 as IPlayerInfo); })
+  }
+
+  addCardsListener() {
+    document.getElementById("develop-card-list")?.addEventListener("click", (e) => {
+      if (e.target instanceof HTMLDivElement && e.target.classList.contains("knight")) {
+        this.playKnightCard(this.player1 as IPlayerInfo);
+      }
+    })// , { once: true }
+  }
+
+  playKnightCard(player: IPlayerInfo) {
+    player.hand.development.knights -= 1;
+    player.armySize += 1;
+    this.state?.calculateArmySize();
+    this.setRobber(player);
   }
 
   // addAvaliableListener(player: IPlayerInfo) {
@@ -161,15 +183,28 @@ export default class Controller {
   }
 
   setRobber(player: IPlayerInfo) {
+    //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
     this.map?.addEventListener("click", (e) => {
       if (e.target instanceof HTMLDivElement && e.target.classList.contains("hex")) {
-        this.state?.setRobber(this.player1 as IPlayerInfo, e.target.id);
+        const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, e.target.id);
         this.state?.updateMap();
+        settlementsToRob?.forEach(e => {
+          const settlement = document.getElementById(e) as HTMLDivElement;
+          if (settlement.classList.contains("own")
+          && !settlement.classList.contains("own_nobody")
+          && !settlement.classList.contains(`own_${player.color}`)){
+            settlement.classList.add("active");
+            settlement.addEventListener("click", e => {
+              this.state?.transferOneToAnother(player, settlement.classList[3])
+            }, {once: true});
+          }
+        })
       }
     })
   }
 
-  turnTransfer() {}
+
+  buyDevelopCard() {}
 
   rollDice() {} // import from dice module?
 

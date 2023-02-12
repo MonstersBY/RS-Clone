@@ -270,6 +270,9 @@
 
 .robber {
   z-index: 1;
+  position: absolute;
+  top: 25%;
+  left: 25%;
   width: 50%;
   height: 50%;
   background: rgba(0, 0, 0, 0.5);

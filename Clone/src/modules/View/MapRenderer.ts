@@ -50,6 +50,7 @@ export default class MapRenderer {
           hex.type in types ? `version_${types[hex.type as keyof typeof types]}` : ""}${
           hex.harbor ? `harbor_${hex.harbor}` : ""}"
           id="hex_${i}">
+          ${hex.harbor ? ``}
           ${hexToken}
           ${settlement_N}
           ${road_N}

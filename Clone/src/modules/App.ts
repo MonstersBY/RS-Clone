@@ -28,7 +28,7 @@ export default class App {
       this.state.view = this.view;
       this.state.initialState();
 
-      this.view.init(this.state.getMapObject());
+      this.view.init(this.state.mapObject);
       this.controller.state = this.state;
       this.controller.init();
     }
