@@ -204,7 +204,7 @@ export default class Controller {
   }
 
 
-  buyDevelopCard() {}
+buyDevelopCard() {}
 
   rollDice() {} // import from dice module?
 

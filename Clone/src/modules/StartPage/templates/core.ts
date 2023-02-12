@@ -3,16 +3,27 @@ export const core = `
       <a href="/" class="logo header__logo flex-bs">
           <img src="assets/images/logo.png" alt="logo" class="logo__img">
       </a>
-  <nav class="menu header-menu">
+    <nav class="menu header-menu">
+        <a href="/" class="logo burger__logo flex-bs">
+        <img src="assets/images/logo.png" alt="logo" class="logo__img">
+        </a>
       <ul class="menu__list header-menu__list flex-row">
           <li class="menu__list-item mode__page">
-              <a href="#" class="link menu__link active">Play Page</a>
+              <a href="/mode" class="link menu__link active">Play Page</a>
           </li>
           <li class="menu__list-item">
               <a href="#" class="link menu__link">Rules</a>
           </li>
       </ul>
-  </nav>
+      <div class="overlay"></div>
+    </nav>
+    <div class="hamburger">
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+    </div>
+    <button class="btn trade__btn select hidden">Trade</button>
+    <button class="btn trade__btn sea-trade__btn hidden">Sea Trade</button>
   <div class="header__profile">
       <div class="header-login__wrapper">
           <div class="login__container flex-row">
@@ -53,7 +64,7 @@ export const core = `
       </div>
   </div>
   </header>
-  <main class="main-content" >
+  <main class="main-content">
     <div class="container" id="main"></div>
   </main>
   <footer class="footer">
@@ -94,7 +105,7 @@ export const core = `
       </div>
   </div>
   </footer>
-`
+`;
 
 export const renderCore = () => {
   document.body.innerHTML = "";

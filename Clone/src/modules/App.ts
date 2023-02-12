@@ -1,10 +1,15 @@
 import Router from "./Router";
-// import Room from "../backend/Room";
+import Room from "./Room";
+import Mode from "./Mode";
+import State from "./backend/State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
-import State from "../backend/State/State";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
+import { diceRoll } from "./diceRoll/diceRoll";
+import { burger } from "./hamburger/burger";
+import { modificatePage } from "./StartPage/templates/modificateIngamePage";
+import { costListener } from "./GameListeners/costListener";
 
 export default class App {
   constructor(
@@ -13,18 +18,46 @@ export default class App {
     public view: View = new View(),
     public state: State = new State(),
 
-    // public room: Room = new Room(),
+    public inGame: boolean = false,
     ) {}
 
   init() {
+    this.addGameListener();
     renderCore();
     addHelper();
+    this.setRouter();
     this.router.setRoutes();
-    this.addGameListener();
+    diceRoll();
+    modificatePage();
+    burger(
+      ".header-menu",
+      ".menu__list",
+      ".hamburger",
+      ".burger__logo",
+      ".overlay"
+    );
+    // costListener();
+    this.CreateRoom();
+    this.CreateMode();
   }
 
-  addGameListener() {
-    if (window.location.pathname === "/game") {
+  setRouter() {
+    this.router = new Router();
+    this.router.setRoutes();
+  }
+
+  CreateRoom() {
+    const room = new Room();
+    room.init();
+  }
+
+  CreateMode() {
+    const mode = new Mode();
+    mode.init();
+  }
+
+addGameListener() {
+  if (window.location.pathname === "/game") {
       this.state.view = this.view;
       this.state.initialState();
 

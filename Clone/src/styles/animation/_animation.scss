@@ -1,3 +1,58 @@
+.select {
+  animation: pulse 1s infinite alternate;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid $color-primary-dark;
+  user-select: none;
+  opacity: 1;
+  cursor: pointer;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 1.2vh $color-background-dark;
+  }
+  100% {
+    box-shadow: 0 0 1.4vh 1.5vh $color-primary-light;
+  }
+}
+
+.select__road {
+  animation: road__pulse 2s infinite alternate;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+  opacity: 1;
+  cursor: pointer;
+  background: url('../assets/images/map_animation/gradients.svg');
+  background-size: 100% 100%;
+}
+
+@keyframes road__pulse {
+  0% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.2;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes build {
+  0% {
+    opacity: 0;
+    scale: 1;
+  }
+  50% {
+    opacity: 1;
+    scale: 2;
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
 .map__road-1 {
   top: 52.625%;
   left: 22.625%;

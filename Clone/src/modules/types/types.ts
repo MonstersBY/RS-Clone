@@ -55,7 +55,7 @@ interface IResources {
   grain: number,
   lumber: number,
   ore: number,
-  wool: number, 
+  wool: number,
 }
 
 interface IDevCards {
