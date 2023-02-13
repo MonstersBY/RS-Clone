@@ -184,9 +184,9 @@ export default class Controller {
 
   setRobber(player: IPlayerInfo) {
     //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
-    this.map?.addEventListener("click", (e) => {
+    this.map?.addEventListener("click", (e: MouseEvent) => {
       if (e.target instanceof HTMLDivElement && e.target.classList.contains("hex")) {
-        const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, e.target.id);
+        const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, String(e.target.id)); //this.player1 as IPlayerInfo, 
         this.state?.updateMap();
         settlementsToRob?.forEach(e => {
           const settlement = document.getElementById(e) as HTMLDivElement;

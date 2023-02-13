@@ -1,7 +1,7 @@
 import Router from "./Router";
-import Room from "./Room";
-import Mode from "./Mode";
-import State from "./backend/State/State";
+// import Room from "./Room";
+// import Mode from "./Mode";
+import State from "../backend/State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
@@ -18,7 +18,7 @@ export default class App {
     public view: View = new View(),
     public state: State = new State(),
 
-    public inGame: boolean = false,
+    public inGame: boolean = false, // unused
     ) {}
 
   init() {
@@ -36,9 +36,10 @@ export default class App {
       ".burger__logo",
       ".overlay"
     );
+    // temp disabled
     // costListener();
-    this.CreateRoom();
-    this.CreateMode();
+    // this.CreateRoom(); 
+    // this.CreateMode();
   }
 
   setRouter() {
@@ -46,18 +47,20 @@ export default class App {
     this.router.setRoutes();
   }
 
-  CreateRoom() {
-    const room = new Room();
-    room.init();
-  }
+  // temp disabled
+  // CreateRoom() {
+  //   const room = new Room();
+  //   room.init();
+  // }
 
-  CreateMode() {
-    const mode = new Mode();
-    mode.init();
-  }
+  // temp disabled
+  // CreateMode() {
+  //   const mode = new Mode();
+  //   mode.init();
+  // }
 
-addGameListener() {
-  if (window.location.pathname === "/game") {
+  addGameListener() {
+    if (window.location.pathname === "/game") {
       this.state.view = this.view;
       this.state.initialState();
 

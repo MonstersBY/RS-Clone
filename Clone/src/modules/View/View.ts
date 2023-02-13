@@ -12,32 +12,34 @@ export default class View {
   ) {}
 
     init(mapObject: any) {
-      this.renderGamePage();
-      // this.ui = new PlayerInterface(this.state?.playersInfo);
+      setTimeout(() => {
       this.renderFullMap(mapObject);
+      // add renderfullUI(player: number)
+      }, 0);
     }
 
-    renderGamePage() {
-      const container = document.getElementById("main");
-      if (container) container.innerHTML = "";
-      container?.insertAdjacentHTML("beforeend", game);
-  
-      if (container) {
-        container.addEventListener("click", (e: Event) => {
-          const constructionBlock = document.querySelector(".construction-cost");
-          console.log(e.target);
-          if (
-            e.target instanceof HTMLDivElement &&
-            e.target.classList.contains("cost__btn")
-          ) {
-            constructionBlock?.classList.toggle("cost");
-          }
-        });
-    }
-  }
+  // Possable useless function
+  //   renderGamePage() {
+  //     const container = document.getElementById("main");
+  //     if (container) container.innerHTML = "";
+  //     container?.insertAdjacentHTML("afterbegin", game);
+
+  //   //   if (container) {
+  //   //     container.addEventListener("click", (e: Event) => {
+  //   //       const constructionBlock = document.querySelector(".construction-cost");
+  //   //       console.log(e.target);
+  //   //       if (
+  //   //         e.target instanceof HTMLDivElement &&
+  //   //         e.target.classList.contains("cost__btn")
+  //   //       ) {
+  //   //         constructionBlock?.classList.toggle("cost");
+  //   //       }
+  //   //     });
+  //   // }
+  // }
 
   renderFullMap(map: Array<IHex>) {
-    const mapContainer = document.querySelector("#map");
+    const mapContainer = document.getElementById("map");
     if (mapContainer) {
       mapContainer.innerHTML = "";
       const mapTree = this.renderer.getMapAsNodeTree(map as Array<IHex>) as string;
@@ -54,6 +56,7 @@ export default class View {
   renderStats() {
     // transfer this.state.playersInfo object to UI
   }
+
   renderHand(player: number) {
     // transfer this.state.playersInfo[player].hand object to UI
   }

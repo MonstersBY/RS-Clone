@@ -55,17 +55,11 @@ class Router {
         break;
       case "/game":
         this.addRoute("/game");
-        // this.gameStartEvent();
         break;
       default:
         this.addRoute("/404");
     }
   }
-
-  // gameStartEvent() {
-  //   let event = new Event("gamestart", {bubbles: true});
-  //   document.body.dispatchEvent(event);
-  // }
 }
 
 export default Router;

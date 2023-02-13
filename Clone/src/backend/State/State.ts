@@ -114,7 +114,7 @@ export default class State {
   }
 
   // Player actions
-  public setRobber(player: IPlayerInfo, id: string) {
+  public setRobber(player: IPlayerInfo, id: string): Array<string> {
     const i = id.split("_")[1];
     if (this.mapObject) {
       this.mapObject.forEach((hex: IHex) => {

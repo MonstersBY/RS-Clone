@@ -1,8 +1,7 @@
-import { getElementBySelector, IHex } from "../types/types";
+import { IHex } from "../types/types";
 
 export default class MapRenderer {
   constructor(
-    // public mapObject?: Array<IHex>,
     private HEX_COUNT = 37,
     ) {}
 
@@ -50,7 +49,6 @@ export default class MapRenderer {
           hex.type in types ? `version_${types[hex.type as keyof typeof types]}` : ""}${
           hex.harbor ? `harbor_${hex.harbor}` : ""}"
           id="hex_${i}">
-          ${hex.harbor ? ``}
           ${hexToken}
           ${settlement_N}
           ${road_N}
