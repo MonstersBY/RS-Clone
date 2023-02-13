@@ -410,20 +410,19 @@
   }
 }
 
-.version_1 {
-  background-position-y: 0;
-}
-
-.version_2 {
-  background-position-y: -100%;
-}
-
-.version_3 {
-  background-position-y: -200%;
-}
-
-.version_4 {
-  background-position-y: -300%;
+.version {
+  &_1 {
+    background-position-y: 0;
+  }
+  &_2 {
+    background-position-y: -100%;
+  }
+  &_3 {
+    background-position-y: -200%;
+  }
+  &_4 {
+    background-position-y: -300%;
+  }
 }
 
 .own_red,

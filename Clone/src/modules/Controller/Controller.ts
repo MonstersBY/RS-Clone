@@ -17,10 +17,8 @@ export default class Controller {
   ) {}
 
   init() {
-    this.player1 = this.state?.playersInfo[0];
-    this.map = document.getElementById("map") as HTMLDivElement;
     const buttons = `
-    <div style="position: absolute; top: 0; left: 0; display: flex; flex-direction: column; height: 30px; gap: 20px;">
+    <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
     <button id="first-set">first-set<button>
     <button id="refresh">refresh<button>
     <button id="build-road">build-road<button>
@@ -30,20 +28,18 @@ export default class Controller {
     <button id="random-number">random-number<button>
     </div>
     `
-    document.body.insertAdjacentHTML("afterbegin", buttons);
-    this.addBuildFirstSettlementListener();
-    this.addRefreshListener();
-    this.addRoadListener();
-    this.addSettlementListener();
-    this.addCityListener();
-    this.addRobberListener();
-
-    // this.addRandomListener();
+    setTimeout(() => {
+      this.player1 = this.state?.playersInfo[0];
+      this.map = document.getElementById("map") as HTMLDivElement;
+      document.body.insertAdjacentHTML("afterbegin", buttons);
+      this.addBuildFirstSettlementListener();
+      this.addRefreshListener();
+      this.addRoadListener();
+      this.addSettlementListener();
+      this.addCityListener();
+      this.addRobberListener();
+    }, 0);
   }
-
-  // addRandomListener() {
-  //   document.getElementById("random-number")?.addEventListener("click", () => {console.log(this.state?.chooseRandomResourse())} )// , { once: true }
-  // }
 
   addBuildFirstSettlementListener() {
     document.getElementById("first-set")?.addEventListener("click", this.buildFirstSettlementMode.bind(this))// , { once: true }
@@ -101,7 +97,7 @@ export default class Controller {
     const places = [...document.querySelectorAll(".hex__settlement_N"), ...document.querySelectorAll(".hex__settlement_S")];
     places.forEach((e) => {
       if (!e.classList.contains("own")) {
-        e.classList.add("active");
+        e.classList.add("select");
       }
     });
     if (this.map) {
@@ -111,12 +107,12 @@ export default class Controller {
   }
 
   choosePlaceSettlement(e: Event) {
-    if (e.target instanceof HTMLDivElement && e.target.classList.contains("active")) {
+    if (e.target instanceof HTMLDivElement && e.target.classList.contains("select")) {
       if (e.target.classList.contains("hex__settlement_N") || e.target.classList.contains("hex__settlement_S")) {
         const chousen = e.target;
         const places = [...document.querySelectorAll(".hex__settlement_N"), ...document.querySelectorAll(".hex__settlement_S")];
         places.forEach((e) => {
-            e.classList.remove("active");
+            e.classList.remove("select");
         })
         this.state?.setNewSettlement(this.player1 as IPlayerInfo, chousen.id);
         this.state?.updateMap();
@@ -133,7 +129,7 @@ export default class Controller {
     next.split(",").forEach((e) => {
       const road = document.getElementById(e) as HTMLDivElement;
       if (!road.classList.contains("own")) {
-        road.classList.add("active");
+        road.classList.add("select__road");
         road.addEventListener("click", (e) => {
           this.state?.setNewRoad(this.player1 as IPlayerInfo, road.id);
           this.state?.updateMap();
@@ -147,7 +143,7 @@ export default class Controller {
     roads.forEach(e => {
       const road = document.getElementById(e);
       if(road && !road.classList.contains("own")) {
-        road.classList.add("active");
+        road.classList.add("select__road");
         road.addEventListener("click", (e) => {
           this.state?.setNewRoad(this.player1 as IPlayerInfo, road.id);
           this.state?.updateMap();
@@ -161,7 +157,7 @@ export default class Controller {
     settlements.forEach(e => {
       const settlement = document.getElementById(e);
       if(settlement && !settlement.classList.contains("own")) {
-        settlement.classList.add("active");
+        settlement.classList.add("select");
         settlement.addEventListener("click", (e) => {
           this.state?.setNewSettlement(this.player1 as IPlayerInfo, settlement.id);
           this.state?.updateMap();
@@ -193,7 +189,7 @@ export default class Controller {
           if (settlement.classList.contains("own")
           && !settlement.classList.contains("own_nobody")
           && !settlement.classList.contains(`own_${player.color}`)){
-            settlement.classList.add("active");
+            settlement.classList.add("select");
             settlement.addEventListener("click", e => {
               this.state?.transferOneToAnother(player, settlement.classList[3])
             }, {once: true});
