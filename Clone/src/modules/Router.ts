@@ -28,7 +28,7 @@ class Router {
         title: "Page not found",
         template: errorPage,
       },
-    }
+    },
   ) {}
 
   addRoute(route: string) {

@@ -2,28 +2,47 @@
 interface IHex {
   type: string,
   token: number,
-  settlement_N: ISettlement | boolean,
-  road_N: number | boolean,
-  road_W: number | boolean,
-  road_S: number | boolean,
-  settlement_S: ISettlement | boolean,
+  settlement_N: ISettlement | false,
+  road_N: IRoad | false,
+  road_W: IRoad | false,
+  road_S: IRoad | false,
+  settlement_S: ISettlement | false,
   robber: boolean,
-  harbor: boolean,
+  harbor: string | false,
 }
 
 interface ISettlement {
-  player: number,
-  type: string,
+  id: string,
+  player: string | false,
+  city: boolean,
+  nextHexes: Array<number>,
+  nextNodes: Array<string>,
+}
+
+interface IRoad {
+  id: string,
+  player: string | false,
+  nextNodes: Array<string>,
 }
 
 // Player
 interface IPlayerInfo {
   id: number,
+  color: string,
+  longestRoad: boolean,
+  largestArmy: boolean,
+
   hand: IPlayerHand,
-  settlements: IPlayerSettlements,
-  harbors: IPlayerHarbors,
-  roads: IPlayerRoads,
-  army: number,
+  harbors: Array<string>,
+  hexes: Array<number>,
+  avalible: Array<string>,
+
+  settlements: Array<string>,
+  cities: Array<string>,
+  roads:  Array<string>,
+
+  roadChain: number,
+  armySize: number,
 }
 
 interface IPlayerHand {
@@ -36,39 +55,15 @@ interface IResources {
   grain: number,
   lumber: number,
   ore: number,
-  wool: number, 
+  wool: number,
 }
 
 interface IDevCards {
   victory: number,
   knights: number,
-  breakthrough: {
-    road: number,
-    plenty: number,
-    monopoly: number,
-  }
-}
-
-interface IPlayerSettlements {
-  [settlement: number]: {
-    isCity: boolean,
-    adjacent: [number, number, number],
-  }
-}
-
-interface IPlayerRoads {
-  [road: number]: {
-    adjacent: [number, number],
-  }
-}
-
-interface IPlayerHarbors {
-  all: boolean,
-  brick: boolean,
-  grain: boolean,
-  lumber: boolean,
-  ore: boolean,
-  wool: boolean, 
+  road: number,
+  plenty: number,
+  monopoly: number,
 }
 
 function getElementBySelector<T extends HTMLElement>(
@@ -81,4 +76,4 @@ function getElementBySelector<T extends HTMLElement>(
   return element;
 }
 
-export { IHex, IPlayerInfo, getElementBySelector}
+export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand}
