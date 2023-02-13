@@ -1,4 +1,4 @@
-import { IPlayerInfo } from "../../../modules/types/types";
+import { IPlayerInfo } from "../../modules/types/types";
 
 export const getEmptyPlayer = (i: number, color: string) => {
   return <IPlayerInfo>{
@@ -13,7 +13,7 @@ export const getEmptyPlayer = (i: number, color: string) => {
         grain: 0,
         lumber: 0,
         ore: 0,
-        wool: 0,
+        wool: 0, 
       },
       development: {
         victory: 0,
