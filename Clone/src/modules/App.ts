@@ -1,7 +1,7 @@
 import Router from "./Router";
-// import Room from "./Room";
-// import Mode from "./Mode";
-import State from "../backend/State/State";
+import Room from "./Room";
+import Mode from "./Mode";
+// import State from "../backend/State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
@@ -11,12 +11,14 @@ import { burger } from "./hamburger/burger";
 import { modificatePage } from "./StartPage/templates/modificateIngamePage";
 import { costListener, monopolyListener, plentyListener, tradeListener } from "./GameListeners/modalListeners";
 
+import socket from "./Socket";
+
 export default class App {
   constructor(
     public router: Router = new Router(),
     public controller: Controller = new Controller(),
     public view: View = new View(),
-    public state: State = new State(),
+    // public state: State = new State(),
 
     public inGame: boolean = false, // unused
     ) {}
@@ -41,8 +43,8 @@ export default class App {
     tradeListener();
     monopolyListener();
     plentyListener();
-    // this.CreateRoom();
-    // this.CreateMode();
+    this.CreateRoom();
+    this.CreateMode();
   }
 
   setRouter() {
@@ -51,25 +53,28 @@ export default class App {
   }
 
   // temp disabled
-  // CreateRoom() {
-  //   const room = new Room();
-  //   room.init();
-  // }
+  CreateRoom() {
+    if (window.location.pathname === "/room") {
+      const room = new Room();
+      room.init();
+    }
+  }
 
   // temp disabled
-  // CreateMode() {
-  //   const mode = new Mode();
-  //   mode.init();
-  // }
+  CreateMode() {
+    const mode = new Mode();
+    mode.init();
+  }
 
   addGameListener() {
     if (window.location.pathname === "/game") {
-      this.state.view = this.view;
-      this.state.initialState();
 
-      this.view.init(this.state.mapObject);
-      this.controller.state = this.state;
-      this.controller.init();
+      socket.emit('create-game', localStorage.getItem('Room'))
+
+      socket.on('Map-object', (obj, players) => {
+        this.view.init(obj, players);
+        this.controller.init();
+      })
     }
   }
 }
