@@ -2,27 +2,24 @@ export const modificatePage = () => {
   document.body.style.background = "rgb(0, 145, 204)";
 
     // "radial-gradient(circle,#009bda 0,#0091cc 18%,#2280b7 23%,#07486e 65%)";
-  changeHeader();
-  changeContainer();
-  hiddenFooter();
+    changeHeader();
+    changeContainer();
+    hiddenFooter();
 }
 
-  const changeHeader = () => {
-  const logo = document.querySelector(".header__logo");
-  const headerProfile = document.querySelector(".header__profile");
-  const headerMenu = document.querySelector(".header-menu");
-  const hamburger = document.querySelector(".hamburger");
-  const tradeBtns = document.querySelectorAll('.trade__btn');
+const changeHeader = () => {
+  const header = document.querySelector(".header");
+  /* const logo = document.querySelector(".header__logo");
+  const headerProfile = document.querySelector(".header__profile"); */
+  const headerMenu = document.querySelector(".game-menu");
+  const hamburger = document.querySelector(".game-burger");
 
-  logo?.classList.add('hidden');
-  headerProfile?.classList.add('hidden');
+  header?.classList.add("hidden");
+  /* logo?.classList.add('hidden');
+  headerProfile?.classList.add('hidden'); */
   headerMenu?.classList.add('ingame');
   hamburger?.classList.add("block");
 
-    tradeBtns.forEach((btn) => {
-    btn.classList.remove("hidden");
-    btn.classList.add("block");
-  });
 }
 
 const changeContainer = () => {
