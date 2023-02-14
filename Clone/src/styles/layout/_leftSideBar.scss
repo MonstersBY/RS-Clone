@@ -188,7 +188,7 @@
     content: "Buy devcards";
     position: absolute;
     @include font(1.5rem, 120%);
-    width: 100%;
+    width: fit-content;
     height: 7vh;
     top: 0;
     left: 0;

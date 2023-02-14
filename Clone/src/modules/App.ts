@@ -23,10 +23,10 @@ export default class App {
 
   init() {
     this.addGameListener();
-    // renderCore();
+    renderCore();
     addHelper();
-    // this.setRouter();
-    // this.router.setRoutes();
+    this.setRouter();
+    this.router.setRoutes();
     diceRoll();
     modificatePage();
     burger(
@@ -43,11 +43,11 @@ export default class App {
     // this.CreateMode();
   }
 
-/*   setRouter() {
+  setRouter() {
     this.router = new Router();
     this.router.setRoutes();
   }
- */
+
   // temp disabled
   // CreateRoom() {
   //   const room = new Room();
