@@ -1,23 +1,26 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-const io = require('socket.io')(http, {
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
+const httpServer = createServer();
+
+const io = new Server(httpServer, {
     cors: {
-        origin: ['http://localhost:8080', 'https://admin.socket.io'],
-        methods: ['GET', 'POST'],
-    },
-})
+      origin: ['http://localhost:8080', 'https://admin.socket.io', 'https://fluffy-panda-da842f.netlify.app']
+    }
+});
+
 const port = process.env.PORT || 3000;
 
 let users = []
 let allrooms = []
 
-io.on('connection', (socket) => {
-    // console.log(`User connected ${socket.id}`);
+io.on("connection", (socket) => {
+        console.log(`User connected ${socket.id}`);
 
     socket.on('chatMessage', (msg, room) => {
         const user = users.find(user => user.id === socket.id)
-        io.to(room).emit('message', user.username, msg)
+        console.log(user);
+        if (user) io.to(room).emit('message', user.username, msg)
     })
     
     socket.on('join-room', (username, room) => {
@@ -80,6 +83,6 @@ io.on('connection', (socket) => {
 });
 
 
-http.listen(port, function() {
-    console.log('listening on *: ' + port);
-});
+io.listen(port, function () {
+    console.log('CORS-enabled web server listening on port '+ port)
+})
