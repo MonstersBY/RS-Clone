@@ -1,72 +1,75 @@
 import Router from "./Router";
-import Room from "./Room";
-import Mode from "./Mode";
-import State from "./State/State";
+// import Room from "./Room";
+// import Mode from "./Mode";
+import State from "../backend/State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import { diceRoll } from "./diceRoll/diceRoll";
 import { burger } from "./hamburger/burger";
-import { changeHeader } from "./StartPage/templates/renderIngamePage";
+import { modificatePage } from "./StartPage/templates/modificateIngamePage";
+import { costListener, monopolyListener, plentyListener, tradeListener } from "./GameListeners/modalListeners";
 
 export default class App {
   constructor(
-    public router?: any,
+    public router: Router = new Router(),
+    public controller: Controller = new Controller(),
+    public view: View = new View(),
     public state: State = new State(),
-    public controller?: Controller,
-    public view?: View,
 
-
-    public inGame: boolean = false,
+    public inGame: boolean = false, // unused
     ) {}
 
-    init() {
-      renderCore();
-      addHelper();
-      diceRoll();
-      changeHeader();
-      burger(
-         ".header-menu",
-         ".menu__list",
-         ".hamburger",
-         ".burger__logo",
-         ".overlay"
-       );
-      this.setRouter();
-      this.CreateRoom()
-      this.CreateMode()
-    }
+  init() {
+    this.addGameListener();
+    renderCore();
+    addHelper();
+    this.setRouter();
+    this.router.setRoutes();
+    diceRoll();
+    modificatePage();
+    burger(
+      ".header-menu",
+      ".menu__list",
+      ".hamburger",
+      ".burger__logo",
+      ".overlay"
+    );
+    // temp disabled
+    costListener();
+    tradeListener();
+    monopolyListener();
+    plentyListener();
+    // this.CreateRoom();
+    // this.CreateMode();
+  }
 
-    setRouter() {
-      this.router = new Router();
-      this.router.setRoutes();
-    } 
+  setRouter() {
+    this.router = new Router();
+    this.router.setRoutes();
+  }
 
-    CreateRoom() {
-      const room = new Room()
-      room.init()
-    }
+  // temp disabled
+  // CreateRoom() {
+  //   const room = new Room();
+  //   room.init();
+  // }
 
-    CreateMode() {
-      const mode = new Mode()
-      mode.init()
-    }
+  // temp disabled
+  // CreateMode() {
+  //   const mode = new Mode();
+  //   mode.init();
+  // }
 
-    setPlayerNumber() {
-      // add to button listener
-    }
-
-    setGameMode() {
-      // add to button listener
-    }
-
-    startGame() {
+  addGameListener() {
+    if (window.location.pathname === "/game") {
+      this.state.view = this.view;
       this.state.initialState();
-      // hand over map object to render
-      this.view = new View(this.state); // render map and UI for every player
-      this.view.init();
-      // hand over view and state to controller
-      this.controller = new Controller(this.view, this.state); // add listeners that set the state condition
+
+      this.view.init(this.state.mapObject);
+      this.controller.state = this.state;
+      this.controller.init();
     }
+  }
 }

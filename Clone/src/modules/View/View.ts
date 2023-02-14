@@ -1,47 +1,63 @@
-import State from "../State/State";
-import { IHex } from "../types/types";
+import State from "../../backend/State/State";
+import Room from "../../backend/Room";
+import { IHex, ISettlement } from "../types/types";
 import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
+import { game } from "../StartPage/templates/gamePage";
 
 export default class View {
   constructor(
-    public state: State,
     private renderer: MapRenderer = new MapRenderer(),
-    private ui?: PlayerInterface, 
-    ) {}
+    private ui?: PlayerInterface
+  ) {}
 
-    init() {
-      this.renderer = new MapRenderer(this.state.mapObject);
-      this.ui = new PlayerInterface(this.state.playersInfo);
-      this.firstRender();
+    init(mapObject: any) {
+      setTimeout(() => {
+      this.renderFullMap(mapObject);
+      // add renderfullUI(player: number)
+      }, 0);
     }
 
-    firstRender() {
-      const mapContainer = document.querySelector("#map");
-      console.log(mapContainer)
-      if(mapContainer) {
-        mapContainer.innerHTML = "";
-        const mapTree = this.renderer?.getMapAsNodeTree(this.state.getFullMapObject()) as string;
-        mapContainer?.insertAdjacentHTML("beforeend", mapTree);
-      }
-    }
+  // Possable useless function
+  //   renderGamePage() {
+  //     const container = document.getElementById("main");
+  //     if (container) container.innerHTML = "";
+  //     container?.insertAdjacentHTML("afterbegin", game);
 
-    renderFullMap() {
-      
-      // hey, renderer, transfer this.state.mapObject object to nodes
-    }
+  //   //   if (container) {
+  //   //     container.addEventListener("click", (e: Event) => {
+  //   //       const constructionBlock = document.querySelector(".construction-cost");
+  //   //       console.log(e.target);
+  //   //       if (
+  //   //         e.target instanceof HTMLDivElement &&
+  //   //         e.target.classList.contains("cost__btn")
+  //   //       ) {
+  //   //         constructionBlock?.classList.toggle("cost");
+  //   //       }
+  //   //     });
+  //   // }
+  // }
 
-    renderfullUI(player: number) {
-      // hey, ui, transfer this.state.playersInfo[player] object to UI
-      this.renderStats();
-      this.renderHand(player);
+  renderFullMap(map: Array<IHex>) {
+    const mapContainer = document.getElementById("map");
+    if (mapContainer) {
+      mapContainer.innerHTML = "";
+      const mapTree = this.renderer.getMapAsNodeTree(map as Array<IHex>) as string;
+      mapContainer?.insertAdjacentHTML("beforeend", mapTree);
     }
+  }
 
-    renderStats() {
-      // transfer this.state.playersInfo object to UI
-    }
+  renderfullUI(player: number) {
+    // hey, ui, transfer this.state.playersInfo[player] object to UI
+    this.renderStats();
+    this.renderHand(player);
+  }
 
-    renderHand(player: number) {
-      // transfer this.state.playersInfo[player].hand object to UI
-    }
+  renderStats() {
+    // transfer this.state.playersInfo object to UI
+  }
+
+  renderHand(player: number) {
+    // transfer this.state.playersInfo[player].hand object to UI
+  }
 }

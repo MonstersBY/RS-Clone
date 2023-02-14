@@ -27,19 +27,18 @@ body ::-webkit-scrollbar-track {
 .main-content {
   flex: 1 1 auto;
 }
-
 .container {
-  position: relative;
+  // position: relative;
   max-width: $content-width;
   margin: 0 auto;
   padding: 0 1.5rem;
+
   @include min-media-desktop {
     max-width: 100%;
   }
   @include max-media-small-desktop {
     max-width: 1000px;
   }
-
   @include max-media-tablet {
     max-width: 740px;
     padding: 0 20px;
@@ -53,7 +52,6 @@ body ::-webkit-scrollbar-track {
   @include font(2.4rem, 130%, 700);
   margin: 1.2rem 0 0.8rem 0;
 }
-
 .link {
   @include font(1.8rem, 120%, 700);
   @extend %transition;
@@ -63,7 +61,6 @@ body ::-webkit-scrollbar-track {
     color: darken($color-primary-light, 40%);
   }
 }
-
 .btn {
 	@extend %transition;
   @include font(1.6rem, 120%);
@@ -78,25 +75,20 @@ body ::-webkit-scrollbar-track {
     background-color: darken($color-btn-secondary, 20%);
 	}
 }
-
 .ico {
   padding: -2px;
 }
-
 .hidden {
   display: none;
 }
-
 .active {
   border-bottom: 1px solid $color-primary-light;
 }
-
 .flex-row {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-
 .flex-bs {
   display: flex;
   justify-content: center;
@@ -105,4 +97,8 @@ body ::-webkit-scrollbar-track {
 img {
   vertical-align: middle;
   border-style: none;
+}
+
+.modal {
+  left: 16%;
 }

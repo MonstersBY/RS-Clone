@@ -16,7 +16,7 @@
     @content;
   }
 }
-// 1500
+// 1500 // 1440/
 @mixin max-media-medium-desktop {
   @media (max-width: $medium-desktop-width) {
     @content;

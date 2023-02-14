@@ -1,7 +1,7 @@
 import { randomDiceRoll } from './randomDiceRoll'
 
 const renderDice = () => {
-  const container = document.querySelector('.container');
+  const mainWrap = document.querySelector('.main__wrapper');
   const gameField = document.createElement('div');
   gameField.classList.add("game");
   gameField.innerHTML = `
@@ -82,7 +82,7 @@ const renderDice = () => {
           </div>
         </div>
   `;
-  container?.append(gameField);
+  mainWrap?.append(gameField);
 }
 
 export const diceRoll = () => {

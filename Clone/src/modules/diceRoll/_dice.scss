@@ -1,21 +1,15 @@
 .game {
-  position:relative;
+  position: absolute;
+  top: 2rem;
+  right: 25rem;
   width: auto;
-  height: 5rem;
+  height: 3rem;
 }
 
 .dice__container {
-  position:absolute;
-  bottom: 0;
   display: inline-block;
 }
 
-.dice__container_one {
-  right:5.5rem;
-}
-.dice__container_two {
-  right: 0.5rem;
-}
 .dice {
   position: relative;
   width: 5rem;
