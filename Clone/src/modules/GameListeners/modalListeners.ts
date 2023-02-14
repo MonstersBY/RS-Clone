@@ -22,3 +22,29 @@ export const tradeListener = () => {
     }
   });
 };
+
+export const monopolyListener = () => {
+  const modalMonopoly = document.querySelector(".monopoly-choose");
+
+  document.addEventListener("click", (e: Event) => {
+    if (e.target && e.target instanceof HTMLElement) {
+      const target = e.target.closest(".dev-monopoly");
+      if (target && target.classList.contains("dev-monopoly")) {
+        modalMonopoly?.classList.toggle("modal");
+      }
+    }
+  });
+};
+
+export const plentyListener = () => {
+  const modalPlenty = document.querySelector(".plenty-choose");
+
+  document.addEventListener("click", (e: Event) => {
+    if (e.target && e.target instanceof HTMLElement) {
+      const target = e.target.closest(".dev-invention");
+      if (target && target.classList.contains("dev-invention")) {
+        modalPlenty?.classList.toggle("modal");
+      }
+    }
+  });
+};

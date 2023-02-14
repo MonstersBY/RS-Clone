@@ -9,7 +9,7 @@ import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import { diceRoll } from "./diceRoll/diceRoll";
 import { burger } from "./hamburger/burger";
 import { modificatePage } from "./StartPage/templates/modificateIngamePage";
-import { costListener, tradeListener } from "./GameListeners/modalListeners";
+import { costListener, monopolyListener, plentyListener, tradeListener } from "./GameListeners/modalListeners";
 
 export default class App {
   constructor(
@@ -39,6 +39,8 @@ export default class App {
     // temp disabled
     costListener();
     tradeListener();
+    monopolyListener();
+    plentyListener();
     // this.CreateRoom();
     // this.CreateMode();
   }
