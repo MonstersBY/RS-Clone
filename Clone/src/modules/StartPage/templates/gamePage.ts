@@ -2,7 +2,7 @@ export const game = `
       <div class="main__wrapper">
         <div class="left__sidebar">
           <div class="menu">
-            <nav class="menu header-menu">
+            <nav class="menu header-menu game-menu">
               <a href="/" class="logo  burger__logo flex-bs">
                 <img src="assets/images/logo.png" alt="logo" class="logo__img">
               </a>
@@ -16,7 +16,7 @@ export const game = `
               </ul>
               <div class="overlay"></div>
             </nav>
-            <div class="hamburger">
+            <div class="hamburger game-burger">
               <span class="line"></span>
               <span class="line"></span>
               <span class="line"></span>
@@ -98,7 +98,6 @@ export const game = `
               </div>
             </div>
           </div>
-
           <div class="construction-cost">
             <div class="construction-content__wrap">
               <h3 class="construction-cost__title">Construction Cost</h3>
@@ -439,6 +438,34 @@ export const game = `
             <div class="trade__btns flex-row">
               <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon">
               <div class="btn counteroffer__btn counteroffer">Counteroffer</div>
+              <img src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
+            </div>
+          </div>
+        </div>
+        <div class="modal-choose">
+          <div class="modal-choose__wrap flex-bs">
+            <div id="choose_lumber" class="resource__container choose-resource resource flex-bs">
+              <div class="resource-icon icon-lumber"></div>
+              <input type="checkbox" checked class="choose-checkbox">
+            </div>
+            <div id="choose_grain" class="resource__container choose-resource resource flex-bs">
+              <div class="resource-icon icon-grain"></div>
+              <input type="checkbox" checked class="choose-checkbox">
+            </div>
+            <div id="choose_wool" class="resource__container choose-resource resource flex-bs">
+              <div class="resource-icon icon-wool"></div>
+              <input type="checkbox" class="choose-checkbox">
+            </div>
+            <div id="choose_brick" class="resource__container choose-resource resource flex-bs">
+              <div class="resource-icon icon-brick"></div>
+              <input type="checkbox" class="choose-checkbox">
+            </div>
+            <div id="choose_ore" class="resource__container choose-resource resource flex-bs">
+              <div class="resource-icon icon-ore"></div>
+              <input type="checkbox" class="choose-checkbox">
+            </div>
+            <div class="choose__btns flex-row">
+              <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon">
               <img src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
             </div>
           </div>

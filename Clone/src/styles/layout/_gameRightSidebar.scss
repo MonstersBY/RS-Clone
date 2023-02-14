@@ -3,6 +3,7 @@
   flex-direction: column;
   justify-content: space-between;
   width: 16%;
+  height: 100vh;
   box-shadow: 2px 2px 4px $color-primary;
 }
 .miniboard__img {
@@ -21,8 +22,8 @@
 }
 .player-board {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  flex-direction: column;
+  gap: 0.5rem;
   width: 100%;
 }
 
@@ -34,12 +35,13 @@
 }
 
 .nickname__wrap {
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .player-miniboard {
-  width: 70%;
+  width: 100%;
   justify-content: space-around;
 }
 

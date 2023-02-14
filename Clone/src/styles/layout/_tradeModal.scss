@@ -17,10 +17,9 @@
   }
 }
 
-.trade {
+.modal-trade.modal {
   left: 16%;
 }
-
 .trade__subtitle {
   @include font(1.6rem, 120%);
   width: 50%;

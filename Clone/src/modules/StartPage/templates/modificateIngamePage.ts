@@ -2,17 +2,17 @@ export const modificatePage = () => {
   document.body.style.background = "rgb(0, 145, 204)";
 
     // "radial-gradient(circle,#009bda 0,#0091cc 18%,#2280b7 23%,#07486e 65%)";
-  changeHeader();
-  changeContainer();
-  hiddenFooter();
+    changeHeader();
+    changeContainer();
+    hiddenFooter();
 }
 
 const changeHeader = () => {
   const header = document.querySelector(".header");
   /* const logo = document.querySelector(".header__logo");
   const headerProfile = document.querySelector(".header__profile"); */
-  const headerMenu = document.querySelector(".header-menu");
-  const hamburger = document.querySelector(".hamburger");
+  const headerMenu = document.querySelector(".game-menu");
+  const hamburger = document.querySelector(".game-burger");
 
   header?.classList.add("hidden");
   /* logo?.classList.add('hidden');
