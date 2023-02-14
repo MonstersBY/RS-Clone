@@ -7,22 +7,19 @@ export const modificatePage = () => {
   hiddenFooter();
 }
 
-  const changeHeader = () => {
-  const logo = document.querySelector(".header__logo");
-  const headerProfile = document.querySelector(".header__profile");
+const changeHeader = () => {
+  const header = document.querySelector(".header");
+  /* const logo = document.querySelector(".header__logo");
+  const headerProfile = document.querySelector(".header__profile"); */
   const headerMenu = document.querySelector(".header-menu");
   const hamburger = document.querySelector(".hamburger");
-  const tradeBtns = document.querySelectorAll('.trade__btn');
 
-  logo?.classList.add('hidden');
-  headerProfile?.classList.add('hidden');
+  header?.classList.add("hidden");
+  /* logo?.classList.add('hidden');
+  headerProfile?.classList.add('hidden'); */
   headerMenu?.classList.add('ingame');
   hamburger?.classList.add("block");
 
-    tradeBtns.forEach((btn) => {
-    btn.classList.remove("hidden");
-    btn.classList.add("block");
-  });
 }
 
 const changeContainer = () => {

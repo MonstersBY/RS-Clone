@@ -1,11 +1,14 @@
 .modal-trade {
+  @extend %transition;
   position: absolute;
-  top: 0;
-  right: 24rem;
+  bottom: 1rem;
+  left: -116%;
+  z-index: 5;
+  background: transparent;
   &:before {
     content: "";
     position: absolute;
-    left: 0;
+    left: -2rem;
     top: -0.5rem;
     width: 1.5rem;
     height: 1.5rem;
@@ -14,14 +17,19 @@
   }
 }
 
+.trade {
+  left: 16%;
+}
+
 .trade__subtitle {
   @include font(1.6rem, 120%);
+  width: 50%;
   text-align: center;
   margin-bottom: 1rem;
 }
 
 .trade-container__wrap {
-  margin-bottom: 1rem;
+ justify-content: space-between;
 }
 
 .arrow_left,
@@ -40,7 +48,17 @@
   background-size: 100% 100%;
 }
 .resource__container {
-  width: 25vh;
+  width: fit-content;
+}
+.trade__resource {
+  .resource-counter {
+    width: 3vh;
+    height: 3vh;
+  }
+}
+.trade__resource-icon {
+  width: 7vh;
+  height: 7vh;
 }
 .trade__btns {
   justify-content: space-around;
@@ -53,8 +71,10 @@
 
 .modal-trade__counteroffer {
   position: absolute;
-  top: 0;
-  right: 24rem;
+  bottom: 1rem;
+  left: -116%;
+  z-index: 5;
+  background: transparent;
   &:before {
     content: "";
     position: absolute;
@@ -66,10 +86,17 @@
     background-size: 100% 100%;
   }
 }
+.counteroffer {
+  left: 16%;
+}
 
 .counteroffer__btn {
   @include font(1.6rem, 120%);
   text-align: center;
   width: 11rem;
   height: 2rem;
+}
+.trade__titles {
+  width: 100%;
+  justify-content: space-between;
 }
