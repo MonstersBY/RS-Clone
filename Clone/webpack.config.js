@@ -6,7 +6,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == "production";
 
-const pages = ["index.html", "ingame.html"];
+const pages = ["index.html"];
 
 const stylesHandler = MiniCssExtractPlugin.loader;
 
