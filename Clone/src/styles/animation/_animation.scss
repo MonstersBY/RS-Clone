@@ -48,6 +48,10 @@
     opacity: 0;
     scale: 1;
   }
+  25%{
+    opacity: 0.5;
+    scale: 1.5;
+  }
   50% {
     opacity: 1;
     scale: 2;
@@ -74,6 +78,21 @@
   animation-fill-mode: both;
 }
 
+@keyframes pulse_hex {
+  0% {
+    box-shadow: 0 0 2.2vh $color-background-dark;
+    border-radius: 0;
+  }
+  100% {
+    box-shadow: 0 0 2.4vh 1.5vh $color-primary-light;
+    border-radius: 50%;
+  }
+}
+
+.get {
+  animation: pulse_hex 2s alternate;
+  transition: all 0.2s ease-in-out;
+}
 
 .map__road-1 {
   top: 52.625%;
