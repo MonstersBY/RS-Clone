@@ -48,3 +48,10 @@ export const plentyListener = () => {
     }
   });
 };
+
+export const robberMove = () => {
+  const robber = document.querySelector('.robber');
+  document.addEventListener("click", (e) => {
+    console.log(e.target);
+  });
+}
