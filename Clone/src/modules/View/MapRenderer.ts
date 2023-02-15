@@ -42,7 +42,7 @@ export default class MapRenderer {
           hex.settlement_S.city ? "city" : ""}" id="${hex.settlement_S.id}" data-next="${hex.settlement_S.nextNodes}">
         </div>` : "";
 
-      const robber = hex.robber ? `<div id="robberIcon" class="robber moveDown"></div>` : "";
+      const robber = hex.robber ? `<div id="robberIcon" class="robber"></div>` : "";
 
       const hexNode = `
         <div class="hex hex_${hex.type} ${
