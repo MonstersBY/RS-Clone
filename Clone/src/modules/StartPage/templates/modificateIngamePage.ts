@@ -1,10 +1,10 @@
 export const modificatePage = () => {
-  document.body.style.background = "rgb(0, 145, 204)";
-
-    // "radial-gradient(circle,#009bda 0,#0091cc 18%,#2280b7 23%,#07486e 65%)";
+  if (window.location.pathname === "/game") {
+    document.body.style.background = "rgb(0, 145, 204)";
     changeHeader();
     changeContainer();
     hiddenFooter();
+  }
 }
 
 const changeHeader = () => {
