@@ -1,7 +1,7 @@
 import Router from "./Router";
-// import Room from "./Room";
-// import Mode from "./Mode";
-import State from "../backend/State/State";
+import Room from "./Room";
+import Mode from "./Mode";
+// import State from "../backend/State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
@@ -9,14 +9,16 @@ import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import { diceRoll } from "./diceRoll/diceRoll";
 import { burger } from "./hamburger/burger";
 import { modificatePage } from "./StartPage/templates/modificateIngamePage";
-import { costListener } from "./GameListeners/costListener";
+import { costListener, monopolyListener, plentyListener, tradeListener } from "./GameListeners/modalListeners";
+
+import socket from "./Socket";
 
 export default class App {
   constructor(
     public router: Router = new Router(),
     public controller: Controller = new Controller(),
     public view: View = new View(),
-    public state: State = new State(),
+    // public state: State = new State(),
 
     public inGame: boolean = false, // unused
     ) {}
@@ -37,9 +39,12 @@ export default class App {
       ".overlay"
     );
     // temp disabled
-    // costListener();
-    // this.CreateRoom(); 
-    // this.CreateMode();
+    costListener();
+    tradeListener();
+    monopolyListener();
+    plentyListener();
+    this.CreateRoom();
+    this.CreateMode();
   }
 
   setRouter() {
@@ -48,25 +53,30 @@ export default class App {
   }
 
   // temp disabled
-  // CreateRoom() {
-  //   const room = new Room();
-  //   room.init();
-  // }
+  CreateRoom() {
+    if (window.location.pathname === "/room") {
+      const room = new Room();
+      room.init();
+    }
+  }
 
   // temp disabled
-  // CreateMode() {
-  //   const mode = new Mode();
-  //   mode.init();
-  // }
+  CreateMode() {
+    if (window.location.pathname === "/mode") {
+      const mode = new Mode();
+      mode.init();
+    }
+  }
 
   addGameListener() {
     if (window.location.pathname === "/game") {
-      this.state.view = this.view;
-      this.state.initialState();
 
-      this.view.init(this.state.mapObject);
-      this.controller.state = this.state;
-      this.controller.init();
+      socket.emit('create-game', localStorage.getItem('Room'))
+
+      socket.on('Map-object', (obj, players) => {
+        this.view.init(obj, players);
+        this.controller.init();
+      })
     }
   }
 }

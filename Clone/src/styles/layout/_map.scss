@@ -9,7 +9,6 @@
   width: 90vmin;
   overflow: visible;
   z-index: 3;
-  // clip-path: polygon(25% 5%,75% 5%,98% 52%,75% 99%,25% 99%,2% 52%);
 }
 
 .map-background__container {
@@ -21,7 +20,6 @@
 
 .bg__container {
   align-items: center;
-  background: radial-gradient(circle,#009bda 0,#0091cc 18%,#2280b7 23%,#07486e 65%);
   display: flex;
   height: 400vh;
   justify-content: center;
@@ -122,17 +120,14 @@
   // mountains variant1
   &:nth-child(6) {
     grid-column-start: 5;
-    background-position-x: -500%;
   }
   // pasture variant1
   &:nth-child(7) {
     grid-column-start: 7;
-    background-position-x: -400%;
   }
   // forest variant1
   &:nth-child(8) {
     grid-column-start: 9;
-    background-position-x: -200%;
   }
   &:nth-child(9) {
     grid-column-start: 11;
@@ -147,7 +142,6 @@
   // field variant1
   &:nth-child(11) {
     grid-column-start: 4;
-    background-position-x: -600%;
   }
   // hills variant1
   &:nth-child(12) {
@@ -157,14 +151,10 @@
   // pasture variant2
   &:nth-child(13) {
     grid-column-start: 8;
-    background-position-x: -400%;
-    background-position-y: -100%;
   }
   // hills variant2
   &:nth-child(14) {
     grid-column-start: 10;
-    background-position-x: -300%;
-    background-position-y: -100%;
   }
   &:nth-child(15) {
     grid-column-start: 12;
@@ -175,14 +165,10 @@
   // field variant2
   &:nth-child(17) {
     grid-column-start: 3;
-    background-position-x: -600%;
-    background-position-y: -100%;
   }
   // forest variant2
   &:nth-child(18) {
     grid-column-start: 5;
-    background-position-x: -200%;
-    background-position-y: -100%;
   }
   &:nth-child(19) {
     grid-column-start: 7;
@@ -190,14 +176,10 @@
   // forest variant3
   &:nth-child(20) {
     grid-column-start: 9;
-    background-position-x: -200%;
-    background-position-y: -200%;
   }
   // mountains variant2
   &:nth-child(21) {
     grid-column-start: 11;
-    background-position-x: -500%;
-    background-position-y: -100%;
   }
   &:nth-child(22) {
     grid-column-start: 13;
@@ -212,26 +194,18 @@
    // forest variant4
   &:nth-child(24) {
     grid-column-start: 4;
-    background-position-x: -200%;
-    background-position-y: -300%;
   }
   // mountains variant3
   &:nth-child(25) {
     grid-column-start: 6;
-    background-position-x: -500%;
-    background-position-y: -200%;
   }
   // field variant3
   &:nth-child(26) {
     grid-column-start: 8;
-    background-position-x: -600%;
-    background-position-y: -200%;
   }
   // pasture variant3
   &:nth-child(27) {
     grid-column-start: 10;
-    background-position-x: -400%;
-    background-position-y: -200%;
   }
   &:nth-child(28) {
     grid-column-start: 12;
@@ -242,20 +216,14 @@
    // hills variant3
   &:nth-child(30) {
     grid-column-start: 5;
-    background-position-x: -300%;
-    background-position-y: -200%;
   }
   // field variant4
   &:nth-child(31) {
     grid-column-start: 7;
-    background-position-x: -600%;
-    background-position-y: -300%;
   }
   // pasture variant4
   &:nth-child(32) {
     grid-column-start: 9;
-    background-position-x: -400%;
-    background-position-y: -300%;
   }
   &:nth-child(33) {
     grid-column-start: 11;
@@ -294,59 +262,153 @@
   }
   &__settlement {
     &_N {
-      z-index: 3;
+      z-index: 4;
       position: absolute;
       width: 30%;
       height: 30%;
       border-radius: 50%;
-      top: -22%;
+      top: -18%;
       right: calc(50% - 13%);
       opacity: 0;
     }
     &_S {
-      z-index: 3;
+      z-index: 4;
       position: absolute;
       width: 30%;
       height: 30%;
       border-radius: 50%;
-      bottom: -22%;
+      bottom: -5%;
       right: calc(50% - 13%);
       opacity: 0;
+
     }
   }
+
   &__road {
     &_N {
       z-index: 3;
       position: absolute;
-      width: 10%;
+      width: 100%;
       height: 50%;
-      left: 20%;
-      top: -13%;
+      left: -27%;
+      top: -15%;
       transform: rotate(60deg);
-      // opacity: 0;
-      background: #cc3a00;
+      opacity: 0;
     }
     &_W {
       z-index: 3;
       position: absolute;
-      width: 10%;
-      height: 50%;
-      left: -5%;
-      top: 25%;
-      // opacity: 0;
-      background: #cc6d00;
+      width: 100%;
+      height: 52%;
+      left: -51%;
+      top: 23%;
+      opacity: 0;
     }
     &_S {
       z-index: 3;
       position: absolute;
-      width: 10%;
+      width: 100%;
       height: 50%;
-      left: 20%;
-      bottom: -13%;
+      left: -23%;
+      bottom: -12%;
       transform: rotate(-60deg);
-      // opacity: 0;
-      background: #0091cc;
+      opacity: 0;
     }
+  }
+}
+.hex_harbor {
+  .hex__settlement_S {
+    width: 38.7%;
+    height: 45%;
+    bottom: -43%;
+    right: 23%;
+  }
+  .hex__settlement_N {
+    width: 38.7%;
+    height: 45%;
+    top: -30%;
+    right: 18%;
+  }
+  .hex__road_W {
+    height: 77%;
+    width: 129%;
+  }
+  .hex__road_N {
+    height: 81%;
+    width: 125%;
+  }
+  .hex__road_S {
+    height: 77%;
+    width: 129%;
+  }
+
+}
+.harbor_wool {
+  .hex__road_W {
+    left: -94%;
+    top: 34%;
+  }
+  .hex__road_N {
+    left: -66%;
+    top: -26%;
+  }
+  .hex__settlement_N  {
+    top: -29%;
+    right: 53%;
+  }
+}
+.harbor_all {
+  .hex__road_W {
+    left: -64%;
+    top: 4%;
+  }
+   .hex__road_N {
+    left: -30%;
+    top: -41%;
+  }
+  .hex__settlement_S {
+    bottom: -48%;
+    right: 18%;
+  }
+  .hex__settlement_N {
+    top: -37%;
+    right: 18%;
+  }
+}
+.harbor_ore {
+  .hex__road_S {
+    left: -58%;
+    top: 63%;
+  }
+  .hex__road_W {
+    left: -82%;
+    top: 9%;
+  }
+  .hex__settlement_S {
+    bottom: -43%;
+    right: 35%;
+  }
+}
+.harbor_grain {
+  .hex__road_S {
+    left: -31%;
+    top: 91%;
+  }
+  .hex__settlement_S {
+    bottom: -54%;
+    right: 21%;
+  }
+}
+.harbor_lumber {
+  .hex__settlement_S {
+    bottom: -61%;
+    right: 29%;
+  }
+}
+.harbor_brick {
+  .hex__settlement_N {
+    top: -59%;
+    right: 30%;
   }
 }
 
@@ -429,7 +491,6 @@
 .own_blue,
 .own_orange,
 .own_green {
-  animation: build 2s linear;
   opacity: 1;
 }
 
@@ -458,8 +519,7 @@
 .hex__road_W.own_red,
 .hex__road_S.own_red {
   background: url('../assets/images/map_animation/road_red.svg');
-  background-repeat: no-repeat;
-  background-size: contain;
+  background-size: 100% 100%;
 }
 
 .hex__settlement_N.own_red,
