@@ -7,14 +7,13 @@ export default class Mode {
     ) {}
 
   init() {
-    // localStorage.setItem('Room', '')
-
     this.ConnectSocket()
     this.createNewRoom()
     this.CheckRoom()
     this.CreateName()
     this.RoomList()
     this.ConnectRoom()
+    this.Disconnect()
   }
 
   ConnectSocket() {
@@ -90,6 +89,13 @@ export default class Mode {
       const room = target.querySelector('.room-name')?.innerHTML
       if (room) localStorage.setItem('Room', room)
     })
+  }
+
+  Disconnect() {
+    if (localStorage.getItem('Room')){
+      socket.emit('leave-lobby', localStorage.getItem('Room'), localStorage.getItem('Name'))
+      localStorage.setItem('Room', '')
+    }
   }
 
 }

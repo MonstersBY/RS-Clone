@@ -11,6 +11,8 @@ export default class Room {
     this.ChatMessages()
     this.CreateMessage()
     this.CreateRoom()
+    this.CheckReady()
+    this.CreateGame()
   }
 
   CreateRoom() {
@@ -37,9 +39,9 @@ export default class Room {
         list.removeChild(list.firstChild);
       }
       for (let i = 0; i < users.length; i++) {
-        const div = document.createElement('li')
-        div.classList.add('player__list-item')
-        div.innerHTML = `
+        const li = document.createElement('li')
+        li.classList.add('player__list-item')
+        li.innerHTML = `
                   <div class="player__info">
                       <div class="player__name">
                           <img src="assets/images/icons/icon_player.svg" alt="player icon" class="player__icon">
@@ -63,12 +65,23 @@ export default class Room {
                           <img src="assets/images/map_animation/settlement_red.svg" alt="Settlement" width="15" height="15">
                           <img src="assets/images/map_animation/city_red.svg" alt="City" width="15" height="15">
                       </div>
-                  </div>
-                  <div class="state__btn not_ready">
-                      <span>Not ready</span>
-                      <img src="assets/images/icons/icon_x.svg" alt="not ready"  class="status__icon">
                   </div>`
-        list?.appendChild(div)
+        let readyInfo = document.createElement('div')
+        if (users[i].ready) {
+          readyInfo.innerHTML = `
+            <div class="state__btn">
+              <span>Ready</span>
+              <img src="assets/images/icons/icon-check_green.png" alt="ready"  class="status__icon">
+            </div>`
+        } else {
+          readyInfo.innerHTML = `
+            <div class="state__btn not_ready">
+              <span>Not ready</span>
+              <img src="assets/images/icons/icon_x.svg" alt="not ready"  class="status__icon">
+            </div>`
+        }
+        li.appendChild(readyInfo)
+        list?.appendChild(li)
       }
 
     })
@@ -115,6 +128,25 @@ export default class Room {
     <img src="assets/images/icons/icon_player.svg" alt="" class="nick">
     <b>${user}:</b> ${message}`;
     document.querySelector('.chat__messages')?.appendChild(div)
+  }
+
+  CheckReady() {
+    const checkbox = document.querySelector('.ready__checkbox');
+    checkbox?.addEventListener('change', (e) => {
+      const target = e.target as HTMLInputElement
+      socket.emit('change-prepared', localStorage.getItem('Room'), localStorage.getItem('Name'), target.checked)
+    })
+  }
+
+  CreateGame() {
+    const startGame = document.getElementById('start-game')
+    startGame?.addEventListener('click', e => {
+      socket.emit('StartGame', localStorage.getItem('Room'))
+    })
+
+    socket.on('ChangeToGamePage', () => {
+      window.location.pathname = '/game'
+    })
   }
 
 }

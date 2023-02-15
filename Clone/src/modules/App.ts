@@ -62,8 +62,10 @@ export default class App {
 
   // temp disabled
   CreateMode() {
-    const mode = new Mode();
-    mode.init();
+    if (window.location.pathname === "/mode") {
+      const mode = new Mode();
+      mode.init();
+    }
   }
 
   addGameListener() {
