@@ -7,11 +7,6 @@
   cursor: pointer;
 }
 
-.build {
-  animation: build 2s linear;
-  opacity: 1;
-}
-
 @keyframes pulse {
   0% {
     box-shadow: 0 0 1.2vh $color-background-dark;
@@ -43,6 +38,11 @@
   }
 }
 
+.build {
+  animation: build 2s linear;
+  opacity: 1;
+}
+
 @keyframes build {
   0% {
     opacity: 0;
@@ -57,6 +57,23 @@
     scale: 1;
   }
 }
+
+@keyframes moveDown {
+  from {
+    transform: translate3d(0, -100%, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+.moveDown {
+  animation-name: moveDown;
+  animation-duration: 1.5s;
+  animation-fill-mode: both;
+}
+
 
 .map__road-1 {
   top: 52.625%;

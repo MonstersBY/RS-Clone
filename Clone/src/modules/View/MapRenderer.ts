@@ -21,7 +21,7 @@ export default class MapRenderer {
 
       const hexToken = hex.token ? `<div class="hex__num_tocken">${hex.token}</div>` : "";
 
-      const settlement_N = hex.settlement_N ? 
+      const settlement_N = hex.settlement_N ?
       `<div class="hex_node hex__settlement_N ${
         hex.settlement_N.player ? `own own_${hex.settlement_N.player}` : ""} ${
         hex.settlement_N.city ? "city" : ""}" id="${hex.settlement_N.id}" data-next="${hex.settlement_N.nextNodes}">
@@ -36,13 +36,13 @@ export default class MapRenderer {
       const road_S = hex.road_S ?
       `<div class="hex_node hex__road_S${hex.road_S.player ? ` own own_${hex.road_S.player}` : ""}" id="${hex.road_S.id}" data-next="${hex.road_S.nextNodes}"></div>` : "";
 
-      const settlement_S = hex.settlement_S ? 
+      const settlement_S = hex.settlement_S ?
         `<div class="hex_node hex__settlement_S ${
           hex.settlement_S.player ? `own own_${hex.settlement_S.player}` : ""} ${
           hex.settlement_S.city ? "city" : ""}" id="${hex.settlement_S.id}" data-next="${hex.settlement_S.nextNodes}">
         </div>` : "";
 
-      const robber = hex.robber ? `<div class="robber"></div>` : "";
+      const robber = hex.robber ? `<div class="robber moveDown"></div>` : "";
 
       const hexNode = `
         <div class="hex hex_${hex.type} ${

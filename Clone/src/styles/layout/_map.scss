@@ -412,6 +412,7 @@
 }
 
 .robber {
+  @extend %transition;
   width: 6.2vh;
   height: 10.2vh;
   z-index: 2;
