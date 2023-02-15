@@ -2,16 +2,6 @@
   position: absolute;
   bottom: 1rem;
   left: -116%;
-   &:before {
-    content: "";
-    position: absolute;
-    right: 0;
-    top: -1.5rem;
-    width: 1.5rem;
-    height: 1.5rem;
-    background: url("../assets/images/ingame/x_icon.svg");
-    background-size: 100% 100%;
-  }
   &__wrap {
     width: 16vh;
     flex-wrap: wrap;

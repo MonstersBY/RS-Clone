@@ -1,18 +1,16 @@
-// import State from "../backend/State/State";
 import socket from "./Socket";
 
 export default class Room {
   constructor(
-    public mode = "newbie", 
     ) {}
 
   init() {
-    // const room = this.getRandomHash()
-
     this.AllSockets()
     this.ChatMessages()
     this.CreateMessage()
     this.CreateRoom()
+    this.CheckReady()
+    this.CreateGame()
   }
 
   CreateRoom() {
@@ -33,19 +31,19 @@ export default class Room {
     // Users is array
 
     socket.on('all-user-room', users => {
-      const need = users.filter((user: { room: string | null; }) => user.room === room)
+      // const need = users.filter((user: { room: string | null; }) => user.room === room)
       let list = document.querySelector('.player__list')
       while(list?.firstChild){
         list.removeChild(list.firstChild);
       }
-      for (let i = 0; i < need.length; i++) {
-        const div = document.createElement('li')
-        div.classList.add('player__list-item')
-        div.innerHTML = `
+      for (let i = 0; i < users.length; i++) {
+        const li = document.createElement('li')
+        li.classList.add('player__list-item')
+        li.innerHTML = `
                   <div class="player__info">
                       <div class="player__name">
                           <img src="assets/images/icons/icon_player.svg" alt="player icon" class="player__icon">
-                          <span>${need[i].username}</span>
+                          <span>${users[i].username}</span>
                       </div>
                       <div class="player__color">
                           <select class="color__select" ">
@@ -65,12 +63,23 @@ export default class Room {
                           <img src="assets/images/map_animation/settlement_red.svg" alt="Settlement" width="15" height="15">
                           <img src="assets/images/map_animation/city_red.svg" alt="City" width="15" height="15">
                       </div>
-                  </div>
-                  <div class="state__btn not_ready">
-                      <span>Not ready</span>
-                      <img src="assets/images/icons/icon_x.svg" alt="not ready"  class="status__icon">
                   </div>`
-        list?.appendChild(div)
+        let readyInfo = document.createElement('div')
+        if (users[i].ready) {
+          readyInfo.innerHTML = `
+            <div class="state__btn">
+              <span>Ready</span>
+              <img src="assets/images/icons/icon-check_green.png" alt="ready"  class="status__icon">
+            </div>`
+        } else {
+          readyInfo.innerHTML = `
+            <div class="state__btn not_ready">
+              <span>Not ready</span>
+              <img src="assets/images/icons/icon_x.svg" alt="not ready"  class="status__icon">
+            </div>`
+        }
+        li.appendChild(readyInfo)
+        list?.appendChild(li)
       }
 
     })
@@ -91,11 +100,12 @@ export default class Room {
 
   ChatMessages() {
     const room = localStorage.getItem('Room')
+    const user = localStorage.getItem('Name')
     const chatForm = document.querySelector('.form-send__btn')
     chatForm?.addEventListener('click', e => {
       const msg = <HTMLInputElement>document.querySelector('.chat__input')
       if (msg?.value === '') return
-      // socket.emit('chatMessage', msg?.value, room)
+      socket.emit('chatMessage', msg?.value, room, user)
       msg.value = ''
       msg.focus()
     })
@@ -118,13 +128,23 @@ export default class Room {
     document.querySelector('.chat__messages')?.appendChild(div)
   }
 
-  addGameListener() {
-    if (window.location.pathname === "/room") {
-      document.getElementById("gameMode")?.addEventListener("change", (e) => {
-        if (e.target instanceof HTMLSelectElement) {
-          this.mode = e.target.value;
-        }
-      })
-    }
+  CheckReady() {
+    const checkbox = document.querySelector('.ready__checkbox');
+    checkbox?.addEventListener('change', (e) => {
+      const target = e.target as HTMLInputElement
+      socket.emit('change-prepared', localStorage.getItem('Room'), localStorage.getItem('Name'), target.checked)
+    })
   }
+
+  CreateGame() {
+    const startGame = document.getElementById('start-game')
+    startGame?.addEventListener('click', e => {
+      socket.emit('StartGame', localStorage.getItem('Room'))
+    })
+
+    socket.on('ChangeToGamePage', () => {
+      window.location.pathname = '/game'
+    })
+  }
+
 }

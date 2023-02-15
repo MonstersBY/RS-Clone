@@ -1,94 +1,112 @@
-import Room from "../Clone/src/backend/Room";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import State from './modules/State/State.js';
 
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-const io = require('socket.io')(http, {
+const httpServer = createServer();
+
+const io = new Server(httpServer, {
     cors: {
-        origin: ['http://localhost:8080', 'https://admin.socket.io'],
-        methods: ['GET', 'POST'],
-    },
-})
+      origin: ['http://localhost:8080', 'https://admin.socket.io', 'https://fluffy-panda-da842f.netlify.app']
+    }
+});
+
 const port = process.env.PORT || 3000;
 
-// let users = [];
-let rooms = [];
+let allrooms = []
+const allGame = new Map() 
 
-io.on('connection', (socket) => {
-    // console.log(`User connected ${socket.id}`);
+io.on("connection", (socket) => {
+    console.log(`User connected ${socket.id}`);
 
-    socket.on('chatMessage', (msg, room) => {
-        const user = users.find(user => user.id === socket.id)
-        io.to(room).emit('message', user.username, msg)
-    })
-    
-    socket.on('join-room', (room) => {
-        const user = {
-            username,
-            id: socket.id,
-            color,
-            ready,
-        }
-        room.users.push(user);
-    })
-
-    socket.on('create-room', (username, room) => {
-        const user = {
-            username,
-            id: socket.id,
-            color,
-            ready,
-        }
-
-        room.users.push(user);
-        if(user.room){
-            const newRoom = {
+    socket.on('join-room', (username, room) => {
+        const index = allrooms.findIndex(findRoom => findRoom.room === room)
+        if (index == -1) {
+            const roomInfo = {
                 room,
-                users: [],
-                HideBank,
-                GameMode,
-                GameMap,
-                Dice,
-            };
+                users: [{
+                    username,
+                    ready: false,
+                }],
+                colors: ['red', 'blue', 'orange', 'green'],
+                HideBank: true,
+                FriendlyRobber: true,
+                GameMode: 'Base',
+                GameMap: 'Classic',
+                Dice: 'Random',
+            }
+            allrooms.push(roomInfo)
+            socket.join(room)
+            io.to(room).emit('all-user-room', roomInfo.users)
+        } else {
+            const user = {
+                username,
+                ready: false,
+            }
+            socket.join(room)
+            allrooms[index].users.push(user)
+            io.to(room).emit('all-user-room', allrooms[index].users)
+        }
+        socket.emit('create-room', room)
     })
 
+    socket.on('create-game', room => {
+        if (!allGame.has(room)) {
+            const index = allrooms.findIndex(findRoom => findRoom.room === room)
+            const gameSettings = allrooms[index]
+            const state = new State()
+            
+            state.playersCount = gameSettings.users.length
+            state.gameMode = gameSettings.GameMode
+            state.initialState()
+            for (let i = 0; i < state.playersCount; i++) {
+                state.playersInfo[i].color = gameSettings.colors[i]
+            }
+            allGame.set(room, state)
+        }
+        const state = allGame.get(room)
+        socket.emit('Map-object', state.mapObject, state.playersInfo)
+    })
 
-        users.push(user);
+    socket.on('leave-lobby', (room, name) =>{
+        const index = allrooms.findIndex(findRoom => findRoom.room === room)
+        const indexUser = allrooms[index].users.findIndex(findUser => findUser.username === name)
+        allrooms[index].users.splice(indexUser, 1);
+        const msg = 'disconnect'
+        io.to(room).emit('message', name, msg)
+        io.to(room).emit('all-user-room', allrooms[index].users)
 
-
-            if (!rooms.includes(room)) rooms.push(newRoom);
-
-            console.log('room: '+ room);
-            socket.join(room)
-            socket.emit('create-room', room)
-            io.to(room).emit('all-user-room', users)
+        if ( allrooms[index].users.length === 0) {
+            allrooms.splice(index, 1)
+            io.emit('room-list', allrooms)
         }
 
     })
 
-    io.emit('room-list', rooms)
+    io.emit('room-list', allrooms)
 
-    // console.log(io.sockets.adapter.rooms);
+    socket.on('chatMessage', (msg, room, user) => {
+        io.to(room).emit('message', user, msg)
+    })
 
-    // console.log(socket.rooms);
-
-    // console.log(Object.keys(io.engine.clients)) //all users
     
+    socket.on('change-prepared', (room, name, status) => {
+        const index = allrooms.findIndex(findRoom => findRoom.room === room)
+        const indexUser = allrooms[index].users.findIndex(findUser => findUser.username === name)
+        allrooms[index].users[indexUser].ready = status
+        const msg = status ? 'ready' : 'not ready'
+        io.to(room).emit('message', name, msg)
+        io.to(room).emit('all-user-room', allrooms[index].users)
+    })
 
-    // console.log(socket.rooms);
+    socket.on('StartGame', (room) => {
+        io.to(room).emit('ChangeToGamePage')
+    })
 
     socket.on('disconnect', () => {
-        const index = users.findIndex(user => user.id === socket.id)
-        
-        if (index !== -1) {
-
-            users.splice(index, 1);
-        }
-        // console.log(`Socket disconnect! ${socket.id}`);
     });
 });
 
 
-http.listen(port, function() {
-    console.log('listening on *: ' + port);
-});
+io.listen(port, function () {
+    console.log('CORS-enabled web server listening on port '+ port)
+})

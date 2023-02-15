@@ -1,21 +1,18 @@
-// import State from "./State/State";
 import socket from "./Socket";
 
 export default class Mode {
 
   constructor(
-
     ) {}
 
   init() {
-    // localStorage.setItem('Room', '')
-
     this.ConnectSocket()
     this.createNewRoom()
     this.CheckRoom()
     this.CreateName()
     this.RoomList()
     this.ConnectRoom()
+    this.Disconnect()
   }
 
   ConnectSocket() {
@@ -48,7 +45,7 @@ export default class Mode {
             <img src="assets/images/icons/icon_gamemode_base.svg" alt="map icon" class="ranked-card__img">
           </div>
           <div class="ranked-card__text">
-            <h3 class="ranked-card__title">Room: <span class="room-name">${rooms[i]}</span></h3>
+            <h3 class="ranked-card__title">Room: <span class="room-name">${rooms[i].room}</span></h3>
             <div class="ranked-card__link">
               <a href="#" class="link login__link">Log in to play</a>
             </div>
@@ -91,6 +88,13 @@ export default class Mode {
       const room = target.querySelector('.room-name')?.innerHTML
       if (room) localStorage.setItem('Room', room)
     })
+  }
+
+  Disconnect() {
+    if (localStorage.getItem('Room')){
+      socket.emit('leave-lobby', localStorage.getItem('Room'), localStorage.getItem('Name'))
+      localStorage.setItem('Room', '')
+    }
   }
 
 }

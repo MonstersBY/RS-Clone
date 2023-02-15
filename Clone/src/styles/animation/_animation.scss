@@ -7,11 +7,6 @@
   cursor: pointer;
 }
 
-.build {
-  animation: build 2s linear;
-  opacity: 1;
-}
-
 @keyframes pulse {
   0% {
     box-shadow: 0 0 1.2vh $color-background-dark;
@@ -43,10 +38,19 @@
   }
 }
 
+.build {
+  animation: build 2s linear;
+  opacity: 1;
+}
+
 @keyframes build {
   0% {
     opacity: 0;
     scale: 1;
+  }
+  25%{
+    opacity: 0.5;
+    scale: 1.5;
   }
   50% {
     opacity: 1;
@@ -56,6 +60,38 @@
     opacity: 1;
     scale: 1;
   }
+}
+
+@keyframes moveDown {
+  from {
+    transform: translate3d(0, -100%, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+.moveDown {
+  animation-name: moveDown;
+  animation-duration: 1.5s;
+  animation-fill-mode: both;
+}
+
+@keyframes pulse_hex {
+  0% {
+    box-shadow: 0 0 2.2vh $color-background-dark;
+    border-radius: 0;
+  }
+  100% {
+    box-shadow: 0 0 2.4vh 1.5vh $color-primary-light;
+    border-radius: 50%;
+  }
+}
+
+.get {
+  animation: pulse_hex 2s alternate;
+  transition: all 0.2s ease-in-out;
 }
 
 .map__road-1 {

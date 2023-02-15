@@ -1,9 +1,10 @@
-import State from "../../backend/State/State";
-import Room from "../../backend/Room";
+// import State from "../../backend/State/State";
+// import Room from "../../backend/Room";
 import { IHex, ISettlement } from "../types/types";
 import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
 import { game } from "../StartPage/templates/gamePage";
+import { modificatePage } from "../StartPage/templates/modificateIngamePage";
 
 export default class View {
   constructor(
@@ -11,9 +12,10 @@ export default class View {
     private ui?: PlayerInterface
   ) {}
 
-    init(mapObject: any) {
+    init(mapObject: any, playersInfo: any) {
       setTimeout(() => {
-      this.renderFullMap(mapObject);
+        this.renderFullMap(mapObject);
+        modificatePage();
       // add renderfullUI(player: number)
       }, 0);
     }

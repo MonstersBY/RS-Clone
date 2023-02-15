@@ -23,27 +23,21 @@ export default class Controller {
     <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
     <button id="first-set">first-set<button>
     <button id="refresh">refresh<button>
-    <button id="build-road">build-road<button>
-    <button id="build-settlement">build-settlement<button>
-    <button id="build-city">build-city<button>
-    <button id="robber">robber<button>
+
+
     <button id="random-number">random-number<button>
     </div>
     `
     setTimeout(() => {
-      if (this.state) {
-        this.player1 = this.state?.playersInfo[0];
-        this.map = document.getElementById("map") as HTMLDivElement;
-        document.body.insertAdjacentHTML("afterbegin", buttons);
-        this.addBuildFirstSettlementListener();
-        this.addRefreshListener();
-        this.addRobberListener();
-        this.addRoadListener();
-        this.addSettlementListener();
-        this.addCityListener();
-        this.addListenerDices(); // not implemented in html. Add data atr to dice is a way
-        this.addPlayCardListener(this.player1);
-      }
+      this.player1 = this.state?.playersInfo[0];
+      this.map = document.getElementById("map") as HTMLDivElement;
+      document.body.insertAdjacentHTML("afterbegin", buttons);
+      this.addBuildFirstSettlementListener();
+      this.addRefreshListener();
+      this.addRoadListener();
+      this.addSettlementListener();
+      this.addCityListener();
+      this.addCardsListener();
     }, 0);
   }
 
@@ -56,20 +50,55 @@ export default class Controller {
   addRefreshListener() {
     document.getElementById("refresh")?.addEventListener("click", () => { this.state?.updateMap(); })
   }
-  addRobberListener() {
-    document.getElementById("robber")?.addEventListener("click", () => { this.setRobber(this.player1 as IPlayerInfo); })
-  }
+
   addRoadListener() {
     document.getElementById("build-road")?.addEventListener("click", () => { this.buildRoad(this.player1 as IPlayerInfo); })
   }
+
   addSettlementListener() {
     document.getElementById("build-settlement")?.addEventListener("click", () => { this.buildSettlement(this.player1 as IPlayerInfo); })
   }
+
   addCityListener() {
     document.getElementById("build-city")?.addEventListener("click", () => { this.buildCity(this.player1 as IPlayerInfo); })
   }
 
-  // Founding stage
+  /* addRobberListener() {
+    document.getElementById("robber")?.addEventListener("click", () => { this.setRobber(this.player1 as IPlayerInfo); })
+  } */
+
+  addCardsListener() {
+    document.getElementById("develop-card-list")?.addEventListener("click", (e) => {
+      if (e.target instanceof HTMLDivElement) {
+        const target = e.target.closest(".knight");
+        if (target && target.classList.contains("knight")) {
+          console.log(target);
+          this.playKnightCard(this.player1 as IPlayerInfo);
+        }
+      }
+      }) // , { once: true }
+  }
+
+  playKnightCard(player: IPlayerInfo) {
+    player.hand.development.knights -= 1;
+    player.armySize += 1;
+    this.state?.calculateArmySize();
+    this.setRobber(player);
+  }
+
+  // addAvaliableListener(player: IPlayerInfo) {
+  //   const mapContainer = document.querySelector("#map");
+  //   mapContainer?.addEventListener("click", e => {
+  //     if (e.target instanceof HTMLDivElement) {
+  //       if (e.target.classList.contains("hex_node")) {
+  //         if (e.target.classList.contains("active")) {
+  //           player.avalible.push(...e.target.dataset.next?.split(",") as Array<string>);
+  //         }
+  //       }
+  //     }
+  //   })
+  // }
+
   buildFirstSettlementMode() {
     const places = [...document.querySelectorAll(".hex__settlement_N"), ...document.querySelectorAll(".hex__settlement_S")];
     places.forEach((e) => {
@@ -92,6 +121,7 @@ export default class Controller {
             e.classList.remove("select");
         })
         this.state?.setNewSettlement(this.player1 as IPlayerInfo, chousen.id);
+        this.updateBuildCounter(".settlement__counter");
         this.state?.updateMap();
         // this.map?.removeEventListener("click", this.choosePlaceSettlement.bind(this)); //.bind(this) , {once: true}
         if (this.map) {
@@ -110,6 +140,7 @@ export default class Controller {
         road.addEventListener("click", (e) => {
           this.state?.setNewRoad(this.player1 as IPlayerInfo, road.id);
           this.state?.updateMap();
+          this.updateBuildCounter(".road__counter");
         })
       }
     })
@@ -154,6 +185,7 @@ export default class Controller {
       if(road && !road.classList.contains("own")) {
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
+          this.updateBuildCounter(".road__counter");
           this.state?.setNewRoad(this.player1 as IPlayerInfo, road.id);
           this.state?.updateMap();
           let event = new Event("road-builded");
@@ -172,6 +204,7 @@ export default class Controller {
         settlement.addEventListener("click", (e) => {
           this.state?.setNewSettlement(this.player1 as IPlayerInfo, settlement.id);
           this.state?.updateMap();
+          this.updateBuildCounter(".settlement__counter");
         })
       }
     })
@@ -183,6 +216,7 @@ export default class Controller {
       const settlement = document.getElementById(e) as HTMLDivElement;
       settlement.style.transform = "scale(0.8)";
       settlement.addEventListener("click", e => {
+        this.updateBuildCounter(".city__counter");
         this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
         this.state?.updateMap();
       })
