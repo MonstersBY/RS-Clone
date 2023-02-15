@@ -1,6 +1,7 @@
 import Router from "./Router";
 import Room from "./Room";
 import Mode from "./Mode";
+import GameMaster from "./GameMaster"
 // import State from "../backend/State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
@@ -70,13 +71,15 @@ export default class App {
 
   addGameListener() {
     if (window.location.pathname === "/game") {
-
       socket.emit('create-game', localStorage.getItem('Room'))
 
       socket.on('Map-object', (obj, players) => {
         this.view.init(obj, players);
         this.controller.init();
       })
+
+      const mode = new GameMaster();
+      mode.init();
     }
   }
 }

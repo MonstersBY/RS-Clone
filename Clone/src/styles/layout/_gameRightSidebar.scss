@@ -1,10 +1,17 @@
 .right__sidebar {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 1vh;
   width: 16%;
   height: 100vh;
   box-shadow: 2px 2px 4px $color-primary;
+
+  .all-player-board {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 1vh;
+  }
 }
 .miniboard__img {
   width: 5vh;
@@ -20,6 +27,9 @@
     height: 3vh;
   }
 }
+
+
+
 .player-board {
   display: flex;
   flex-direction: column;

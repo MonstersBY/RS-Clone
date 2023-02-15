@@ -1,9 +1,5 @@
-// import { IPlayerInfo, IHex, IPlayerHand } from "./types";
 import MapGenerator from "./MapGenerator.js"
 import { getEmptyPlayer } from "./EmptyPlayer.js"
-// const { MapGenerator } = require("./MapGenerator");
-// const { getEmptyPlayer } = require("./EmptyPlayer");
-// import View from "../../modules/View/View";
 
 export default class State {
   constructor (){
