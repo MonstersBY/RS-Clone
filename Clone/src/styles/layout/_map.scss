@@ -1,6 +1,6 @@
 .map__container {
   position: relative;
-  margin: 0 auto;
+  margin: auto auto;
   display: grid;
   grid-template-columns: repeat(14, 1fr);
   grid-template-rows: repeat(7, 1fr);
@@ -13,7 +13,7 @@
 
 .map-background__container {
   position: relative;
-  margin: 0 auto;
+  margin: auto auto;
   height: fit-content;
   background: radial-gradient(circle,#eed399 0,#eed399 56%,transparent 57%,transparent 100%);
 }
@@ -256,7 +256,7 @@
     background: $color-token;
     border-radius: 50%;
     box-shadow: 3px 3px 3px #000000b0;
-    font-size: large;
+    font-size: 2vmin;
     color: black;
     border: 1px solid #00000067;
   }
@@ -294,6 +294,7 @@
       top: -15%;
       transform: rotate(60deg);
       opacity: 0;
+      // background-color: rgb(203, 219, 26);
     }
     &_W {
       z-index: 3;
@@ -303,6 +304,7 @@
       left: -51%;
       top: 23%;
       opacity: 0;
+      // background-color: rgb(89, 39, 11);
     }
     &_S {
       z-index: 3;
@@ -313,6 +315,7 @@
       bottom: -12%;
       transform: rotate(-60deg);
       opacity: 0;
+      // background-color: rgb(75, 163, 38);
     }
   }
 }

@@ -114,6 +114,7 @@ export default class State {
   }
 
   // Player actions
+
   public setRobber(player: IPlayerInfo, id: string): Array<string> {
     const i = id.split("_")[1];
     if (this.mapObject) {
@@ -148,6 +149,7 @@ export default class State {
 
   public makeExchangeProposal(player: IPlayerInfo) {}// !!!
 
+  // Building
   public setNewSettlement(player: IPlayerInfo, id: string) {
     // add to mapObject
     const hex = id.split("_")[0];
@@ -225,6 +227,7 @@ export default class State {
     // console.log(player.avalible);
   }
 
+  // Development
   public buyDevelopmentCard(player: IPlayerInfo) {
     const resources = player.hand.resources;
     const development = player.hand.development;
@@ -255,13 +258,34 @@ export default class State {
     }
   }
 
-  public playKnigthCard(player: IPlayerInfo) {}// !!!
+  public playKnigthCard(player: IPlayerInfo) {
+    player.hand.development.knights -= 1;
+    player.armySize += 1;
+    this.calculateArmySize();
+  }
 
-  public playMonopolyCard(player: IPlayerInfo) {}// !!!
+  public playMonopolyCard(player: IPlayerInfo) {
+    player.hand.development.plenty -= 1;
+    this.view?.showMonopolyPopup();
+  }
 
-  public playPlentyCard(player: IPlayerInfo) {}// !!!
+  public useMonopolyEffect(player: IPlayerInfo, resource: string) {
+    player.hand.development.plenty -= 1;
+  }
 
-  public playRoadCard(player: IPlayerInfo) {}// !!!
+  public playPlentyCard(player: IPlayerInfo) {
+    player.hand.development.plenty -= 1;
+    this.view?.showPlentyPopup();
+  }
+
+  public usePlentyEffect(player: IPlayerInfo, resource1: string , resource2: string) {
+    player.hand.resources[resource1 as keyof typeof player.hand.resources] += 1;
+    player.hand.resources[resource2 as keyof typeof player.hand.resources] += 1;
+  }
+
+  public playRoadCard(player: IPlayerInfo) {
+    player.hand.development.road -= 1;
+  }
 
   // Tecnical checks and events
   private isAnyResourse(res: IPlayerHand["resources"]) {

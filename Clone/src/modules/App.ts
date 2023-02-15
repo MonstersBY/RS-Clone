@@ -1,6 +1,6 @@
 import Router from "./Router";
-// import Room from "./Room";
-// import Mode from "./Mode";
+import Room from "./Room";
+import Mode from "./Mode";
 import State from "../backend/State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
@@ -28,7 +28,6 @@ export default class App {
     this.setRouter();
     this.router.setRoutes();
     diceRoll();
-    modificatePage();
     burger(
       ".header-menu",
       ".menu__list",
@@ -41,8 +40,8 @@ export default class App {
     tradeListener();
     monopolyListener();
     plentyListener();
-    // this.CreateRoom();
-    // this.CreateMode();
+    this.CreateRoom();
+    this.CreateMode();
   }
 
   setRouter() {
@@ -50,20 +49,19 @@ export default class App {
     this.router.setRoutes();
   }
 
-  // temp disabled
-  // CreateRoom() {
-  //   const room = new Room();
-  //   room.init();
-  // }
+  CreateRoom() {
+    const room = new Room();
+    room.init();
+  }
 
-  // temp disabled
-  // CreateMode() {
-  //   const mode = new Mode();
-  //   mode.init();
-  // }
+  CreateMode() {
+    const mode = new Mode();
+    mode.init();
+  }
 
   addGameListener() {
     if (window.location.pathname === "/game") {
+      modificatePage();
       this.state.view = this.view;
       this.state.initialState();
 

@@ -1,3 +1,5 @@
+import Room from "../Clone/src/backend/Room";
+
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
@@ -9,8 +11,8 @@ const io = require('socket.io')(http, {
 })
 const port = process.env.PORT || 3000;
 
-let users = []
-let rooms = []
+// let users = [];
+let rooms = [];
 
 io.on('connection', (socket) => {
     // console.log(`User connected ${socket.id}`);
@@ -20,15 +22,42 @@ io.on('connection', (socket) => {
         io.to(room).emit('message', user.username, msg)
     })
     
-    socket.on('join-room', (username, room) => {
+    socket.on('join-room', (room) => {
         const user = {
             username,
-            room,
             id: socket.id,
+            color,
+            ready,
         }
-        users.push(user)
+        room.users.push(user);
+    })
+
+    socket.on('create-room', (username, room) => {
+        const user = {
+            username,
+            id: socket.id,
+            color,
+            ready,
+        }
+
+        room.users.push(user);
         if(user.room){
-            if (!rooms.includes(room)) rooms.push(room)
+            const newRoom = {
+                room,
+                users: [],
+                HideBank,
+                GameMode,
+                GameMap,
+                Dice,
+            };
+    })
+
+
+        users.push(user);
+
+
+            if (!rooms.includes(room)) rooms.push(newRoom);
+
             console.log('room: '+ room);
             socket.join(room)
             socket.emit('create-room', room)
@@ -36,6 +65,7 @@ io.on('connection', (socket) => {
         }
 
     })
+
     io.emit('room-list', rooms)
 
     // console.log(io.sockets.adapter.rooms);
