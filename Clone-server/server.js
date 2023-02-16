@@ -38,11 +38,6 @@ io.on("connection", (socket) => {
             allrooms.push(roomInfo)
             socket.join(room)
             io.to(room).emit('all-user-room', roomInfo.users)
-
-            document.getElementById("gameMap").addEventListener("change", (e) => {
-                console.log(e.target.value)
-                roomInfo.gameMap = e.target.value;
-            })
         } else {
             if (allrooms[index].lobbyState == 'Lobby') {
                 const user = {
