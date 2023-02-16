@@ -1,9 +1,8 @@
 export const intro = `
-  <div class="container">
       <div class="main-page__wrapper">
-      <h1 class="title">Online Alternative to Settlers of Catan</h1>
       <div class="content__wrapper flex-bs">
           <div class="main-page__right">
+            <div><a href="/mode" class="btn start__btn mode__page flex-bs">START</a></div>
             <h2 id="about" class="subtitle">What is Colonist?</h2>
             <p class="main-page__text">
                 <b>Short description:</b>
@@ -123,7 +122,5 @@ export const intro = `
               </div>
           </div>
       </div>
-          <a href="/mode" class="btn start__btn mode__page flex-bs">START</a>
       </div>
-  </div>
 `;

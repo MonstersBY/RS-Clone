@@ -7,10 +7,9 @@ export const core = `
         <a href="/" class="logo burger__logo flex-bs">
         <img src="assets/images/logo.png" alt="logo" class="logo__img">
         </a>
-      <ul class="menu__list header-menu__list flex-row">
-      </ul>
       <div class="overlay"></div>
     </nav>
+    <h1 class="title">Online Alternative to Settlers of Catan</h1>
     <div class="hamburger">
       <span class="line"></span>
       <span class="line"></span>

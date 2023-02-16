@@ -59,19 +59,14 @@
   flex-direction: column;
   gap: min(2vh,20px);
   align-self: center;
-  margin: 0 auto;
-  max-width: min(max(350px,45vw),450px);
+  padding: 0 1%;
+  width: 100%;
+  max-width: 40%;
   max-height: 70vh;
 }
 
-.title {
-  text-align: center;
-  font-size: min(max(1.8rem,6vh),4.4rem);
-  margin-bottom: 0.8rem;
-  line-height: 1.5;
-  font-weight: 700;
-}
-.ranked-cards__title {
+.ranked-cards__title,
+.mode__subtitle {
   text-transform: uppercase;
 }
 
@@ -85,7 +80,6 @@
   @include font(1.8rem, 120%);
   display: flex;
   flex-direction: column;
-  padding: 0 10%;
   gap: 2rem;
   margin-bottom: 2rem;
 }
@@ -103,8 +97,8 @@
 
 .new__nick {
   @include font(1.5rem, 120%);
-  width: 100%;
-  height: 3rem;
+  width: 80%;
+  height: 4rem;
   padding: 0.5rem;
   border-radius: 3px;
   overflow: visible;
@@ -128,13 +122,12 @@
 
 .play__btn {
   @include font(3rem, 130%, 700);
-  width: auto;
+  width: 100%;
   height: 9rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 10%;
   background-color: $color-btn-primary;
   filter: drop-shadow(2px 4px 4px rgba(20,20,20,0.4));
   &:hover {

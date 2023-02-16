@@ -6,7 +6,7 @@ export const mode = `
           </div>
           </div>
         <div class="landing-page_right">
-          <h1 class="title">#1 Free Online Alternative to Settlers of Catan</h1>
+          <h2 class="subtitle mode__subtitle">Creating room</h2>
           <div class="social__proof">
             <div class="random__nick"><b>Your random nickname: </b>YHdhl</div>
               <label class="nick__label" for="new__nick"><b>Change nickname:</b>
