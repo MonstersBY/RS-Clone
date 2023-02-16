@@ -10,9 +10,6 @@ export const game = `
                 <li class="menu__list-item mode__page">
                   <a href="#" class="link menu__link active">Play Page</a>
                 </li>
-                <li class="menu__list-item">
-                  <a href="ingame.html" class="link menu__link">Rules</a>
-                </li>
               </ul>
               <div class="overlay"></div>
             </nav>
@@ -25,9 +22,9 @@ export const game = `
           <div id='hand' class="player-hand">
             <div class="player-hand__title">Hand</div>
             <div class="player-hand__resources flex-bs">
-              <div id="player-hand_lumber" class="resource player-hand__resource flex-bs">
+              <div id="player-hand_lumber" class="resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-lumber"></div>
-                <div id="hand-counter_lumber" class="resource-counter flex-bs">1</div>
+                <div id="hand-counter_lumber" class="resource-counter invisible flex-bs">0</div>
               </div>
               <div id="player-hand_brick" class=" resource player-hand__resource flex-bs">
                 <div class="resource-icon icon-brick"></div>
@@ -37,9 +34,9 @@ export const game = `
                 <div class="resource-icon icon-wool"></div>
                 <div id="hand-counter_wool" class="resource-counter flex-bs">0</div>
               </div>
-              <div id="player-hand_grain" class="resource player-hand__resource flex-bs">
+              <div id="player-hand_grain" class="resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-grain"></div>
-                <div id="hand-counter_grain" class="resource-counter flex-bs">2</div>
+                <div id="hand-counter_grain" class="resource-counter invisible flex-bs empty">0</div>
               </div>
               <div id="player-hand_ore" class="resource player-hand__resource flex-bs">
                 <div class="resource-icon icon-ore"></div>
@@ -213,130 +210,6 @@ export const game = `
             </form>
           </div>
           <div class = "all-player-board">
-            <div class="player-board">
-            <div class="nickname__wrap flex-bs">
-              <div class="avatar__wrap flex-bs">
-                <img src="assets/images/icons/icon_player.svg" alt="avatar" class="player__icon">
-              </div>
-              <div class="nickname">YaniaR</div>
-              <div class="player-score flex-bs">
-                <span>1</span>
-              </div>
-            </div>
-            <div class="player-miniboard flex-bs">
-              <div class="card__wrap unknown__wrap">
-                <img src="assets/images/ingame/card_rescardback.svg" alt="unknown card" class="miniboard__img card__img">
-                <div class="miniboard__counter flex-bs">7</div>
-              </div>
-              <div class="card__wrap devcard__wrap">
-                <img src="assets/images/ingame/card_devcardback.svg" alt="devcard" class="miniboard__img devcard__img">
-                <div class="miniboard__counter flex-bs">2</div>
-              </div>
-              <div class="card__wrap largest-army__wrap">
-                <img src="assets/images/ingame/icon_largest_army.svg" alt="army" class="miniboard__img largest__icon army__img">
-                <div class="miniboard__counter flex-bs">2</div>
-              </div>
-              <div class="card__wrap longest-road__wrap">
-                <img src="assets/images/ingame/icon_longest_road.svg" alt="army"
-                  class="miniboard__img largest__icon longest-road__img">
-                <div class="miniboard__counter flex-bs">3</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="player-board">
-            <div class="nickname__wrap flex-bs">
-              <div class="avatar__wrap flex-bs">
-                <img src="assets/images/icons/icon_player.svg" alt="avatar" class="player__icon">
-              </div>
-              <div class="nickname">YaniaR</div>
-              <div class="player-score flex-bs">
-                <span>1</span>
-              </div>
-            </div>
-            <div class="player-miniboard flex-bs">
-              <div class="card__wrap unknown__wrap">
-                <img src="assets/images/ingame/card_rescardback.svg" alt="unknown card" class="miniboard__img card__img">
-                <div class="miniboard__counter flex-bs">7</div>
-              </div>
-              <div class="card__wrap devcard__wrap">
-                <img src="assets/images/ingame/card_devcardback.svg" alt="devcard" class="miniboard__img devcard__img">
-                <div class="miniboard__counter flex-bs">2</div>
-              </div>
-              <div class="card__wrap largest-army__wrap">
-                <img src="assets/images/ingame/icon_largest_army.svg" alt="army" class="miniboard__img largest__icon army__img">
-                <div class="miniboard__counter flex-bs">2</div>
-              </div>
-              <div class="card__wrap longest-road__wrap">
-                <img src="assets/images/ingame/icon_longest_road.svg" alt="army"
-                  class="miniboard__img largest__icon longest-road__img">
-                <div class="miniboard__counter flex-bs">3</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="player-board">
-            <div class="nickname__wrap flex-bs">
-              <div class="avatar__wrap flex-bs">
-                <img src="assets/images/icons/icon_player.svg" alt="avatar" class="player__icon">
-              </div>
-              <div class="nickname">YaniaR</div>
-              <div class="player-score flex-bs">
-                <span>1</span>
-              </div>
-            </div>
-            <div class="player-miniboard flex-bs">
-              <div class="card__wrap unknown__wrap">
-                <img src="assets/images/ingame/card_rescardback.svg" alt="unknown card" class="miniboard__img card__img">
-                <div class="miniboard__counter flex-bs">7</div>
-              </div>
-              <div class="card__wrap devcard__wrap">
-                <img src="assets/images/ingame/card_devcardback.svg" alt="devcard" class="miniboard__img devcard__img">
-                <div class="miniboard__counter flex-bs">2</div>
-              </div>
-              <div class="card__wrap largest-army__wrap">
-                <img src="assets/images/ingame/icon_largest_army.svg" alt="army" class="miniboard__img largest__icon army__img">
-                <div class="miniboard__counter flex-bs">2</div>
-              </div>
-              <div class="card__wrap longest-road__wrap">
-                <img src="assets/images/ingame/icon_longest_road.svg" alt="army"
-                  class="miniboard__img largest__icon longest-road__img">
-                <div class="miniboard__counter flex-bs">3</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="player-board">
-            <div class="nickname__wrap flex-bs">
-              <div class="avatar__wrap flex-bs">
-                <img src="assets/images/icons/icon_player.svg" alt="avatar" class="player__icon">
-              </div>
-              <div class="nickname">YaniaR</div>
-              <div class="player-score flex-bs">
-                <span>1</span>
-              </div>
-            </div>
-            <div class="player-miniboard flex-bs">
-              <div class="card__wrap unknown__wrap">
-                <img src="assets/images/ingame/card_rescardback.svg" alt="unknown card" class="miniboard__img card__img">
-                <div class="miniboard__counter flex-bs">7</div>
-              </div>
-              <div class="card__wrap devcard__wrap">
-                <img src="assets/images/ingame/card_devcardback.svg" alt="devcard" class="miniboard__img devcard__img">
-                <div class="miniboard__counter flex-bs">2</div>
-              </div>
-              <div class="card__wrap largest-army__wrap">
-                <img src="assets/images/ingame/icon_largest_army.svg" alt="army" class="miniboard__img largest__icon army__img">
-                <div class="miniboard__counter flex-bs">2</div>
-              </div>
-              <div class="card__wrap longest-road__wrap">
-                <img src="assets/images/ingame/icon_longest_road.svg" alt="army"
-                  class="miniboard__img largest__icon longest-road__img">
-                <div class="miniboard__counter flex-bs">3</div>
-              </div>
-            </div>
-          </div>
-          </div>
           </div>
         </div>
         <div class="timer game-btn flex-bs">Time:

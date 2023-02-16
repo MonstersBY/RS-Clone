@@ -1,12 +1,10 @@
-// import State from "../backend/State/State";
 import socket from "./Socket";
 
 export default class Room {
   constructor(
-    ) {}
+  ) { }
 
   init() {
-    // const room = this.getRandomHash()
     this.AllSockets()
     this.ChatMessages()
     this.CreateMessage()
@@ -36,7 +34,7 @@ export default class Room {
     socket.on('all-user-room', users => {
       // const need = users.filter((user: { room: string | null; }) => user.room === room)
       let list = document.querySelector('.player__list')
-      while(list?.firstChild){
+      while (list?.firstChild) {
         list.removeChild(list.firstChild);
       }
       for (let i = 0; i < users.length; i++) {
@@ -54,13 +52,6 @@ export default class Room {
                               <option value="Blue">Blue</option>
                               <option value="Orange">Orange</option>
                               <option value="Green">Green</option>
-                              <option value="Black">Black</option>
-                              <option value="Bronze">Bronze</option>
-                              <option value="Silver">Silver</option>
-                              <option value="Gold">Gold</option>
-                              <option value="White">White</option>
-                              <option value="Purple">Purple</option>
-                              <option value="MysticBlue">MysticBlue</option>
                           </select>
                           <img src="assets/images/map_animation/road_red.svg" alt="Road" width="15" height="15">
                           <img src="assets/images/map_animation/settlement_red.svg" alt="Settlement" width="15" height="15">
@@ -92,7 +83,7 @@ export default class Room {
     let text = "";
     let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for (var i = 0; i < 5; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
     return text
   }
 
@@ -166,5 +157,4 @@ export default class Room {
       window.location.pathname = '/game'
     })
   }
-
 }
