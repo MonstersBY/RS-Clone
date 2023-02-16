@@ -30,7 +30,6 @@ export default class App {
     this.setRouter();
     this.router.setRoutes();
     diceRoll();
-    modificatePage();
     burger(
       ".header-menu",
       ".menu__list",

@@ -21,13 +21,16 @@ export default class Controller {
     <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
     <button id="first-set">first-set<button>
     <button id="refresh">refresh<button>
-    <button id="build-road">build-road<button>
-    <button id="build-settlement">build-settlement<button>
-    <button id="build-city">build-city<button>
-    <button id="robber">robber<button>
+
+
     <button id="random-number">random-number<button>
     </div>
     `
+    // <button id="robber">robber<button>
+    //  <button id="build-road">build-road<button>
+    // <button /* id="build-settlement" */>build-settlement<button>
+    // <button/*  id="build-city" */>build-city<button>
+
     setTimeout(() => {
       this.player1 = this.state?.playersInfo[0];
       this.map = document.getElementById("map") as HTMLDivElement;
@@ -37,7 +40,7 @@ export default class Controller {
       this.addRoadListener();
       this.addSettlementListener();
       this.addCityListener();
-      this.addRobberListener();
+      this.addCardsListener();
     }, 0);
   }
 
@@ -61,16 +64,20 @@ export default class Controller {
     document.getElementById("build-city")?.addEventListener("click", () => { this.buildCity(this.player1 as IPlayerInfo); })
   }
 
-  addRobberListener() {
+  /* addRobberListener() {
     document.getElementById("robber")?.addEventListener("click", () => { this.setRobber(this.player1 as IPlayerInfo); })
-  }
+  } */
 
   addCardsListener() {
     document.getElementById("develop-card-list")?.addEventListener("click", (e) => {
-      if (e.target instanceof HTMLDivElement && e.target.classList.contains("knight")) {
-        this.playKnightCard(this.player1 as IPlayerInfo);
+      if (e.target instanceof HTMLDivElement) {
+        const target = e.target.closest(".knight");
+        if (target && target.classList.contains("knight")) {
+          console.log(target);
+          this.playKnightCard(this.player1 as IPlayerInfo);
+        }
       }
-    })// , { once: true }
+      }) // , { once: true }
   }
 
   playKnightCard(player: IPlayerInfo) {
@@ -115,6 +122,7 @@ export default class Controller {
             e.classList.remove("select");
         })
         this.state?.setNewSettlement(this.player1 as IPlayerInfo, chousen.id);
+        this.updateBuildCounter(".settlement__counter");
         this.state?.updateMap();
         // this.map?.removeEventListener("click", this.choosePlaceSettlement.bind(this)); //.bind(this) , {once: true}
         if (this.map) {
@@ -133,6 +141,7 @@ export default class Controller {
         road.addEventListener("click", (e) => {
           this.state?.setNewRoad(this.player1 as IPlayerInfo, road.id);
           this.state?.updateMap();
+          this.updateBuildCounter(".road__counter");
         })
       }
     })
@@ -145,6 +154,7 @@ export default class Controller {
       if(road && !road.classList.contains("own")) {
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
+          this.updateBuildCounter(".road__counter");
           this.state?.setNewRoad(this.player1 as IPlayerInfo, road.id);
           this.state?.updateMap();
         })
@@ -161,6 +171,7 @@ export default class Controller {
         settlement.addEventListener("click", (e) => {
           this.state?.setNewSettlement(this.player1 as IPlayerInfo, settlement.id);
           this.state?.updateMap();
+          this.updateBuildCounter(".settlement__counter");
         })
       }
     })
@@ -172,29 +183,54 @@ export default class Controller {
       const settlement = document.getElementById(e) as HTMLDivElement;
       settlement.style.transform = "scale(0.8)";
       settlement.addEventListener("click", e => {
+        this.updateBuildCounter(".city__counter");
         this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
         this.state?.updateMap();
       })
     })
   }
 
+  updateBuildCounter(sel: string) {
+    const counter = document.querySelector(sel);
+    let counterNumber = Number(counter?.textContent);
+    if (counterNumber <= 0) return;
+    if(counter) counter.textContent = `${ --counterNumber }`;
+  }
+
   setRobber(player: IPlayerInfo) {
     //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
     this.map?.addEventListener("click", (e: MouseEvent) => {
-      if (e.target instanceof HTMLDivElement && e.target.classList.contains("hex")) {
-        const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, String(e.target.id)); //this.player1 as IPlayerInfo, 
-        this.state?.updateMap();
-        settlementsToRob?.forEach(e => {
-          const settlement = document.getElementById(e) as HTMLDivElement;
-          if (settlement.classList.contains("own")
-          && !settlement.classList.contains("own_nobody")
-          && !settlement.classList.contains(`own_${player.color}`)){
-            settlement.classList.add("select");
-            settlement.addEventListener("click", e => {
-              this.state?.transferOneToAnother(player, settlement.classList[3])
-            }, {once: true});
-          }
-        })
+
+      if (e.target instanceof HTMLDivElement) {
+        const target = e.target.closest(".hex");
+        if (target && target.classList.contains("hex")) {
+          const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, String(target.id)); //this.player1 as IPlayerInfo,
+          this.state?.updateMap();
+
+          const robber = document.querySelector(".robber");
+          if (robber) robber.classList.add("moveDown");
+
+          settlementsToRob?.forEach((e) => {
+            const settlement = document.getElementById(e) as HTMLDivElement;
+            if (
+              settlement.classList.contains("own") &&
+              !settlement.classList.contains("own_nobody") &&
+              !settlement.classList.contains(`own_${player.color}`)
+            ) {
+              settlement.classList.add("select");
+              settlement.addEventListener(
+                "click",
+                (e) => {
+                  this.state?.transferOneToAnother(
+                    player,
+                    settlement.classList[3]
+                  );
+                },
+                { once: true }
+              );
+            }
+          });
+        }
       }
     })
   }

@@ -41,8 +41,8 @@ export const plentyListener = () => {
 
   document.addEventListener("click", (e: Event) => {
     if (e.target && e.target instanceof HTMLElement) {
-      const target = e.target.closest(".dev-invention");
-      if (target && target.classList.contains("dev-invention")) {
+      const target = e.target.closest(".dev-plenty");
+      if (target && target.classList.contains("dev-plenty")) {
         modalPlenty?.classList.toggle("modal");
       }
     }
