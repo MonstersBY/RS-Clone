@@ -15,7 +15,7 @@ export default class View {
     init(mapObject: any, playersInfo: any) {
       setTimeout(() => {
         this.renderFullMap(mapObject);
-        modificatePage();
+        // modificatePage();
       // add renderfullUI(player: number)
       }, 0);
     }

@@ -42,6 +42,7 @@ export default class App {
     tradeListener();
     monopolyListener();
     plentyListener();
+    modificatePage();
     this.CreateRoom();
     this.CreateMode();
   }

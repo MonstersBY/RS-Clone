@@ -10,9 +10,6 @@ export const game = `
                 <li class="menu__list-item mode__page">
                   <a href="#" class="link menu__link active">Play Page</a>
                 </li>
-                <li class="menu__list-item">
-                  <a href="ingame.html" class="link menu__link">Rules</a>
-                </li>
               </ul>
               <div class="overlay"></div>
             </nav>
@@ -25,25 +22,25 @@ export const game = `
           <div id='hand' class="player-hand">
             <div class="player-hand__title">Hand</div>
             <div class="player-hand__resources flex-bs">
-              <div id="player-hand_lumber" class="resource player-hand__resource flex-bs">
+              <div id="player-hand_lumber" class="resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-lumber"></div>
-                <div id="hand-counter_lumber" class="resource-counter flex-bs">1</div>
+                <div id="hand-counter_lumber" class="resource-counter invisible flex-bs">0</div>
               </div>
               <div id="player-hand_brick" class=" resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-brick"></div>
-                <div id="hand-counter_brick" class="resource-counter invisible flex-bs">0</div>
+                <div id="hand-counter_brick" class="resource-counter invisible flex-bs empty">0</div>
               </div>
               <div id="player-hand_wool" class="resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-wool"></div>
-                <div id="hand-counter_wool" class="resource-counter invisible flex-bs">0</div>
+                <div id="hand-counter_wool" class="resource-counter invisible flex-bs empty">0</div>
               </div>
-              <div id="player-hand_grain" class="resource player-hand__resource flex-bs">
+              <div id="player-hand_grain" class="resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-grain"></div>
-                <div id="hand-counter_grain" class="resource-counter flex-bs">2</div>
+                <div id="hand-counter_grain" class="resource-counter invisible flex-bs empty">0</div>
               </div>
               <div id="player-hand_ore" class="resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-ore"></div>
-                <div id="hand-counter_ore" class="resource-counter invisible flex-bs">0</div>
+                <div id="hand-counter_ore" class="resource-counter invisible flex-bs empty">0</div>
               </div>
             </div>
           </div>

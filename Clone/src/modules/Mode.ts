@@ -97,5 +97,4 @@ export default class Mode {
       localStorage.setItem('Room', '')
     }
   }
-
 }
