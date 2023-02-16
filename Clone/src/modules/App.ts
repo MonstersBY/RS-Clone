@@ -30,11 +30,11 @@ export default class App {
     this.router.setRoutes();
     diceRoll();
     burger(
-      ".header-menu",
+      ".game-menu",
       ".menu__list",
-      ".hamburger",
-      ".burger__logo",
-      ".overlay"
+      ".game-burger",
+      ".game-menu .burger__logo",
+      ".game-menu .overlay"
     );
     costListener();
     tradeListener();
