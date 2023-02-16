@@ -35,6 +35,7 @@ export default class MapGenerator {
         } else if(newMap[i].type !== "sea") {
           newMap[i].token = tokens[t];
           newMap[i].type = types[t];
+          newMap[i].robber = false;
           t++;
         }
       }

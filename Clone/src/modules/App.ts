@@ -1,7 +1,6 @@
 import Router from "./Router";
 import Room from "./Room";
 import Mode from "./Mode";
-// import State from "../backend/State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
@@ -18,7 +17,6 @@ export default class App {
     public router: Router = new Router(),
     public controller: Controller = new Controller(),
     public view: View = new View(),
-    // public state: State = new State(),
 
     public inGame: boolean = false, // unused
     ) {}
@@ -37,7 +35,6 @@ export default class App {
       ".burger__logo",
       ".overlay"
     );
-    // temp disabled
     costListener();
     tradeListener();
     monopolyListener();
@@ -52,7 +49,6 @@ export default class App {
     this.router.setRoutes();
   }
 
-  // temp disabled
   CreateRoom() {
     if (window.location.pathname === "/room") {
       const room = new Room();
@@ -60,7 +56,6 @@ export default class App {
     }
   }
 
-  // temp disabled
   CreateMode() {
     if (window.location.pathname === "/mode") {
       const mode = new Mode();

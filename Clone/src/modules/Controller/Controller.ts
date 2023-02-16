@@ -1,9 +1,11 @@
 import View from "../View/View";
-import Room from "../../backend/Room";
+// import Room from "../../backend/Room";
 // import Timer from "./Timer";
-import GameMaster from "../../backend/GameMaster";
-import { IPlayerInfo } from "../types/types";
+// import GameMaster from "../../backend/GameMaster";
+import { getElementBySelector, IPlayerInfo } from "../types/types";
 import State from "../../backend/State/State";
+import { randomDiceRoll } from "../diceRoll/randomDiceRoll";
+import socket from "../Socket";
 
 export default class Controller {
   constructor(
@@ -26,11 +28,6 @@ export default class Controller {
     <button id="random-number">random-number<button>
     </div>
     `
-    // <button id="robber">robber<button>
-    //  <button id="build-road">build-road<button>
-    // <button /* id="build-settlement" */>build-settlement<button>
-    // <button/*  id="build-city" */>build-city<button>
-
     setTimeout(() => {
       this.player1 = this.state?.playersInfo[0];
       this.map = document.getElementById("map") as HTMLDivElement;
@@ -44,10 +41,12 @@ export default class Controller {
     }, 0);
   }
 
+  addListenerDices() { // TODO Как типизировать callback?
+    document.getElementById("roll-dice")?.addEventListener("click", () => { this.rollDice() })
+  }
   addBuildFirstSettlementListener() {
     document.getElementById("first-set")?.addEventListener("click", this.buildFirstSettlementMode.bind(this))// , { once: true }
   }
-
   addRefreshListener() {
     document.getElementById("refresh")?.addEventListener("click", () => { this.state?.updateMap(); })
   }
@@ -147,6 +146,38 @@ export default class Controller {
     })
   }
 
+  // Player turn
+  // Start turn
+  rollDice() { //TODO need to add dice imputs or read value prop at existing node
+    randomDiceRoll();
+    const one = Number((getElementBySelector("dice-one") as HTMLInputElement).value);
+    const two = Number((getElementBySelector("dice-two") as HTMLInputElement).value);
+    this.state?.setDiceRoll([one, two]);
+    this.state?.addResoursesThisTurn(one + two);
+  }
+
+  setRobber(player: IPlayerInfo) {
+    //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
+    this.map?.addEventListener("click", (e: MouseEvent) => {
+      if (e.target instanceof HTMLDivElement && e.target.classList.contains("hex")) {
+        const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, String(e.target.id)); //this.player1 as IPlayerInfo, 
+        this.state?.updateMap();
+        settlementsToRob?.forEach(e => {
+          const settlement = document.getElementById(e) as HTMLDivElement;
+          if (settlement.classList.contains("own")
+          && !settlement.classList.contains("own_nobody")
+          && !settlement.classList.contains(`own_${player.color}`)){
+            settlement.classList.add("select");
+            settlement.addEventListener("click", e => {
+              this.state?.transferOneToAnother(player, settlement.classList[3])
+            }, {once: true});
+          }
+        })
+      }
+    })
+  }
+
+  // Building
   buildRoad(player: IPlayerInfo) {
     const roads = [...new Set(this.player1?.avalible.filter(e => e.split("_")[1] === "road"))];
     roads.forEach(e => {
@@ -157,6 +188,8 @@ export default class Controller {
           this.updateBuildCounter(".road__counter");
           this.state?.setNewRoad(this.player1 as IPlayerInfo, road.id);
           this.state?.updateMap();
+          let event = new Event("road-builded");
+          window.dispatchEvent(event);
         })
       }
     })
@@ -190,55 +223,50 @@ export default class Controller {
     })
   }
 
-  updateBuildCounter(sel: string) {
-    const counter = document.querySelector(sel);
-    let counterNumber = Number(counter?.textContent);
-    if (counterNumber <= 0) return;
-    if(counter) counter.textContent = `${ --counterNumber }`;
+  // Development cards
+  buyDevelopCard() {
+    this.state?.buyDevelopmentCard(this.player1 as IPlayerInfo);
   }
 
-  setRobber(player: IPlayerInfo) {
-    //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
-    this.map?.addEventListener("click", (e: MouseEvent) => {
-
+  addPlayCardListener(player: IPlayerInfo) {
+    document.getElementById("develop-card-list")?.addEventListener("click", (e) => {
       if (e.target instanceof HTMLDivElement) {
-        const target = e.target.closest(".hex");
-        if (target && target.classList.contains("hex")) {
-          const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, String(target.id)); //this.player1 as IPlayerInfo,
-          this.state?.updateMap();
-
-          const robber = document.querySelector(".robber");
-          if (robber) robber.classList.add("moveDown");
-
-          settlementsToRob?.forEach((e) => {
-            const settlement = document.getElementById(e) as HTMLDivElement;
-            if (
-              settlement.classList.contains("own") &&
-              !settlement.classList.contains("own_nobody") &&
-              !settlement.classList.contains(`own_${player.color}`)
-            ) {
-              settlement.classList.add("select");
-              settlement.addEventListener(
-                "click",
-                (e) => {
-                  this.state?.transferOneToAnother(
-                    player,
-                    settlement.classList[3]
-                  );
-                },
-                { once: true }
-              );
-            }
-          });
+        const name = e.target.className.split(" ")[1];
+        switch (name) {
+          case "knight":
+            this.state?.playKnigthCard(player);
+            this.setRobber(player);
+            break;
+          case "monopoly":
+            this.state?.playMonopolyCard(player);
+            this.state?.useMonopolyEffect(player, this.choiceHandler());
+            break;
+          case "plenty":
+            this.state?.playPlentyCard(player);
+            break;
+          case "road":
+            this.state?.playRoadCard(player);
+            this.buildRoad(player);
+            window.addEventListener("road-builded", () => {
+              this.buildRoad(player);
+            }, {once: true});
+            break;
         }
       }
     })
   }
 
-
-buyDevelopCard() {}
-
-  rollDice() {} // import from dice module?
+  choiceHandler() { // add listener on "accept choice btn"
+    getElementBySelector("accept-choice-btn").addEventListener("click", (e) => {
+      let res;
+      if (e.target instanceof HTMLDivElement) {
+        if (e.target.classList.contains("resourse-for-choice")) {
+          res = e.target.dataset.resource;
+        }
+      }
+    }, {once: true});
+    return "here will be string with resourse";
+  }
 
   rollDiceTimer() {}
 

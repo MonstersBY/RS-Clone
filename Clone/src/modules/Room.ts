@@ -1,4 +1,3 @@
-// import State from "../backend/State/State";
 import socket from "./Socket";
 
 export default class Room {
@@ -6,7 +5,6 @@ export default class Room {
   ) { }
 
   init() {
-    // const room = this.getRandomHash()
     this.AllSockets()
     this.ChatMessages()
     this.CreateMessage()

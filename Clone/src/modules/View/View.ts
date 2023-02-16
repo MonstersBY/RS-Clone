@@ -65,4 +65,12 @@ export default class View {
     // transfer this.state.playersInfo[player].hand object to UI
     
   }
+
+  showPlentyPopup() {
+
+  }
+
+  showMonopolyPopup() {
+
+  }
 }

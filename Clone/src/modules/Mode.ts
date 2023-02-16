@@ -1,4 +1,3 @@
-// import State from "./State/State";
 import socket from "./Socket";
 
 export default class Mode {
