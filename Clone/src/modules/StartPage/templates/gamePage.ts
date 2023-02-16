@@ -49,17 +49,17 @@ export const game = `
           </div>
           <div class="game-btns__wrapper flex-bs">
               <div class="game-btn flex-bs">
-                <div class="player-stock__icon player-stock__road_red">
-                  <div class="player-stock__counter flex-bs road__counter">13</div>
+                <div id="build-road" class="player-stock__icon player-stock__road_red">
+                  <div class="player-stock__counter flex-bs road__counter">15</div>
                 </div>
               </div>
               <div class="game-btn">
-                <div class="player-stock__icon player-stock__settlement_red">
-                  <div class="player-stock__counter flex-bs settlement__counter">3</div>
+                <div id="build-settlement" class="player-stock__icon player-stock__settlement_red">
+                  <div class="player-stock__counter flex-bs settlement__counter">5</div>
                 </div>
               </div>
               <div class="game-btn">
-                <div class="player-stock__icon player-stock__city_red">
+                <div id="build-city" class="player-stock__icon player-stock__city_red">
                   <div class="player-stock__counter flex-bs city__counter">4</div>
                 </div>
               </div>
@@ -71,18 +71,18 @@ export const game = `
               <div class="trade-devcard__btn-icon"></div>
             </div>
           </div>
-          <div class="game-btns__wrapper flex-bs develop-cards__wrapper">
-            <div class="game-btn develop__btn">
+          <div id="develop-card-list" class="game-btns__wrapper flex-bs develop-cards__wrapper">
+            <div class="game-btn monopoly develop__btn">
               <div class="devcard__btn-icon dev-monopoly">
                 <div class="player-stock__counter flex-bs devcard__counter">1</div>
               </div>
             </div>
-            <div class="game-btn develop__btn empty">
-              <div class="devcard__btn-icon dev-invention">
+            <div class="game-btn plenty develop__btn empty">
+              <div class="devcard__btn-icon dev-plenty">
                 <div class="player-stock__counter flex-bs devcard__counter">0</div>
               </div>
             </div>
-            <div class="game-btn develop__btn">
+            <div class="game-btn road develop__btn">
               <div class="devcard__btn-icon dev-road">
                 <div class="player-stock__counter flex-bs devcard__counter">1</div>
               </div>
@@ -92,8 +92,8 @@ export const game = `
                 <div class="player-stock__counter flex-bs devcard__counter">3</div>
               </div>
             </div>
-            <div class="game-btn develop__btn">
-              <div class="devcard__btn-icon dev-knight">
+            <div class="game-btn knight develop__btn">
+              <div id="robber" class="devcard__btn-icon dev-knight">
                 <div class="player-stock__counter flex-bs devcard__counter">5</div>
               </div>
             </div>

@@ -6,6 +6,7 @@ import PlayerInterface from "./PlayerInterface";
 import { game } from "../StartPage/templates/gamePage";
 
 import socket from "../Socket";
+import { modificatePage } from "../StartPage/templates/modificateIngamePage";
 
 export default class View {
   constructor(
@@ -15,6 +16,7 @@ export default class View {
 
     init(mapObject: any, playersInfo: any) {
       setTimeout(() => {
+      modificatePage();
       this.renderFullMap(mapObject);
       this.CreatePlayers()
       this.Resources()
