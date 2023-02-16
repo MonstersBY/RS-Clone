@@ -5,6 +5,7 @@ import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
 import { game } from "../StartPage/templates/gamePage";
 import { modificatePage } from "../StartPage/templates/modificateIngamePage";
+import { IPlayerInfo } from "../types/types";
 
 export default class View {
   constructor(
@@ -57,20 +58,15 @@ export default class View {
     this.renderDynamicUI(playerInfo);
   }
 
-  renderStaticUI() {
+  renderStaticUI(playerInfo: IPlayerInfo[]) {
     // transfer this.state.playersInfo object to UI
   }
 
   renderDynamicUI(player: IPlayerInfo) {
     // transfer this.state.playersInfo[player].hand object to UI
-    
   }
 
-  showPlentyPopup() {
+  showPlentyPopup() {}
 
-  }
-
-  showMonopolyPopup() {
-
-  }
+  showMonopolyPopup() {}
 }

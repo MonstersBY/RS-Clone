@@ -13,7 +13,7 @@ export const getEmptyPlayer = (i) => {
         grain: 0,
         lumber: 0,
         ore: 0,
-        wool: 0, 
+        wool: 0,
       },
       development: {
         victory: 0,
@@ -30,9 +30,11 @@ export const getEmptyPlayer = (i) => {
     settlements: [],
     cities: [],
     roads: [],
+    settlementsStock: 5,
+    citiesStock: 4,
+    roadsStock: 15,
 
     roadChain: 0,
     armySize: 0,
   }
-
 };
