@@ -14,10 +14,9 @@ export default class MapGenerator {
   }
 
   generatePlayers(players) {
-    // const colors = ["red", "blue", "green", "orange"];
     const playersInfo = [];
     for (let i = 0; i < players; i++) {
-      playersInfo.push(getEmptyPlayer(i));
+      playersInfo.push(getEmptyPlayer());
     }
     return playersInfo;
   }

@@ -27,7 +27,7 @@ interface IRoad {
 
 // Player
 interface IPlayerInfo {
-  id: number,
+  name: string,
   color: string,
   longestRoad: boolean,
   largestArmy: boolean,
@@ -80,4 +80,4 @@ function getElementBySelector<T extends HTMLElement>(
   return element;
 }
 
-export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand}
+export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand, IResources, IDevCards}

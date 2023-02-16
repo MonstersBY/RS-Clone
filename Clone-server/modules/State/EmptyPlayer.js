@@ -1,6 +1,6 @@
-export const getEmptyPlayer = (i) => {
+export const getEmptyPlayer = () => {
   return {
-    id: i,
+    name: '',
     color: '',
     longestRoad: false,
     largestArmy: false,

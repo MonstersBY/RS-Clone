@@ -38,11 +38,6 @@ io.on("connection", (socket) => {
             allrooms.push(roomInfo)
             socket.join(room)
             io.to(room).emit('all-user-room', roomInfo.users)
-
-            document.getElementById("gameMap").addEventListener("change", (e) => {
-                console.log(e.target.value)
-                roomInfo.gameMap = e.target.value;
-            })
         } else {
             if (allrooms[index].lobbyState == 'Lobby') {
                 const user = {
@@ -71,6 +66,7 @@ io.on("connection", (socket) => {
             state.gameMap = gameSettings.gameMap
             state.initialState()
             for (let i = 0; i < state.playersCount; i++) {
+                state.playersInfo[i].name = gameSettings.users[i].username
                 state.playersInfo[i].color = gameSettings.colors[i]
             }
             allGame.set(room, state)
@@ -129,9 +125,27 @@ io.on("connection", (socket) => {
         const index = allrooms.findIndex(findRoom => findRoom.room === room)
         const indexUser = allrooms[index].users.findIndex(findName => findName.username === name)
 
-        console.log(allGame.get(room));
+        // console.log(allGame.get(room));
         socket.emit('players-hand', allGame.get(room).playersInfo[indexUser].hand.resources)
         io.to(room).emit('list-players', allrooms[index].users, allGame.get(room).playersInfo)
+    })
+
+    socket.on('isYouTurnPlayer', (room, name) =>{
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === name)
+        const active = allGame.get(room).activePlayer === index ? true : false
+        socket.emit('firstSettlementMode', allGame.get(room).playersInfo[index], active)
+    })
+
+    socket.on('setNewSettlement', (player, id, room) =>{
+        allGame.get(room).setNewSettlement(player, id)
+    })
+    socket.on('setNewRoad', (player, id, room) =>{
+        allGame.get(room).setNewRoad(player, id)
+    })
+
+    socket.on('updateMap', (room) => {
+        // console.log('room: '+room)
+        io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
     })
     
 
