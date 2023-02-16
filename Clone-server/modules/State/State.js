@@ -1,4 +1,3 @@
-// import { IPlayerInfo, IHex, IPlayerHand } from "./types";
 import MapGenerator from "./MapGenerator.js"
 
 export default class State {
