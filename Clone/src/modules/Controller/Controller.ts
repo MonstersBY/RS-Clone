@@ -26,6 +26,7 @@ export default class Controller {
     <button id="build-city">build-city<button>
     <button id="robber">robber<button>
     <button id="random-number">random-number<button>
+    <button id="change-turn">change-turn<button>
     </div>
     `
     setTimeout(() => {
