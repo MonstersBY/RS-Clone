@@ -147,6 +147,37 @@
 .player-stock__city_red {
   background-position: -200% -300%;
 }
+
+.player-stock__road_blue {
+  background-position: -300% -400%;
+}
+.player-stock__settlement_blue {
+  background-position: -400% -400%;
+}
+.player-stock__city_blue {
+  background-position: -500% -400%;
+}
+
+.player-stock__road_green {
+  background-position: -300% -600%;
+}
+.player-stock__settlement_green {
+  background-position: -400% -600%;
+}
+.player-stock__city_green {
+  background-position: -500% -600%;
+}
+
+.player-stock__road_orange {
+  background-position: -300% -300%;
+}
+.player-stock__settlement_orange {
+  background-position: -400% -300%;
+}
+.player-stock__city_orange {
+  background-position: -500% -300%;
+}
+
 .player-stock__counter {
   @include font(1.2rem, 120%);
   position: relative;

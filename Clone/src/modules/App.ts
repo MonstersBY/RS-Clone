@@ -1,8 +1,6 @@
 import Router from "./Router";
 import Room from "./Room";
 import Mode from "./Mode";
-import GameMaster from "./GameMaster"
-// import State from "../backend/State/State";
 import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
@@ -38,11 +36,11 @@ export default class App {
       ".burger__logo",
       ".overlay"
     );
-    // temp disabled
     costListener();
     tradeListener();
     monopolyListener();
     plentyListener();
+    modificatePage();
     this.CreateRoom();
     this.CreateMode();
   }
@@ -52,7 +50,6 @@ export default class App {
     this.router.setRoutes();
   }
 
-  // temp disabled
   CreateRoom() {
     if (window.location.pathname === "/room") {
       const room = new Room();
@@ -60,7 +57,6 @@ export default class App {
     }
   }
 
-  // temp disabled
   CreateMode() {
     if (window.location.pathname === "/mode") {
       const mode = new Mode();
@@ -71,14 +67,13 @@ export default class App {
   addGameListener() {
     if (window.location.pathname === "/game") {
       socket.emit('create-game', localStorage.getItem('Room'))
+      socket.emit('join-game-room', localStorage.getItem('Room'))
 
       socket.on('Map-object', (obj, players) => {
         this.view.init(obj, players);
+        this.controller.view = this.view;
         this.controller.init();
       })
-
-      const mode = new GameMaster();
-      mode.init();
     }
   }
 }

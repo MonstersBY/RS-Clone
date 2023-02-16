@@ -27,10 +27,14 @@ interface IRoad {
 
 // Player
 interface IPlayerInfo {
-  id: number,
+  name: string,
   color: string,
   longestRoad: boolean,
   largestArmy: boolean,
+
+  /* roadStock: number,
+  setllementsStock: number,
+  cityStock: number, */
 
   hand: IPlayerHand,
   harbors: Array<string>,
@@ -76,4 +80,4 @@ function getElementBySelector<T extends HTMLElement>(
   return element;
 }
 
-export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand}
+export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand, IResources, IDevCards}

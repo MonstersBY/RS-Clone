@@ -11,9 +11,6 @@ export const core = `
           <li class="menu__list-item mode__page">
               <a href="/mode" class="link menu__link active">Play Page</a>
           </li>
-          <li class="menu__list-item">
-              <a href="#" class="link menu__link">Rules</a>
-          </li>
       </ul>
       <div class="overlay"></div>
     </nav>
@@ -22,8 +19,6 @@ export const core = `
       <span class="line"></span>
       <span class="line"></span>
     </div>
-    <button class="btn trade__btn select hidden">Trade</button>
-    <button class="btn trade__btn sea-trade__btn hidden">Sea Trade</button>
   <div class="header__profile">
       <div class="header-login__wrapper">
           <div class="login__container flex-row">
@@ -34,33 +29,7 @@ export const core = `
               <div class="login__nickname">
                   <p class="nickname">YaniaR#1000</p>
               </div>
-              <div class="login__dropdown-container">
-                  <a href="#" class="arrow__container">
-                      <img src="assets/images/icons/icon_down_arrow.png" alt="arrow down" class="arrow">
-                  </a>
-                  <ul class="dropdown__menu">
-                      <li class="dropdown__list-item">
-                          <a href="##" class="link dropdown__link">View Profile</a>
-                      </li>
-                      <li class="dropdown__list-item">
-                          <a href="#" class="link dropdown__link">Edit Username</a>
-                      </li>
-                      <li class="dropdown__list-item">
-                          <a href="#" class="link dropdown__link">Default color</a>
-                      </li>
-                      <li class="dropdown__list-item">
-                          <a href="#" class="link dropdown__link">Edit Avatar</a>
-                      </li>
-                      <li class="dropdown__list-item">
-                          <a href="#" class="link dropdown__link">More Avatars</a>
-                      </li>
-                      <li class="dropdown__list-item">
-                          <a href="#" class="link dropdown__link">Login</a>
-                      </li>
-                  </ul>
-              </div>
           </div>
-          <a href="#" class="btn login__btn flex-bs">Log In</a>
       </div>
   </div>
   </header>
