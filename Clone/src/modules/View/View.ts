@@ -12,13 +12,13 @@ export default class View {
     private ui?: PlayerInterface
   ) {}
 
-    init(mapObject: any, playersInfo: any) {
-      setTimeout(() => {
-        this.renderFullMap(mapObject);
-        // modificatePage();
+  init(mapObject: any, playersInfo: any) {
+    setTimeout(() => {
+      this.renderFullMap(mapObject);
+      // modificatePage();
       // add renderfullUI(player: number)
-      }, 0);
-    }
+    }, 0);
+  }
 
   // Possable useless function
   //   renderGamePage() {
@@ -44,22 +44,25 @@ export default class View {
     const mapContainer = document.getElementById("map");
     if (mapContainer) {
       mapContainer.innerHTML = "";
-      const mapTree = this.renderer.getMapAsNodeTree(map as Array<IHex>) as string;
+      const mapTree = this.renderer.getMapAsNodeTree(
+        map as Array<IHex>
+      ) as string;
       mapContainer?.insertAdjacentHTML("beforeend", mapTree);
     }
   }
 
-  renderfullUI(player: number) {
+  renderfullUI(playerInfo: IPlayerInfo[], player: number) {
     // hey, ui, transfer this.state.playersInfo[player] object to UI
-    this.renderStats();
-    this.renderHand(player);
+    this.renderStaticUI(playerInfo);
+    this.renderDynamicUI(playerInfo);
   }
 
-  renderStats() {
+  renderStaticUI() {
     // transfer this.state.playersInfo object to UI
   }
 
-  renderHand(player: number) {
+  renderDynamicUI(player: IPlayerInfo) {
     // transfer this.state.playersInfo[player].hand object to UI
+    
   }
 }

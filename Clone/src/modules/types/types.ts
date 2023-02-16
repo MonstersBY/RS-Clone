@@ -32,6 +32,10 @@ interface IPlayerInfo {
   longestRoad: boolean,
   largestArmy: boolean,
 
+  /* roadStock: number,
+  setllementsStock: number,
+  cityStock: number, */
+
   hand: IPlayerHand,
   harbors: Array<string>,
   hexes: Array<number>,
