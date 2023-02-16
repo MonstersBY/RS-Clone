@@ -4,6 +4,7 @@ import { IHex, ISettlement } from "../types/types";
 import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
 import { game } from "../StartPage/templates/gamePage";
+import { modificatePage } from "../StartPage/templates/modificateIngamePage";
 
 export default class View {
   constructor(
@@ -13,7 +14,8 @@ export default class View {
 
     init(mapObject: any, playersInfo: any) {
       setTimeout(() => {
-      this.renderFullMap(mapObject);
+        this.renderFullMap(mapObject);
+        modificatePage();
       // add renderfullUI(player: number)
       }, 0);
     }
