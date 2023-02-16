@@ -28,6 +28,9 @@ export const getEmptyPlayer = (i) => {
     settlements: [],
     cities: [],
     roads: [],
+    settlementsStock: 5,
+    citiesStock: 4,
+    roadsStock: 15,
 
     roadChain: 0,
     armySize: 0,

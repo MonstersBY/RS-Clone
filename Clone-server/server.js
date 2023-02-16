@@ -16,7 +16,6 @@ let allrooms = []
 const allGame = new Map() 
 
 io.on("connection", (socket) => {
-    // console.log(`User connected ${socket.id}`);
 
     socket.on('join-room', (username, room) => {
         const index = allrooms.findIndex(findRoom => findRoom.room === room)
@@ -29,16 +28,21 @@ io.on("connection", (socket) => {
                     ready: false,
                 }],
                 colors: ['red', 'blue', 'orange', 'green'],
-                HideBank: true,
-                FriendlyRobber: true,
-                GameMode: 'newbie',
-                GameMap: 'Classic',
-                Dice: 'Random',
+                hideBank: true,
+                friendlyRobber: true,
+                gameMode: 'classic',
+                gameMap: 'newbie',
+                dice: 'random',
                 lobbyState: 'Lobby',
             }
             allrooms.push(roomInfo)
             socket.join(room)
             io.to(room).emit('all-user-room', roomInfo.users)
+
+            document.getElementById("gameMap").addEventListener("change", (e) => {
+                console.log(e.target.value)
+                roomInfo.gameMap = e.target.value;
+            })
         } else {
             if (allrooms[index].lobbyState == 'Lobby') {
                 const user = {
@@ -62,9 +66,9 @@ io.on("connection", (socket) => {
             const index = allrooms.findIndex(findRoom => findRoom.room === room)
             const gameSettings = allrooms[index]
             const state = new State()
-            
+
             state.playersCount = gameSettings.users.length
-            state.gameMode = gameSettings.GameMode
+            state.gameMap = gameSettings.gameMap
             state.initialState()
             for (let i = 0; i < state.playersCount; i++) {
                 state.playersInfo[i].color = gameSettings.colors[i]
@@ -121,10 +125,10 @@ io.on("connection", (socket) => {
     })
     
     socket.on('give-room-list-players', (room, name) => {
-        // console.log(allGame.get(room).playersInfo)
+
         const index = allrooms.findIndex(findRoom => findRoom.room === room)
         const indexUser = allrooms[index].users.findIndex(findName => findName.username === name)
-        // console.log(allGame.get(room).playersInfo[indexUser]);
+
         console.log(allGame.get(room));
         socket.emit('players-hand', allGame.get(room).playersInfo[indexUser].hand.resources)
         io.to(room).emit('list-players', allrooms[index].users, allGame.get(room).playersInfo)

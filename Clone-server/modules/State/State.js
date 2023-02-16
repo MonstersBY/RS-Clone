@@ -4,7 +4,8 @@ export default class State {
   constructor (){
     // public view?: View,
     this.playersCount = 4;
-    this.gameMode = "newbie";
+    this.gameMode = "classic";
+    this.gameMap = "newbie";
     this.foundingStage = true;
     this.activePlayer = 0;
     this.diceRoll = [1, 1];
@@ -18,7 +19,7 @@ export default class State {
 
   initialState() {
     const generator = new MapGenerator();
-    this.mapObject = generator.generateMap(this.gameMode);
+    this.mapObject = generator.generateMap(this.gameMap);
     this.playersInfo = generator.generatePlayers(this.playersCount);
     this.developmentDeck = generator.generateDevelopmentDeck();
 

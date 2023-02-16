@@ -9,8 +9,8 @@ export default class MapGenerator {
     this.HEX_COUNT = 37;
   }
 
-  generateMap(mode) {
-    return mode === "newbie" ? this.#getNewbieMap() : this.#getRandomMap();
+  generateMap(map) {
+    return map === "newbie" ? this.#getNewbieMap() : this.#getRandomMap();
   }
 
   generatePlayers(players) {
