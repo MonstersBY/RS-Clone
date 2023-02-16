@@ -17,7 +17,7 @@ export default class View {
     init(mapObject: any, playersInfo: any) {
       setTimeout(() => {
       modificatePage();
-      this.renderFullMap(mapObject);
+      this.renderFullMap();
       this.CreatePlayers()
       this.Resources()
       // add renderfullUI(player: number)
@@ -44,13 +44,16 @@ export default class View {
   //   // }
   // }
 
-  renderFullMap(map: Array<IHex>) {
-    const mapContainer = document.getElementById("map");
-    if (mapContainer) {
-      mapContainer.innerHTML = "";
-      const mapTree = this.renderer.getMapAsNodeTree(map as Array<IHex>) as string;
-      mapContainer?.insertAdjacentHTML("beforeend", mapTree);
-    }
+  renderFullMap() {
+    socket.emit('updateMap', localStorage.getItem('Room'))
+    socket.on('renderFullMapView', mapObj => {
+      const mapContainer = document.getElementById("map");
+      if (mapContainer) {
+        mapContainer.innerHTML = "";
+        const mapTree = this.renderer.getMapAsNodeTree(mapObj as Array<IHex>) as string;
+        mapContainer?.insertAdjacentHTML("beforeend", mapTree);
+      }
+    })
   }
 
   renderfullUI(player: number) {
@@ -72,7 +75,6 @@ export default class View {
     socket.on('list-players', (users, usersInfo) => {
       
         const list = document.querySelector('.all-player-board')
-        console.log(list)
 
         const color = ['red', 'blue', 'green', 'orange']
         while(list?.firstChild){
@@ -137,7 +139,6 @@ export default class View {
   }
 
   SummCards(obj: IResources | IDevCards) {
-    console.log(obj)
     let sum = 0;
     for (let cards of Object.values(obj)) {
       sum += cards;

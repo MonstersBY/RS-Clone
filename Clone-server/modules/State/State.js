@@ -27,7 +27,7 @@ export default class State {
     this.foundingStage = true;
   }
 
-  // public updateMap() {
+  // updateMap() {
   //   this.view?.renderFullMap(this.mapObject);
   // }
 

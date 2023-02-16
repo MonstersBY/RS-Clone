@@ -27,7 +27,7 @@ interface IRoad {
 
 // Player
 interface IPlayerInfo {
-  id: number,
+  name: string,
   color: string,
   longestRoad: boolean,
   largestArmy: boolean,
