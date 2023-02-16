@@ -1,5 +1,3 @@
-// import { IPlayerInfo } from "./types";
-
 export const getEmptyPlayer = (i) => {
   return {
     id: i,

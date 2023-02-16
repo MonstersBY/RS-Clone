@@ -17,6 +17,7 @@ export default class App {
     public router: Router = new Router(),
     public controller: Controller = new Controller(),
     public view: View = new View(),
+    // public state: State = new State(),
 
     public inGame: boolean = false, // unused
     ) {}
@@ -65,7 +66,6 @@ export default class App {
 
   addGameListener() {
     if (window.location.pathname === "/game") {
-
       socket.emit('create-game', localStorage.getItem('Room'))
 
       socket.on('Map-object', (obj, players) => {

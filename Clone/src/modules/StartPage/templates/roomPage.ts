@@ -31,7 +31,7 @@ export const room = `
                             <h4 class="setting__title">Game Mode</h4>
                         </div>
                         <div class="option__body flex-bs">
-                            <select name="gameMode" id="gameMode" class="options__select">
+                            <select id="gameMode" class="options__select">
                                 <option value="4Players" class="game__mode-option">Base: 4 Players</option>
                                 <option value="1vs1" class="game__mode-option">1 vs 1</option>
                                 <option value="Cities" class="game__mode-option">Cities and Knights</option>
@@ -45,7 +45,7 @@ export const room = `
                             <h4 class="setting__title">Map</h4>
                         </div>
                         <div class="option__body flex-bs">
-                            <select name="gameMode" id="gameMode" class="options__select">
+                            <select id="gameMap" class="options__select">
                                 <option value="4Players" class="game__mode-option">Classic</option>
                                 <option value="1vs1" class="game__mode-option">Classic Random</option>
                             </select>
@@ -56,7 +56,7 @@ export const room = `
                         <h4 class="setting__title">Dice</h4>
                     </div>
                     <div class="option__body flex-bs">
-                        <select name="gameMode" id="gameMode" class="options__select">
+                        <select id="diceMode" class="options__select">
                             <option value="4Players" class="game__mode-option">Random</option>
                             <option value="1vs1" class="game__mode-option">Balanced</option>
                         </select>

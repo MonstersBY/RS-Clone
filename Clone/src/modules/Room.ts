@@ -9,6 +9,7 @@ export default class Room {
     this.ChatMessages()
     this.CreateMessage()
     this.CreateRoom()
+    this.CreateError()
     this.CheckReady()
     this.CreateGame()
   }
@@ -119,6 +120,23 @@ export default class Room {
     <img src="assets/images/icons/icon_player.svg" alt="" class="nick">
     <b>${user}:</b> ${message}`;
     document.querySelector('.chat__messages')?.appendChild(div)
+  }
+
+  CreateError() {
+    socket.on('create-room-late', room => {
+      const btn = document.querySelector('.start')
+      const clean = document.querySelector('.ready__block')
+      while(btn?.firstChild){
+        btn.removeChild(btn.firstChild);
+      }
+      while(clean?.firstChild){
+        clean.removeChild(clean.firstChild);
+      }
+      const div = document.createElement('start')
+      div.classList.add('start')
+      div.innerHTML = `<a id="start-game" href="*" class="btn start__game flex-bs">Game started</a>`
+      btn?.appendChild(div)
+    })
   }
 
   CheckReady() {

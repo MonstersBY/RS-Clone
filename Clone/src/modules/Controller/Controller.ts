@@ -3,14 +3,13 @@ import View from "../View/View";
 // import Timer from "./Timer";
 // import GameMaster from "../../backend/GameMaster";
 import { getElementBySelector, IPlayerInfo } from "../types/types";
-import State from "../../backend/State/State";
 import { randomDiceRoll } from "../diceRoll/randomDiceRoll";
 import socket from "../Socket";
 
 export default class Controller {
   constructor(
     // public view?: View,
-    public state?: State,
+     public state?: State,
     // public room?: Room,
     public player1?: IPlayerInfo,
     public map?: HTMLDivElement
