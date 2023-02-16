@@ -71,6 +71,9 @@
   line-height: 1.5;
   font-weight: 700;
 }
+.ranked-cards__title {
+  text-transform: uppercase;
+}
 
 .buttons__wrapper {
   display: flex;
@@ -84,6 +87,12 @@
   flex-direction: column;
   padding: 0 10%;
   gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.nick-form {
+  display: flex;
+  flex-direction: row;
 }
 
 .nick__label {
@@ -98,7 +107,15 @@
   height: 3rem;
   padding: 0.5rem;
   border-radius: 3px;
+  overflow: visible;
 }
+
+.nick__form-btn {
+  width: 10%;
+  border: 2px solid $color-primary-dark;
+  background-color: $color-btn-secondary;
+}
+
 
 .btn__left {
   @include font(1.8rem, 130%, 700);
