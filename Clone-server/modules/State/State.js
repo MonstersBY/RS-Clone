@@ -1,15 +1,11 @@
-// import { IPlayerInfo, IHex, IPlayerHand } from "./types";
 import MapGenerator from "./MapGenerator.js"
-import { getEmptyPlayer } from "./EmptyPlayer.js"
-// const { MapGenerator } = require("./MapGenerator");
-// const { getEmptyPlayer } = require("./EmptyPlayer");
-// import View from "../../modules/View/View";
 
 export default class State {
   constructor (){
     // public view?: View,
     this.playersCount = 4;
-    this.gameMode = "newbie";
+    this.gameMode = "classic";
+    this.gameMap = "newbie";
     this.foundingStage = true;
     this.activePlayer = 0;
     this.diceRoll = [1, 1];
@@ -22,9 +18,10 @@ export default class State {
   }
 
   initialState() {
-    this.mapObject = this.generateMap(this.gameMode);
-    this.playersInfo = this.generatePlayers(this.playersCount);
-    this.developmentDeck = this.generateDevelopmentDeck();
+    const generator = new MapGenerator();
+    this.mapObject = generator.generateMap(this.gameMap);
+    this.playersInfo = generator.generatePlayers(this.playersCount);
+    this.developmentDeck = generator.generateDevelopmentDeck();
 
     this.activePlayer = 0;
     this.foundingStage = true;
@@ -33,30 +30,6 @@ export default class State {
   // public updateMap() {
   //   this.view?.renderFullMap(this.mapObject);
   // }
-
-  // Generation. Works 1 time
-  generateMap(mode) {
-    const generator = new MapGenerator();
-    return mode === "newbie" ? generator.getNewbieMap() : generator.getRandomMap();
-  }
-
-  generatePlayers(players) {
-    // const colors = ["red", "blue", "green", "orange"];
-    const playersInfo = [];
-    for (let i = 0; i < players; i++) {
-      playersInfo.push(getEmptyPlayer(i));
-    }
-    return playersInfo;
-  }
-  
-  generateDevelopmentDeck() {
-    const development = ["road", "plenty", "monopoly"];
-    const victory = Array(5).fill("victory");
-    const knights = Array(14).fill("knights");
-    const deck = [...knights, ...victory, ...development, ...development];
-    const shuffle = new MapGenerator().shuffle;
-    return shuffle(deck);
-  }
 
   // Turn based events
   setDiceRoll(roll) {
@@ -224,7 +197,8 @@ export default class State {
     // add to playerInfo
     player.roads.push(id);
     player.avalible.push(...nearRoads, ...nearNodes);
-    // console.log(player.avalible);
+
+    this.calculateRoadChain(player, id, nearNodes);
   }
 
   buyDevelopmentCard(player) {
@@ -295,7 +269,7 @@ export default class State {
     }
   }
 
-  calculateRoadChain(player) {// !!!
+  calculateRoadChain(player, id) {
     if (player.roads.length > 4) {
       // better start from top-left
     }
