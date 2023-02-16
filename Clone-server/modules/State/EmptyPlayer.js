@@ -1,6 +1,6 @@
-export const getEmptyPlayer = (i) => {
+export const getEmptyPlayer = () => {
   return {
-    id: i,
+    name: '',
     color: '',
     longestRoad: false,
     largestArmy: false,
@@ -11,7 +11,7 @@ export const getEmptyPlayer = (i) => {
         grain: 0,
         lumber: 0,
         ore: 0,
-        wool: 0, 
+        wool: 0,
       },
       development: {
         victory: 0,
@@ -35,5 +35,4 @@ export const getEmptyPlayer = (i) => {
     roadChain: 0,
     armySize: 0,
   }
-
 };
