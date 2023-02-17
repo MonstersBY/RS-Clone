@@ -15,18 +15,18 @@ export const randomDiceRoll = () => {
     audio.src = '../../assets/files/6f488185486f9cf.mp3';
 
 
-  const randomDice = () => {
+  function randomDice() {
     const dieOneValue = Math.floor(Math.random() * 10);
     const dieTwoValue = Math.floor(Math.random() * 10);
 
-      console.log({dieOneValue, dieTwoValue})
+      // console.log({dieOneValue, dieTwoValue})
     if ((dieOneValue >= 1 && dieOneValue <= 6) && (dieTwoValue >= 1 && dieTwoValue <= 6)) {
       roll(dieOneValue, dieTwoValue);
       return [dieOneValue, dieTwoValue];
     } else {
       randomDice();
     }
-  };
+  }
 
   function roll(random1: number, random2: number) {
     const sides = document.querySelectorAll(".side");
@@ -37,7 +37,7 @@ export const randomDiceRoll = () => {
       side.classList.remove("hidden");
     });
 
-    console.log({ random1, random2 });
+    // console.log({ random1, random2 });
     setTimeout(function () {
       diceElements.forEach(function (die) {
         die.classList.remove("rolling");

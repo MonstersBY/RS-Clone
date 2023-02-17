@@ -7,5 +7,6 @@ const socket = io('http://localhost:3000/')
 //     "my-custom-header": "colonist"
 //   }
 // })
+// 127.0.0.1
 
 export default socket

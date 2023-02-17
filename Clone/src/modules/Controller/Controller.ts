@@ -12,6 +12,7 @@ export default class Controller {
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
+    public canRoll?: boolean,
     // private timer: Timer = new Timer(),
     // private master: GameMaster = new GameMaster(),
   ) {}
@@ -28,10 +29,12 @@ export default class Controller {
 
     setTimeout(() => {
       socket.emit('isYouTurnPlayer', localStorage.getItem('Room'), localStorage.getItem('Name'))
+
       socket.on('firstSettlementMode', (player, active) =>{
         // console.log(player)
         this.player = player
         this.activePlayer = active
+        this.canRoll = active;
         console.log(`${localStorage.getItem('Name')}: ${this.activePlayer}`)
 
         if (this.activePlayer) {
@@ -46,27 +49,23 @@ export default class Controller {
       this.addSettlementListener();
       this.addCityListener();
       this.addCardsListener();
+      // this.createNewTurn()
     }, 0);
   }
 
- /*  addListenerDices() {
-      const gameField = document.querySelector(".game");
-      const diceElements = document.querySelectorAll(".dice");
-
-
+ addListenerDices() {
     // TODO Как типизировать callback?
-    gameField?.addEventListener("click", (e: Event) => {
-      if (activePlayer && rollPhase) {
-        const target = e.target as HTMLElement;
-        if (target && target.closest(".dice__container")) {
-          const roll = randomDice();
-          audio.play();
-        }
-        // Утановка diceRoll(roll) в state
-        // Вызов функции addResourcesThisTurn()
-      }
+   document.getElementById("roll-dice")?.addEventListener("click", () => {
+     if (this.canRoll) {
+      //  addListener
+       const roll = [5, 3];
+       this.canRoll = false;
+       socket.emit('weRollDice', localStorage.getItem('Room'), roll);
+     }
     });
-  } */
+  }
+
+
   addBuildFirstSettlementListener() {
     document
       .getElementById("first-set")
@@ -159,6 +158,11 @@ export default class Controller {
             e.classList.remove("select");
         })
         // this.state?.setNewSettlement(this.player as IPlayerInfo, chousen.id);
+        // console.log(this.player)
+        // console.log('---------')
+        // console.log(chousen.id)
+        // console.log('---------')
+        console.log(localStorage.getItem('Room'))
         socket.emit('setNewSettlement', this.player, chousen.id, localStorage.getItem('Room'))
         this.updateBuildCounter(".settlement__counter");
         this.view?.renderFullMap()
@@ -168,66 +172,28 @@ export default class Controller {
           this.map.onclick = null;
         }
         setTimeout(()=>{
+        // window.addEventListener("mapLoad", () => {
           this.buildFirstRoadMode(chousen.dataset.next || "");
-        }, 0)
+        }, 50)
       }
     }
   }
 
   buildFirstRoadMode(next: string) {
+    console.log(next)
     next.split(",").forEach((e) => {
       const road = document.getElementById(e) as HTMLDivElement;
-      console.log(!road.classList.contains("own"))
       if (!road.classList.contains("own")) {
-        console.log(road)
-        console.log('--------')
-        console.log(e)
-        console.log('--------')
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
-          console.log('CLICK')
-          // this.state?.setNewRoad(this.player1 as IPlayerInfo, road.id);
-          // this.state?.updateMap();
+          console.log(this.player)
           socket.emit('setNewRoad', this.player, road.id, localStorage.getItem('Room'))
           this.updateBuildCounter(".road__counter");
-/* <<<<<<< HEAD
-        });
-      }
-    });
-  }
-
-  // Player turn
-  // Start turn
-  rollDice() {
-    //TODO need to add dice imputs or read value prop at existing node
-    randomDiceRoll();
-    const one = Number(
-      (getElementBySelector("dice-one") as HTMLInputElement).value
-    );
-    const two = Number(
-      (getElementBySelector("dice-two") as HTMLInputElement).value
-    );
-    this.state?.setDiceRoll([one, two]);
-    this.state?.addResoursesThisTurn(one + two);
-  }
-
-  setRobber(player: IPlayerInfo) {
-    //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
-    this.map?.addEventListener("click", (e: MouseEvent) => {
-      if (
-        e.target instanceof HTMLDivElement &&
-        e.target.classList.contains("hex")
-      ) {
-        const settlementsToRob = this.state?.setRobber(
-          this.player1 as IPlayerInfo,
-          String(e.target.id)
-        ); //this.player1 as IPlayerInfo,
-        this.state?.updateMap();
 
         const robber = document.querySelector(".robber");
         if (robber) robber.classList.add("moveDown");
 
-        settlementsToRob?.forEach((e: string) => {
+  /*       settlementsToRob?.forEach((e: string) => {
           const settlement = document.getElementById(e) as HTMLDivElement;
           if (
             settlement.classList.contains("own") &&
@@ -246,8 +212,8 @@ export default class Controller {
               { once: true }
             );
           }
-        });
-======= */
+        }); */
+
           this.view?.renderFullMap()
         })
 
@@ -304,7 +270,7 @@ export default class Controller {
     if (counter) counter.textContent = `${--counterNumber}`;
   }
 
-  /* // Development cards
+/*   // Development cards
   buyDevelopCard() {
     this.state?.buyDevelopmentCard(this.player1 as IPlayerInfo);
   }
@@ -341,44 +307,44 @@ export default class Controller {
           }
         }
       });
+  } */
+  setRobber(player: IPlayerInfo) {
+    //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
+    this.map?.addEventListener("click", (e: MouseEvent) => {
+
+      if (e.target instanceof HTMLDivElement) {
+        const target = e.target.closest(".hex");
+        if (target && target.classList.contains("hex")) {
+          // const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, String(target.id)); //this.player1 as IPlayerInfo,
+          // this.state?.updateMap();
+
+          const robber = document.querySelector(".robber");
+          if (robber) robber.classList.add("moveDown");
+
+/*           settlementsToRob?.forEach((e) => {
+            const settlement = document.getElementById(e) as HTMLDivElement;
+            if (
+              settlement.classList.contains("own") &&
+              !settlement.classList.contains("own_nobody") &&
+              !settlement.classList.contains(`own_${player.color}`)
+            ) {
+              settlement.classList.add("select");
+              settlement.addEventListener(
+                "click",
+                (e) => {
+                  this.state?.transferOneToAnother(
+                    player,
+                    settlement.classList[3]
+                  );
+                },
+                { once: true }
+              );
+            }
+          }); */
+        }
+      }
+    })
   }
-  // setRobber(player: IPlayerInfo) {
-  //   //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
-  //   this.map?.addEventListener("click", (e: MouseEvent) => {
-
-  //     if (e.target instanceof HTMLDivElement) {
-  //       const target = e.target.closest(".hex");
-  //       if (target && target.classList.contains("hex")) {
-  //         const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, String(target.id)); //this.player1 as IPlayerInfo,
-  //         this.state?.updateMap();
-
-  //         const robber = document.querySelector(".robber");
-  //         if (robber) robber.classList.add("moveDown");
-
-  //         settlementsToRob?.forEach((e) => {
-  //           const settlement = document.getElementById(e) as HTMLDivElement;
-  //           if (
-  //             settlement.classList.contains("own") &&
-  //             !settlement.classList.contains("own_nobody") &&
-  //             !settlement.classList.contains(`own_${player.color}`)
-  //           ) {
-  //             settlement.classList.add("select");
-  //             settlement.addEventListener(
-  //               "click",
-  //               (e) => {
-  //                 this.state?.transferOneToAnother(
-  //                   player,
-  //                   settlement.classList[3]
-  //                 );
-  //               },
-  //               { once: true }
-  //             );
-  //           }
-  //         });
-  //       }
-  //     }
-  //   })
-  // } */
 
 
   choiceHandler() {
