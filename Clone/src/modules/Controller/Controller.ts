@@ -23,6 +23,7 @@ export default class Controller {
     <button id="first-set">first-set<button>
     <button id="refresh">refresh<button>
     <button id="random-number">random-number<button>
+    <button id="random-dice">random-dice<button>
     </div>
 
     `;
@@ -53,7 +54,7 @@ export default class Controller {
 
         const nextBtn = document.getElementById("create-new-turn");
         if (this.activePlayer) {
-          nextBtn?.classList.add("active");
+          nextBtn?.classList.remove("active");
           this.addListenerDices()
           // randomDiceRoll
         } else {
@@ -88,23 +89,24 @@ export default class Controller {
       }
     });
     socket.on("Client-turn", () => {
-      socket.emit("isYouTurnPlayer", localStorage.getItem("Room"), localStorage.getItem("Name")
-      );
+      socket.emit("isYouTurnPlayer", localStorage.getItem("Room"), localStorage.getItem("Name"));
     });
   }
 
   addListenerDices() {
     // TODO Как типизировать callback?
     const nextBtn = document.getElementById("create-new-turn");
-    document.getElementById("roll-dice")?.addEventListener("click", () => {
-      console.log('roll')
-      if (this.canRoll) {
-        //  addListener
-        const roll = [5, 3];
-        this.canRoll = false;
-        socket.emit("weRollDice", localStorage.getItem("Room"), roll);
+    document.querySelector(".game")?.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      if (target && target.closest(".dice__container")) {
+        if (this.canRoll) {
+          const roll = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+          this.canRoll = false;
+          socket.emit("weRollDice", localStorage.getItem("Room"), roll);
+          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+        }
+        nextBtn?.classList.add("active");
       }
-      // nextBtn?.classList.add("active");
     });
   }
 
