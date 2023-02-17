@@ -37,6 +37,7 @@ export default class Room {
       while (list?.firstChild) {
         list.removeChild(list.firstChild);
       }
+      const colors = ['red', 'blue', 'green', 'orange'];
       for (let i = 0; i < users.length; i++) {
         const li = document.createElement('li')
         li.classList.add('player__list-item')
@@ -47,17 +48,11 @@ export default class Room {
                           <span>${users[i].username}</span>
                       </div>
                       <div class="player__color">
-                          <select class="color__select" ">
-                              <option value="Red">Red</option>
-                              <option value="Blue">Blue</option>
-                              <option value="Orange">Orange</option>
-                              <option value="Green">Green</option>
-                          </select>
-                          <img src="assets/images/map_animation/road_red.svg" alt="Road" width="15" height="15">
-                          <img src="assets/images/map_animation/settlement_red.svg" alt="Settlement" width="15" height="15">
-                          <img src="assets/images/map_animation/city_red.svg" alt="City" width="15" height="15">
+                          <img src="assets/images/map_animation/road_${colors[i]}.svg" alt="Road" width="15" height="15">
+                          <img src="assets/images/map_animation/settlement_${colors[i]}.svg" alt="Settlement" width="15" height="15">
+                          <img src="assets/images/map_animation/city_${colors[i]}.svg" alt="City" width="15" height="15">
                       </div>
-                  </div>`
+                  </div>`;
         let readyInfo = document.createElement('div')
         if (users[i].ready) {
           readyInfo.innerHTML = `

@@ -28,25 +28,25 @@ export default class State {
   }
 
   // Turn based events
-  setDiceRoll(roll) {
-    this.diceRoll = roll;
-  }
+  // setDiceRoll(roll) {
+  //   this.diceRoll = roll;
+  // }
 
-  addResoursesThisTurn(dice) {
-    if (this.mapObject && this.playersInfo) {
+  addResoursesThisTurn(dice, map, players) {
+    if (map  && players) {
 
       let currentHexes = []
       for (let i = 0; i < this.HEX_COUNT; i++) {
-        if (this.mapObject[i].token === dice && !this.mapObject[i].robber) {
+        if (map[i].token === dice && !map[i].robber) {
           currentHexes.push(i);
         }
       }
 
-      for (const player of this.playersInfo) {
+      for (const player of players) {
         for (let i = 0; i < player.hexes.length; i++) {
           for (let j = 0; j < currentHexes.length; j++) {
             if (player.hexes[i] === currentHexes[j]) {
-              switch (this.mapObject[j].type) {
+              switch (map[j].type) {
                 case "hills":
                   player.hand.resources.brick += 1;
                 break;
@@ -69,6 +69,44 @@ export default class State {
       }
     }
   }
+
+  // addResoursesThisTurn(dice) {
+  //   if (this.mapObject && this.playersInfo) {
+
+  //     let currentHexes = []
+  //     for (let i = 0; i < this.HEX_COUNT; i++) {
+  //       if (this.mapObject[i].token === dice && !this.mapObject[i].robber) {
+  //         currentHexes.push(i);
+  //       }
+  //     }
+
+  //     for (const player of this.playersInfo) {
+  //       for (let i = 0; i < player.hexes.length; i++) {
+  //         for (let j = 0; j < currentHexes.length; j++) {
+  //           if (player.hexes[i] === currentHexes[j]) {
+  //             switch (this.mapObject[j].type) {
+  //               case "hills":
+  //                 player.hand.resources.brick += 1;
+  //               break;
+  //               case "fields":
+  //                 player.hand.resources.grain += 1;
+  //               break;
+  //               case "forest":
+  //                 player.hand.resources.lumber += 1;
+  //               break;
+  //               case "mountains":
+  //                 player.hand.resources.ore += 1;
+  //               break;
+  //               case "pasture":
+  //                 player.hand.resources.wool += 1;
+  //               break;
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   isWinner(player) {
     let points = 0;

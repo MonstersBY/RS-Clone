@@ -48,6 +48,16 @@ body ::-webkit-scrollbar-track {
     padding: 0 10px;
   }
 }
+
+.title {
+  text-align: center;
+  font-size: min(max(1.8rem,4vh),4.4rem);
+  margin-bottom: 0.8rem;
+  line-height: 1.5;
+  font-weight: 700;
+  margin: 0 auto;
+}
+
 .subtitle {
   @include font(2.4rem, 130%, 700);
   margin: 1.2rem 0 0.8rem 0;
@@ -98,7 +108,6 @@ img {
   vertical-align: middle;
   border-style: none;
 }
-
 .modal {
   left: 16%;
 }

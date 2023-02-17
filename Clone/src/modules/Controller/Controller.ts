@@ -12,9 +12,10 @@ export default class Controller {
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
-    // private timer: Timer = new Timer(),
-    // private master: GameMaster = new GameMaster(),
-  ) {}
+    public canRoll?: boolean
+  ) // private timer: Timer = new Timer(),
+  // private master: GameMaster = new GameMaster(),
+  {}
 
   init() {
     const buttons = `
@@ -24,39 +25,45 @@ export default class Controller {
     <button id="random-number">random-number<button>
     </div>
 
-    `
+    `;
 
     setTimeout(() => {
-      socket.emit('isYouTurnPlayer', localStorage.getItem('Room'), localStorage.getItem('Name'))
+      socket.emit(
+        "isYouTurnPlayer",
+        localStorage.getItem("Room"),
+        localStorage.getItem("Name")
+      );
 
-      socket.on('firstSettlementMode', (player, active) =>{
-        this.player = player
-        this.activePlayer = active
-        console.log(`${localStorage.getItem('Name')}: ${this.activePlayer}`)
+
+      socket.on("firstSettlementMode", (player, active) => {
+        this.player = player;
+        this.activePlayer = active;
+        console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
 
         if (this.activePlayer) {
-          this.buildFirstSettlementMode()
+          this.buildFirstSettlementMode();
         }
-      })
 
-      socket.on('Turn-player', (player, active) =>{
-        this.player = player
-        this.activePlayer = active
-        console.log(`${localStorage.getItem('Name')}: ${this.activePlayer}`)
-        
-        const nextBtn = document.getElementById('create-new-turn')
+      });
+      socket.on("Turn-player", (player, active) => {
+        this.player = player;
+        this.activePlayer = active;
+        this.canRoll = active;
+        console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
+
+        const nextBtn = document.getElementById("create-new-turn");
         if (this.activePlayer) {
           nextBtn?.classList.add("active");
+          this.addListenerDices()
           // randomDiceRoll
         } else {
           nextBtn?.classList.remove("active");
         }
+      });
+      socket.on("Change-playerInfo", (player) => {
+        this.player = player;
+      });
 
-      })
-
-      socket.on('Change-playerInfo', player => {
-        this.player = player
-      })
       this.map = document.getElementById("map") as HTMLDivElement;
       document.body.insertAdjacentHTML("afterbegin", buttons);
       this.addBuildFirstSettlementListener();
@@ -70,23 +77,37 @@ export default class Controller {
   }
 
   createNewTurn() {
-    const btn = document.getElementById('create-new-turn')
-    btn?.addEventListener('click', e =>{
-      if (btn.classList.length == 2){
-        socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
+    const btn = document.getElementById("create-new-turn");
+    btn?.addEventListener("click", (e) => {
+      if (btn.classList.length == 2) {
+        socket.emit(
+          "Next-person",
+          localStorage.getItem("Room"),
+          localStorage.getItem("Name")
+        );
       }
-    })
-    socket.on('Client-turn', ()=>{
-      socket.emit('isYouTurnPlayer', localStorage.getItem('Room'), localStorage.getItem('Name'))
-    })
-  }
-  
-/*   addListenerDices() {
-    // TODO Как типизировать callback?
-    document.getElementById("roll-dice")?.addEventListener("click", () => {
-      this.rollDice();
     });
-  } */
+    socket.on("Client-turn", () => {
+      socket.emit("isYouTurnPlayer", localStorage.getItem("Room"), localStorage.getItem("Name")
+      );
+    });
+  }
+
+  addListenerDices() {
+    // TODO Как типизировать callback?
+    const nextBtn = document.getElementById("create-new-turn");
+    document.getElementById("roll-dice")?.addEventListener("click", () => {
+      console.log('roll')
+      if (this.canRoll) {
+        //  addListener
+        const roll = [5, 3];
+        this.canRoll = false;
+        socket.emit("weRollDice", localStorage.getItem("Room"), roll);
+      }
+      // nextBtn?.classList.add("active");
+    });
+  }
+
   addBuildFirstSettlementListener() {
     document
       .getElementById("first-set")
@@ -98,15 +119,23 @@ export default class Controller {
   // }
 
   addRoadListener() {
-    document.getElementById("build-road")?.addEventListener("click", () => { this.buildRoad(this.player as IPlayerInfo); })
+    document.getElementById("build-road")?.addEventListener("click", () => {
+      this.buildRoad(this.player as IPlayerInfo);
+    });
   }
 
   addSettlementListener() {
-    document.getElementById("build-settlement")?.addEventListener("click", () => { this.buildSettlement(this.player as IPlayerInfo); })
+    document
+      .getElementById("build-settlement")
+      ?.addEventListener("click", () => {
+        this.buildSettlement(this.player as IPlayerInfo);
+      });
   }
 
   addCityListener() {
-    document.getElementById("build-city")?.addEventListener("click", () => { this.buildCity(this.player as IPlayerInfo); })
+    document.getElementById("build-city")?.addEventListener("click", () => {
+      this.buildCity(this.player as IPlayerInfo);
+    });
   }
 
   /* addRobberListener() {
@@ -114,14 +143,17 @@ export default class Controller {
   } */
 
   addCardsListener() {
-    document.getElementById("develop-card-list")?.addEventListener("click", (e) => {
-      if (e.target instanceof HTMLDivElement) {
-        const target = e.target.closest(".knight");
-        if (target && target.classList.contains("knight")) {
-          this.playKnightCard(this.player as IPlayerInfo);
+    document
+      .getElementById("develop-card-list")
+      ?.addEventListener("click", (e) => {
+        if (e.target instanceof HTMLDivElement) {
+          const target = e.target.closest(".knight");
+          if (target && target.classList.contains("knight")) {
+            // console.log(target);
+            this.playKnightCard(this.player as IPlayerInfo);
+          }
         }
-      }
-    }); // , { once: true }
+      }); // , { once: true }
   }
 
   playKnightCard(player: IPlayerInfo) {
@@ -175,17 +207,23 @@ export default class Controller {
           ...document.querySelectorAll(".hex__settlement_S"),
         ];
         places.forEach((e) => {
-            e.classList.remove("select");
-        })
-        socket.emit('setNewSettlement', this.player, chousen.id, localStorage.getItem('Room'))
+          e.classList.remove("select");
+        });
+        socket.emit(
+          "setNewSettlement",
+          this.player,
+          chousen.id,
+          localStorage.getItem("Room")
+        );
         this.updateBuildCounter(".settlement__counter");
-        this.view?.renderFullMap()
+        this.view?.renderFullMap();
+
         if (this.map) {
           this.map.onclick = null;
         }
-        setTimeout(()=>{
+        setTimeout(() => {
           this.buildFirstRoadMode(chousen.dataset.next || "");
-        }, 50)
+        }, 50);
       }
     }
   }
@@ -196,97 +234,45 @@ export default class Controller {
       if (!road.classList.contains("own")) {
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
-          socket.emit('setNewRoad', this.player, road.id, localStorage.getItem('Room'))
+          socket.emit(
+            "setNewRoad",
+            this.player,
+            road.id,
+            localStorage.getItem("Room")
+          );
           this.updateBuildCounter(".road__counter");
           this.view?.renderFullMap()
           socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
         })
-
       }
-    });
+    })
   }
-/* <<<<<<< HEAD
-        });
-      }
-    });
-  }
-
-  // Player turn
-  // Start turn
-  rollDice() {
-    //TODO need to add dice imputs or read value prop at existing node
-    randomDiceRoll();
-    const one = Number(
-      (getElementBySelector("dice-one") as HTMLInputElement).value
-    );
-    const two = Number(
-      (getElementBySelector("dice-two") as HTMLInputElement).value
-    );
-    this.state?.setDiceRoll([one, two]);
-    this.state?.addResoursesThisTurn(one + two);
-  }
-
-  setRobber(player: IPlayerInfo) {
-    //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
-    this.map?.addEventListener("click", (e: MouseEvent) => {
-      if (
-        e.target instanceof HTMLDivElement &&
-        e.target.classList.contains("hex")
-      ) {
-        const settlementsToRob = this.state?.setRobber(
-          this.player1 as IPlayerInfo,
-          String(e.target.id)
-        ); //this.player1 as IPlayerInfo,
-        this.state?.updateMap();
-
-        const robber = document.querySelector(".robber");
-        if (robber) robber.classList.add("moveDown");
-
-        settlementsToRob?.forEach((e: string) => {
-          const settlement = document.getElementById(e) as HTMLDivElement;
-          if (
-            settlement.classList.contains("own") &&
-            !settlement.classList.contains("own_nobody") &&
-            !settlement.classList.contains(`own_${player.color}`)
-          ) {
-            settlement.classList.add("select");
-            settlement.addEventListener(
-              "click",
-              (e) => {
-                this.state?.transferOneToAnother(
-                  player,
-                  settlement.classList[3]
-                );
-              },
-              { once: true }
-            );
-          }
-        });
-======= */
-  //         this.view?.renderFullMap()
-  //       })
-
-  //     }
-  //   });
-  // }
 
   // Building
   buildRoad(player: IPlayerInfo) {
-    const roads = [...new Set(this.player?.avalible.filter(e => e.split("_")[1] === "road"))];
-    roads.forEach(e => {
+    const roads = [
+      ...new Set(
+        this.player?.avalible.filter((e) => e.split("_")[1] === "road")
+      ),
+    ];
+    roads.forEach((e) => {
       const road = document.getElementById(e);
       if (road && !road.classList.contains("own")) {
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
           this.updateBuildCounter(".road__counter");
-        })
+        });
       }
     });
   }
 
   buildSettlement(player: IPlayerInfo) {
-    const settlements = [...new Set(this.player?.avalible.filter(e => e.split("_")[1] === "settlement"))];
-    settlements.forEach(e => {
+    const settlements = [
+      ...new Set(
+        this.player?.avalible.filter((e) => e.split("_")[1] === "settlement")
+      ),
+    ];
+    settlements.forEach((e) => {
       const settlement = document.getElementById(e);
       if (settlement && !settlement.classList.contains("own")) {
         settlement.classList.add("select");
@@ -298,18 +284,16 @@ export default class Controller {
   }
 
   buildCity(player: IPlayerInfo) {
-
     const settlements = this.player?.settlements as Array<string>;
-    settlements.forEach(e => {
-
+    settlements.forEach((e) => {
       const settlement = document.getElementById(e) as HTMLDivElement;
       settlement.style.transform = "scale(0.8)";
       settlement.addEventListener("click", (e) => {
         this.updateBuildCounter(".city__counter");
         // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
         // this.state?.updateMap();
-      })
-    })
+      });
+    });
   }
 
   updateBuildCounter(sel: string) {
@@ -319,7 +303,7 @@ export default class Controller {
     if (counter) counter.textContent = `${--counterNumber}`;
   }
 
-  /* // Development cards
+  /*   // Development cards
   buyDevelopCard() {
     this.state?.buyDevelopmentCard(this.player1 as IPlayerInfo);
   }
@@ -356,45 +340,43 @@ export default class Controller {
           }
         }
       });
+  } */
+  setRobber(player: IPlayerInfo) {
+    //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
+    this.map?.addEventListener("click", (e: MouseEvent) => {
+      if (e.target instanceof HTMLDivElement) {
+        const target = e.target.closest(".hex");
+        if (target && target.classList.contains("hex")) {
+          // const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, String(target.id)); //this.player1 as IPlayerInfo,
+          // this.state?.updateMap();
+
+          const robber = document.querySelector(".robber");
+          if (robber) robber.classList.add("moveDown");
+
+          /*           settlementsToRob?.forEach((e) => {
+            const settlement = document.getElementById(e) as HTMLDivElement;
+            if (
+              settlement.classList.contains("own") &&
+              !settlement.classList.contains("own_nobody") &&
+              !settlement.classList.contains(`own_${player.color}`)
+            ) {
+              settlement.classList.add("select");
+              settlement.addEventListener(
+                "click",
+                (e) => {
+                  this.state?.transferOneToAnother(
+                    player,
+                    settlement.classList[3]
+                  );
+                },
+                { once: true }
+              );
+            }
+          }); */
+        }
+      }
+    });
   }
-  // setRobber(player: IPlayerInfo) {
-  //   //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
-  //   this.map?.addEventListener("click", (e: MouseEvent) => {
-
-  //     if (e.target instanceof HTMLDivElement) {
-  //       const target = e.target.closest(".hex");
-  //       if (target && target.classList.contains("hex")) {
-  //         const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, String(target.id)); //this.player1 as IPlayerInfo,
-  //         this.state?.updateMap();
-
-  //         const robber = document.querySelector(".robber");
-  //         if (robber) robber.classList.add("moveDown");
-
-  //         settlementsToRob?.forEach((e) => {
-  //           const settlement = document.getElementById(e) as HTMLDivElement;
-  //           if (
-  //             settlement.classList.contains("own") &&
-  //             !settlement.classList.contains("own_nobody") &&
-  //             !settlement.classList.contains(`own_${player.color}`)
-  //           ) {
-  //             settlement.classList.add("select");
-  //             settlement.addEventListener(
-  //               "click",
-  //               (e) => {
-  //                 this.state?.transferOneToAnother(
-  //                   player,
-  //                   settlement.classList[3]
-  //                 );
-  //               },
-  //               { once: true }
-  //             );
-  //           }
-  //         });
-  //       }
-  //     }
-  //   })
-  // } */
-
 
   choiceHandler() {
     // add listener on "accept choice btn"

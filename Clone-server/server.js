@@ -135,8 +135,8 @@ io.on("connection", (socket) => {
     socket.on('isYouTurnPlayer', (room, name) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === name)
         const active = allGame.get(room).activePlayer === index ? true : false
-        console.log(allGame.get(room))
-        console.log('-----------------')
+        // console.log(allGame.get(room))
+        // console.log('-----------------')
         if (allGame.get(room).turn > 0) {
             socket.emit('Turn-player', allGame.get(room).playersInfo[index], active)
         } else {
@@ -185,9 +185,20 @@ io.on("connection", (socket) => {
                 allGame.get(room).activePlayer = 0
             }
         }
-
         io.to(room).emit('Client-turn')
     })
+
+    socket.on('weRollDice', (room, roll) => {
+        console.log(roll)
+        allGame.get(room).diceRoll = roll;
+        allGame.get(room).addResoursesThisTurn(
+            (roll[0] + roll[1]),
+            allGame.get(room).mapObject,
+            allGame.get(room).playersInfo);
+
+        console.log(allGame.get(room).diceRoll);
+        console.log(allGame.get(room).playersInfo[0].hand)
+    });
 
     socket.on('disconnect', () => {
     });

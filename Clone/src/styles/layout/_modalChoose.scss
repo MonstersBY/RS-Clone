@@ -1,4 +1,5 @@
 .modal-choose {
+  @extend %transition;
   position: absolute;
   bottom: 1rem;
   left: -116%;

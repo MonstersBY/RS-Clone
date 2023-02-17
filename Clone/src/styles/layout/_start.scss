@@ -2,7 +2,6 @@
   &__wrapper {
     display: flex;
     flex-direction: column;
-    padding: 1.5rem;
     height: 100%;
   }
   &__sidebar {
@@ -21,8 +20,7 @@
     flex-flow: column;
     height: 100%;
     max-width: 100%;
-    margin: 0 0.5rem 0.5rem;
-    padding: 0.5rem 1.5rem;
+    padding: 0 1.5rem;
     text-align: left;
     overflow-y: auto;
     scroll-behavior: smooth;
@@ -63,7 +61,7 @@
   background-color: rgba(0,0,0,.05);
   overflow: hidden;
   &-body {
-    margin: 1.6rem;
+    margin: 1rem 1rem 0 1rem;
   }
   &-title {
     @include font(1.8rem, 130%, 700);
@@ -77,16 +75,16 @@
 .team__photo {
   display: block;
   margin: 0;
-  width: 30rem;
+  width: 25rem;
   max-width: none;
-  height: 20rem;
+  height: 15rem;
   max-height: none;
   &-wrap {
     display: flex;
     justify-content: center;
     background-color: #006cb1;
     width: 100%;
-    height: 200px;
+    height: 15rem;
     overflow: hidden;
   }
 }
@@ -126,10 +124,12 @@
 .start__btn {
   width: 100%;
   height: 5rem;
-  margin: 0 auto;
-  margin-top: 1.5rem;
+  margin: 1rem auto 1rem;
   background-color: $color-btn-primary;
   &:hover {
     background-color: darken($color-btn-primary, 10%);
   }
+}
+.helper___button.description__btn{
+  position: static;
 }

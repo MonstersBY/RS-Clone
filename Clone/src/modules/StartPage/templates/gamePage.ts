@@ -3,7 +3,7 @@ export const game = `
         <div class="left__sidebar">
           <div class="menu">
             <nav class="menu header-menu game-menu">
-              <a href="/" class="logo  burger__logo flex-bs">
+              <a href="/" class="logo burger__logo flex-bs">
                 <img src="assets/images/logo.png" alt="logo" class="logo__img">
               </a>
               <ul class="menu__list header-menu__list flex-row">
