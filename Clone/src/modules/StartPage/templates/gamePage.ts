@@ -1,24 +1,7 @@
 export const game = `
       <div class="main__wrapper">
         <div class="left__sidebar">
-          <div class="menu">
-            <nav class="menu header-menu game-menu">
-              <a href="/" class="logo burger__logo flex-bs">
-                <img src="assets/images/logo.png" alt="logo" class="logo__img">
-              </a>
-              <ul class="menu__list header-menu__list flex-row">
-                <li class="menu__list-item mode__page">
-                  <a href="#" class="link menu__link active">Play Page</a>
-                </li>
-              </ul>
-              <div class="overlay"></div>
-            </nav>
-            <div class="hamburger game-burger">
-              <span class="line"></span>
-              <span class="line"></span>
-              <span class="line"></span>
-            </div>
-          </div>
+           <a href="/" class="link menu__link">Home</a>
           <div id='hand' class="player-hand">
             <div class="player-hand__title">Hand</div>
             <div class="player-hand__resources flex-bs">
@@ -44,7 +27,7 @@ export const game = `
               </div>
             </div>
           </div>
-          <div><button id="create-new-turn" class="turn-not-active">Next-turn<button></div>
+          <div><button id="create-new-turn" class="turn-not-active btn">Next-turn<button></div>
           <div class="game-btns__wrapper flex-bs">
               <div class="game-btn flex-bs">
                 <div id="build-road" class="player-stock__icon player-stock__road_red">
@@ -201,7 +184,12 @@ export const game = `
         </div>
         <div class="right__sidebar">
           <div class="game-chat">
-            <div class="game-chat__text"></div>
+            <div class="chat__messages game-chat__text">
+              <div class="message__post">
+                <img src="assets/images/icons/icon_player.svg" alt="player icon" class="nick">
+                <b>some:</b> Hi
+              </div>
+            </div>
             <form action="#" class="chat__form">
               <input type="text" autocomplete="off" placeholder="Say hello" maxlength='200' aria-label="Send message input"
                 class="chat__input">

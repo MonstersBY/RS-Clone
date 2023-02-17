@@ -90,6 +90,9 @@
   width: 3vh;
 }
 .game-chat {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
   height: 30%;
   &__text {
     width: 100%;

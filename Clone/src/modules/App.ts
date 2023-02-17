@@ -6,7 +6,6 @@ import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import { diceRoll } from "./diceRoll/diceRoll";
-import { burger } from "./hamburger/burger";
 import { modificatePage } from "./StartPage/templates/modificateIngamePage";
 import { costListener, monopolyListener, plentyListener, tradeListener } from "./GameListeners/modalListeners";
 
@@ -29,13 +28,6 @@ export default class App {
     this.setRouter();
     this.router.setRoutes();
     diceRoll();
-    burger(
-      ".game-menu",
-      ".menu__list",
-      ".game-burger",
-      ".game-menu .burger__logo",
-      ".game-menu .overlay"
-    );
     costListener();
     tradeListener();
     monopolyListener();

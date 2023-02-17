@@ -34,7 +34,7 @@ body ::-webkit-scrollbar-track {
   padding: 0 1.5rem;
 
   @include min-media-desktop {
-    max-width: 100%;
+    max-width: 1400px;
   }
   @include max-media-small-desktop {
     max-width: 1000px;

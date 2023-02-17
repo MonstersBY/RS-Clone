@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-top: 7rem;
+  margin-top: 1rem;
   width: 15%;
 }
 
@@ -17,10 +17,19 @@
   margin: 0 auto;
   margin-top: 0px;
   margin-top: 1.5rem;
-  background-color: gray;
+  background-color: $color-primary;
+  border: 0;
+   &:hover {
+    background-color: $color-primary;
+    cursor: not-allowed;
+	}
 }
 .turn-not-active.active {
-  background-color: green;
+  background-color: $color-btn-secondary;
+  &:hover {
+    background-color: darken($color-btn-secondary, 20%);
+    cursor: pointer;
+	}
 }
 
 .construction-cost {

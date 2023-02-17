@@ -9,12 +9,7 @@ export const modificatePage = () => {
 
 const changeHeader = () => {
   const header = document.querySelector(".header");
-  const headerMenu = document.querySelector(".game-menu");
-  const hamburger = document.querySelector(".game-burger");
   header?.classList.add("hidden");
-  headerMenu?.classList.add('ingame');
-  hamburger?.classList.add("block");
-
 }
 
 const changeContainer = () => {
