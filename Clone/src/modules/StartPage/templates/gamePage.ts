@@ -22,9 +22,9 @@ export const game = `
           <div id='hand' class="player-hand">
             <div class="player-hand__title">Hand</div>
             <div class="player-hand__resources flex-bs">
-              <div id="player-hand_lumber" class="resource player-hand__resource flex-bs empty">
+              <div id="player-hand_lumber" class="resource player-hand__resource flex-bs">
                 <div class="resource-icon icon-lumber"></div>
-                <div id="hand-counter_lumber" class="resource-counter invisible flex-bs">0</div>
+                <div id="hand-counter_lumber" class="resource-counter flex-bs">0</div>
               </div>
               <div id="player-hand_brick" class=" resource player-hand__resource flex-bs">
                 <div class="resource-icon icon-brick"></div>
@@ -34,9 +34,9 @@ export const game = `
                 <div class="resource-icon icon-wool"></div>
                 <div id="hand-counter_wool" class="resource-counter flex-bs">0</div>
               </div>
-              <div id="player-hand_grain" class="resource player-hand__resource flex-bs empty">
+              <div id="player-hand_grain" class="resource player-hand__resource flex-bs">
                 <div class="resource-icon icon-grain"></div>
-                <div id="hand-counter_grain" class="resource-counter invisible flex-bs empty">0</div>
+                <div id="hand-counter_grain" class="resource-counter flex-bs">0</div>
               </div>
               <div id="player-hand_ore" class="resource player-hand__resource flex-bs">
                 <div class="resource-icon icon-ore"></div>
@@ -44,6 +44,7 @@ export const game = `
               </div>
             </div>
           </div>
+          <div><button id="create-new-turn" class="turn-not-active">Next-turn<button></div>
           <div class="game-btns__wrapper flex-bs">
               <div class="game-btn flex-bs">
                 <div id="build-road" class="player-stock__icon player-stock__road_red">

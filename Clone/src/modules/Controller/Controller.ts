@@ -28,6 +28,7 @@ export default class Controller {
 
     setTimeout(() => {
       socket.emit('isYouTurnPlayer', localStorage.getItem('Room'), localStorage.getItem('Name'))
+
       socket.on('firstSettlementMode', (player, active) =>{
         // console.log(player)
         this.player = player
@@ -38,6 +39,25 @@ export default class Controller {
           this.buildFirstSettlementMode()
         }
       })
+
+      socket.on('Turn-player', (player, active) =>{
+        // console.log(player)
+        this.player = player
+        this.activePlayer = active
+        console.log(`${localStorage.getItem('Name')}: ${this.activePlayer}`)
+        
+        const nextBtn = document.getElementById('create-new-turn')
+        if (this.activePlayer) {
+          nextBtn?.classList.add("active");
+        } else {
+          nextBtn?.classList.remove("active");
+        }
+
+      })
+
+      socket.on('Change-playerInfo', player => {
+        this.player = player
+      })
       this.map = document.getElementById("map") as HTMLDivElement;
       document.body.insertAdjacentHTML("afterbegin", buttons);
       this.addBuildFirstSettlementListener();
@@ -46,9 +66,22 @@ export default class Controller {
       this.addSettlementListener();
       this.addCityListener();
       this.addCardsListener();
+      this.createNewTurn()
     }, 0);
   }
 
+  createNewTurn() {
+    const btn = document.getElementById('create-new-turn')
+    btn?.addEventListener('click', e =>{
+      if (btn.classList.length == 2){
+        socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
+      }
+    })
+    socket.on('Client-turn', ()=>{
+      socket.emit('isYouTurnPlayer', localStorage.getItem('Room'), localStorage.getItem('Name'))
+    })
+  }
+  
 /*   addListenerDices() {
     // TODO Как типизировать callback?
     document.getElementById("roll-dice")?.addEventListener("click", () => {
@@ -147,37 +180,43 @@ export default class Controller {
             e.classList.remove("select");
         })
         // this.state?.setNewSettlement(this.player as IPlayerInfo, chousen.id);
+        // console.log(this.player)
+        // console.log('---------')
+        // console.log(chousen.id)
+        // console.log('---------')
+        console.log(localStorage.getItem('Room'))
         socket.emit('setNewSettlement', this.player, chousen.id, localStorage.getItem('Room'))
         this.updateBuildCounter(".settlement__counter");
         this.view?.renderFullMap()
-        // this.state?.updateMap();
-        // this.map?.removeEventListener("click", this.choosePlaceSettlement.bind(this)); //.bind(this) , {once: true}
         if (this.map) {
           this.map.onclick = null;
         }
         setTimeout(()=>{
           this.buildFirstRoadMode(chousen.dataset.next || "");
-        }, 0)
+        }, 5)
       }
     }
   }
 
   buildFirstRoadMode(next: string) {
+    console.log(next)
     next.split(",").forEach((e) => {
       const road = document.getElementById(e) as HTMLDivElement;
-      console.log(!road.classList.contains("own"))
+      road.classList.add("select__road");
       if (!road.classList.contains("own")) {
-        console.log(road)
-        console.log('--------')
-        console.log(e)
-        console.log('--------')
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
-          console.log('CLICK')
-          // this.state?.setNewRoad(this.player1 as IPlayerInfo, road.id);
-          // this.state?.updateMap();
+          console.log(this.player)
           socket.emit('setNewRoad', this.player, road.id, localStorage.getItem('Room'))
           this.updateBuildCounter(".road__counter");
+          this.view?.renderFullMap()
+          console.log(123123123123123)
+          socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
+        })
+
+      }
+    });
+  }
 /* <<<<<<< HEAD
         });
       }
@@ -236,12 +275,12 @@ export default class Controller {
           }
         });
 ======= */
-          this.view?.renderFullMap()
-        })
+  //         this.view?.renderFullMap()
+  //       })
 
-      }
-    });
-  }
+  //     }
+  //   });
+  // }
 
   // Building
   buildRoad(player: IPlayerInfo) {
