@@ -49,10 +49,22 @@ export default class Controller {
     }, 0);
   }
 
-/*   addListenerDices() {
+ /*  addListenerDices() {
+      const gameField = document.querySelector(".game");
+      const diceElements = document.querySelectorAll(".dice");
+
+
     // TODO Как типизировать callback?
-    document.getElementById("roll-dice")?.addEventListener("click", () => {
-      this.rollDice();
+    gameField?.addEventListener("click", (e: Event) => {
+      if (activePlayer && rollPhase) {
+        const target = e.target as HTMLElement;
+        if (target && target.closest(".dice__container")) {
+          const roll = randomDice();
+          audio.play();
+        }
+        // Утановка diceRoll(roll) в state
+        // Вызов функции addResourcesThisTurn()
+      }
     });
   } */
   addBuildFirstSettlementListener() {

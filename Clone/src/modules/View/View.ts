@@ -65,6 +65,7 @@ export default class View {
   }
 
   renderStaticUI(playerInfo: IPlayerInfo[]) {
+    
     // transfer this.state.playersInfo object to UI
   }
 
