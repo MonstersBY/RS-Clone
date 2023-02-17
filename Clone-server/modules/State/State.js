@@ -28,25 +28,26 @@ export default class State {
   }
 
   // Turn based events
-  setDiceRoll(roll) {
+  /* setDiceRoll(roll) {
     this.diceRoll = roll;
+    this.addResoursesThisTurn(roll[0]+roll[1]);
   }
-
-  addResoursesThisTurn(dice) {
-    if (this.mapObject && this.playersInfo) {
+ */
+  addResoursesThisTurn(dice, map, players) {
+    if (map && players) {
 
       let currentHexes = []
       for (let i = 0; i < this.HEX_COUNT; i++) {
-        if (this.mapObject[i].token === dice && !this.mapObject[i].robber) {
+        if (map[i].token === dice && !map[i].robber) {
           currentHexes.push(i);
         }
       }
 
-      for (const player of this.playersInfo) {
+      for (const player of players) {
         for (let i = 0; i < player.hexes.length; i++) {
           for (let j = 0; j < currentHexes.length; j++) {
             if (player.hexes[i] === currentHexes[j]) {
-              switch (this.mapObject[j].type) {
+              switch (map[j].type) {
                 case "hills":
                   player.hand.resources.brick += 1;
                 break;
