@@ -15,7 +15,7 @@ export default class View {
     private ui?: PlayerInterface
   ) {}
 
-    init(mapObject: any, playersInfo: any) {
+    init() {
       setTimeout(() => {
       modificatePage();
       this.renderFullMap();

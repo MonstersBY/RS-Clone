@@ -19,7 +19,7 @@ export const randomDiceRoll = () => {
     const dieOneValue = Math.floor(Math.random() * 10);
     const dieTwoValue = Math.floor(Math.random() * 10);
 
-      console.log({dieOneValue, dieTwoValue})
+      // console.log({dieOneValue, dieTwoValue})
     if ((dieOneValue >= 1 && dieOneValue <= 6) && (dieTwoValue >= 1 && dieTwoValue <= 6)) {
       roll(dieOneValue, dieTwoValue);
       return [dieOneValue, dieTwoValue];
@@ -37,7 +37,7 @@ export const randomDiceRoll = () => {
       side.classList.remove("hidden");
     });
 
-    console.log({ random1, random2 });
+    // console.log({ random1, random2 });
     setTimeout(function () {
       diceElements.forEach(function (die) {
         die.classList.remove("rolling");

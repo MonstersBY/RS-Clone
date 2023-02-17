@@ -5,6 +5,7 @@ export default class State {
     this.playersCount = 4;
     this.gameMode = "classic";
     this.gameMap = "newbie";
+    this.turn = -1;
     this.foundingStage = true;
     this.activePlayer = 0;
     this.diceRoll = [1, 1];
@@ -17,11 +18,11 @@ export default class State {
   }
 
   initialState() {
-    const generator = new MapGenerator();
-    this.mapObject = generator.generateMap(this.gameMap);
-    this.playersInfo = generator.generatePlayers(this.playersCount);
-    this.developmentDeck = generator.generateDevelopmentDeck();
-
+    const generator = new MapGenerator(); //
+    this.mapObject = JSON.parse(JSON.stringify(generator.generateMap(this.gameMap))); //разрываем связь
+    this.playersInfo = JSON.parse(JSON.stringify(generator.generatePlayers(this.playersCount)));
+    this.developmentDeck = JSON.parse(JSON.stringify(generator.generateDevelopmentDeck()));
+    //копирование объектов
     this.activePlayer = 0;
     this.foundingStage = true;
   }
@@ -147,6 +148,7 @@ export default class State {
 
     // add to playerInfo
     player.settlements.push(id);
+    // console.log(player)
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
     // player.hexes.sort();
