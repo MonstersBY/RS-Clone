@@ -88,6 +88,9 @@ body ::-webkit-scrollbar-track {
 .ico {
   padding: -2px;
 }
+.status__icon {
+  cursor: pointer;
+}
 .hidden {
   display: none;
 }
@@ -110,4 +113,7 @@ img {
 }
 .modal {
   left: 16%;
+}
+input[type="checkbox"] {
+  cursor: pointer;
 }
