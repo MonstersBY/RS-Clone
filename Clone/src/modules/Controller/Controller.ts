@@ -30,7 +30,6 @@ export default class Controller {
       socket.emit('isYouTurnPlayer', localStorage.getItem('Room'), localStorage.getItem('Name'))
 
       socket.on('firstSettlementMode', (player, active) =>{
-        // console.log(player)
         this.player = player
         this.activePlayer = active
         console.log(`${localStorage.getItem('Name')}: ${this.activePlayer}`)
@@ -41,7 +40,6 @@ export default class Controller {
       })
 
       socket.on('Turn-player', (player, active) =>{
-        // console.log(player)
         this.player = player
         this.activePlayer = active
         console.log(`${localStorage.getItem('Name')}: ${this.activePlayer}`)
@@ -49,6 +47,7 @@ export default class Controller {
         const nextBtn = document.getElementById('create-new-turn')
         if (this.activePlayer) {
           nextBtn?.classList.add("active");
+          // randomDiceRoll
         } else {
           nextBtn?.classList.remove("active");
         }
@@ -119,7 +118,6 @@ export default class Controller {
       if (e.target instanceof HTMLDivElement) {
         const target = e.target.closest(".knight");
         if (target && target.classList.contains("knight")) {
-          // console.log(target);
           this.playKnightCard(this.player as IPlayerInfo);
         }
       }
@@ -179,12 +177,6 @@ export default class Controller {
         places.forEach((e) => {
             e.classList.remove("select");
         })
-        // this.state?.setNewSettlement(this.player as IPlayerInfo, chousen.id);
-        // console.log(this.player)
-        // console.log('---------')
-        // console.log(chousen.id)
-        // console.log('---------')
-        console.log(localStorage.getItem('Room'))
         socket.emit('setNewSettlement', this.player, chousen.id, localStorage.getItem('Room'))
         this.updateBuildCounter(".settlement__counter");
         this.view?.renderFullMap()
@@ -193,24 +185,20 @@ export default class Controller {
         }
         setTimeout(()=>{
           this.buildFirstRoadMode(chousen.dataset.next || "");
-        }, 5)
+        }, 50)
       }
     }
   }
 
   buildFirstRoadMode(next: string) {
-    console.log(next)
     next.split(",").forEach((e) => {
       const road = document.getElementById(e) as HTMLDivElement;
-      road.classList.add("select__road");
       if (!road.classList.contains("own")) {
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
-          console.log(this.player)
           socket.emit('setNewRoad', this.player, road.id, localStorage.getItem('Room'))
           this.updateBuildCounter(".road__counter");
           this.view?.renderFullMap()
-          console.log(123123123123123)
           socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
         })
 
