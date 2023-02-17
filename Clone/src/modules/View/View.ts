@@ -56,6 +56,8 @@ export default class View {
         mapContainer?.insertAdjacentHTML("beforeend", mapTree);
       }
     })
+    let event = new Event('mapLoad');
+    window.dispatchEvent(event);
   }
 
   renderfullUI(playerInfo: IPlayerInfo[], player: number) {
@@ -65,6 +67,7 @@ export default class View {
   }
 
   renderStaticUI(playerInfo: IPlayerInfo[]) {
+
     // transfer this.state.playersInfo object to UI
   }
 

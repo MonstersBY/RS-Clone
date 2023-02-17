@@ -2,7 +2,7 @@
   &__logo {
     @include font(1.25rem, 120%, 700);
     flex-basis: 0;
-    margin-right: 6.4rem;
+    margin-right: 1rem;
     &.hidden {
       display: none;
     }
@@ -11,9 +11,7 @@
     position:relative;
     width: 100%;
     max-width: 1400px;
-    // min-height: 7rem;
     padding: 0.75rem 1rem 0 1rem;
-    margin: 0 auto;
   }
   &-menu {
     @extend %transition;

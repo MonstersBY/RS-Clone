@@ -15,7 +15,7 @@ export const randomDiceRoll = () => {
     audio.src = '../../assets/files/6f488185486f9cf.mp3';
 
 
-  const randomDice = () => {
+  function randomDice() {
     const dieOneValue = Math.floor(Math.random() * 10);
     const dieTwoValue = Math.floor(Math.random() * 10);
 
@@ -26,7 +26,7 @@ export const randomDiceRoll = () => {
     } else {
       randomDice();
     }
-  };
+  }
 
   function roll(random1: number, random2: number) {
     const sides = document.querySelectorAll(".side");
