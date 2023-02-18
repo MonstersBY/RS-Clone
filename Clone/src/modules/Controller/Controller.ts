@@ -68,10 +68,11 @@ export default class Controller {
       document.body.insertAdjacentHTML("afterbegin", buttons);
       this.addBuildFirstSettlementListener();
       // this.addRefreshListener();
-      this.addRoadListener();
-      this.addSettlementListener();
-      this.addCityListener();
+      // this.addRoadListener();
+      // this.addSettlementListener();
+      // this.addCityListener();
       this.addCardsListener();
+      this.addBuildAndTradeListeners();
       // this.createNewTurn()
 
       this.addListenerDices();
@@ -125,25 +126,56 @@ export default class Controller {
   //   document.getElementById("refresh")?.addEventListener("click", () => { this.state?.updateMap(); })
   // }
 
-  addRoadListener() {
-    document.getElementById("build-road")?.addEventListener("click", () => {
-      this.buildRoad(this.player as IPlayerInfo);
+
+  addBuildAndTradeListeners() {
+    const btnsWrap = document.getElementById('build-trade-card-list');
+    const constructionBlock = document.querySelector(".construction-cost");
+
+    btnsWrap?.addEventListener('click', (e: Event) => {
+      if (e.target instanceof HTMLElement) {
+        const target = e.target.closest('.game-btn');
+        if (target) {
+          const name = target.className.split(' ')[1];
+          switch (name) {
+            case "road__btn":
+              this.buildRoad(this.player as IPlayerInfo);
+              break;
+            case "settlement__btn":
+              this.buildSettlement(this.player as IPlayerInfo);
+              break;
+            case "city__btn":
+              this.buildCity(this.player as IPlayerInfo);
+              break;
+            case "construction__btn":
+              constructionBlock?.classList.toggle("modal");
+              break;
+            case "trade-devcard__btn":
+              this.buyDevelopCard()
+          }
+        }
+      }
     });
   }
 
-  addSettlementListener() {
+/*   addRoadListener() {
+    document.getElementById("build-road")?.addEventListener("click", () => {
+      this.buildRoad(this.player as IPlayerInfo);
+    });
+  } */
+
+/*   addSettlementListener() {
     document
       .getElementById("build-settlement")
       ?.addEventListener("click", () => {
         this.buildSettlement(this.player as IPlayerInfo);
       });
-  }
+  } */
 
-  addCityListener() {
+ /*  addCityListener() {
     document.getElementById("build-city")?.addEventListener("click", () => {
       this.buildCity(this.player as IPlayerInfo);
     });
-  }
+  } */
 
   /* addRobberListener() {
     document.getElementById("robber")?.addEventListener("click", () => { this.setRobber(this.player1 as IPlayerInfo); })
@@ -346,12 +378,12 @@ export default class Controller {
     if (counter) counter.textContent = `${--counterNumber}`;
   }
 
-  /*   // Development cards
+    // Development cards
   buyDevelopCard() {
-    this.state?.buyDevelopmentCard(this.player1 as IPlayerInfo);
+    // this.state?.buyDevelopmentCard(this.player1 as IPlayerInfo);
   }
 
-  addPlayCardListener(player: IPlayerInfo) {
+  /* addPlayCardListener(player: IPlayerInfo) {
     document
       .getElementById("develop-card-list")
       ?.addEventListener("click", (e) => {
