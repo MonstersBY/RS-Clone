@@ -84,7 +84,7 @@ io.on("connection", (socket) => {
                 const msg = 'disconnect'
                 io.to(room).emit('message', name, msg)
                 io.to(room).emit('all-user-room', allrooms[index].users)
-        
+
                 if ( allrooms[index].users.length === 0) {
                     allrooms.splice(index, 1)
                     io.emit('room-list', allrooms)

@@ -149,9 +149,7 @@ export default class State {
     player.settlements.push(id);
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
-    // player.hexes.sort();
     player.avalible.push(...nearNodes);
-    // console.log(player.avalible);
   }
 
   setNewCity(player, id) {
@@ -237,11 +235,11 @@ export default class State {
   playRoadCard(player) {}// !!!
 
   // Tecnical checks and events
-  isAnyResourse(res) {
+  #isAnyResourse(res) {
     return res.brick + res.grain + res.lumber + res.ore + res.wool;
   }
 
-  chooseRandomResourse(res) {
+  #chooseRandomResourse(res) {
     const randomNumber = new MapGenerator().randomNumber;
     const resources = ["grain", "wool", "ore", "lumber", "brick"];
     let chosen = 0;
@@ -257,8 +255,8 @@ export default class State {
   transferOneToAnother(player, victimColor) {
     for (const playerVictim of this.playersInfo) {
       if (playerVictim.color === victimColor) {
-        if (this.isAnyResourse(playerVictim.hand.resources)) {
-          const type = this.chooseRandomResourse(playerVictim.hand.resources);
+        if (this.#isAnyResourse(playerVictim.hand.resources)) {
+          const type = this.#chooseRandomResourse(playerVictim.hand.resources);
           playerVictim.hand.resources[type] -= 1;
           player.hand.resources[type] += 1;
         };
@@ -266,10 +264,35 @@ export default class State {
     }
   }
 
-  calculateRoadChain(player, id) {
-    if (player.roads.length > 4) {
-      // better start from top-left
+  calculateRoadChain(player, id, counted = []) {
+    let chain = 0;
+    if (counted.includes(id)) {
+      return chain;
+    } else {
+      const hex = id.split("_")[0];
+      const hode = "road_" + id.split("_")[2];
+      if (this.mapObject[hex][hode].player === player.color) {
+        chain += 1;
+
+        const nearNodes = this.mapObject[hex][hode].nextNodes;
+        let nearRoads = [];
+
+        for (let i = 0; i < nearNodes.length; i++) {
+          const hex = nearNodes[i].split("_")[0];
+          const settlementId = "settlement_" + nearNodes[i].split("_")[2];
+          nearRoads.push(...this.mapObject[hex][settlementId].nextNodes);
+        }
+        const nearRoadsSet = new Set(nearRoads);
+        nearRoadsSet.delete(id);
+        nearRoads = [...nearRoadsSet];
+
+        nearRoads.forEach((road) => {
+          const newCounted = [...counted, id];
+          chain += calculateRoadChain(color, road, newCounted);
+        })
+      }
     }
+    return chain;
   }
 
   calculateMaxRoadChain() {
