@@ -8,11 +8,13 @@ import { game } from "../StartPage/templates/gamePage";
 import socket from "../Socket";
 import { modificatePage } from "../StartPage/templates/modificateIngamePage";
 import { IPlayerInfo } from "../types/types";
+import Dice from "../diceRoll/diceRoll";
 
 export default class View {
   constructor(
     private renderer: MapRenderer = new MapRenderer(),
-    private ui?: PlayerInterface
+    private ui?: PlayerInterface,
+    public dice: Dice = new Dice,
   ) {}
 
     init() {
@@ -21,9 +23,11 @@ export default class View {
       this.renderFullMap();
       this.CreatePlayers()
       this.Resources()
+      this.dice.init()
 
       // add renderfullUI(player: number)
-    }, 0);
+      }, 0);
+
   }
 
   // Possable useless function
@@ -73,7 +77,14 @@ export default class View {
 
   renderDynamicUI(player: IPlayerInfo) {
     // transfer this.state.playersInfo[player].hand object to UI
+    const stockRoad = document.getElementById("build-road");
+    stockRoad?.classList.add(`player-stock__road_${player.color}`);
+    const stockSettlement = document.getElementById("build-settlement");
+    stockSettlement?.classList.add(`player-stock__settlement_${player.color}`);
+    const stockCity = document.getElementById("build-city");
+    stockCity?.classList.add(`player-stock__city_${player.color}`);
   }
+  
   showPlentyPopup() {}
 
   showMonopolyPopup() {}

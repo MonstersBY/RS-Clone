@@ -5,7 +5,7 @@ import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
-import { diceRoll } from "./diceRoll/diceRoll";
+import  Dice  from "./diceRoll/diceRoll";
 import { modificatePage } from "./StartPage/templates/modificateIngamePage";
 import { costListener, monopolyListener, plentyListener, tradeListener } from "./GameListeners/modalListeners";
 
@@ -16,6 +16,8 @@ export default class App {
     public router: Router = new Router(),
     public controller: Controller = new Controller(),
     public view: View = new View(),
+    // public dice: Dice = new Dice,
+
     // public state: State = new State(),
 
     public inGame: boolean = false, // unused
@@ -27,7 +29,7 @@ export default class App {
     addHelper();
     this.setRouter();
     this.router.setRoutes();
-    diceRoll();
+    
     costListener();
     tradeListener();
     monopolyListener();

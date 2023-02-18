@@ -1,4 +1,5 @@
 import View from "../View/View";
+import Dice from "../diceRoll/diceRoll";
 
 import { getElementBySelector, IPlayerInfo } from "../types/types";
 import { randomDiceRoll } from "../diceRoll/randomDiceRoll";
@@ -7,14 +8,14 @@ import socket from "../Socket";
 export default class Controller {
   constructor(
     public view?: View,
+    public dice?: Dice,
     // public state?: State,
     // public room?: Room,
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
-    public canRoll?: boolean
-  ) // private timer: Timer = new Timer(),
-  // private master: GameMaster = new GameMaster(),
+    public canRoll?: boolean // private timer: Timer = new Timer(),
+  ) // private master: GameMaster = new GameMaster(),
   {}
 
   init() {
@@ -26,6 +27,7 @@ export default class Controller {
     </div>
 
     `;
+    // this.dice.init();
 
     setTimeout(() => {
       socket.emit(
@@ -71,6 +73,8 @@ export default class Controller {
       this.addCityListener();
       this.addCardsListener();
       // this.createNewTurn()
+
+      this.addListenerDices();
     }, 0);
   }
 
@@ -96,14 +100,19 @@ export default class Controller {
 
   addListenerDices() {
     // TODO Как типизировать callback?
-    document.getElementById("roll-dice")?.addEventListener("click", () => {
-      if (this.canRoll) {
-        //  addListener
-        const roll = [5, 3];
-        this.canRoll = false;
-        socket.emit("weRollDice", localStorage.getItem("Room"), roll);
-      }
-    });
+    console.log('ROLL');
+    if (this.canRoll) {
+      document.getElementById("roll-dice")?.addEventListener("click", (e: Event) => {
+        const target = e.target as HTMLElement;
+        if (target && target.closest(".dice__container") && this.dice) {
+          const roll =  this.dice.randomDiceRoll();
+          this.dice.audio.play();
+          this.canRoll = false;
+          socket.emit("weRollDice", localStorage.getItem("Room"), roll);
+        }
+      }, {once: true});
+
+    }
   }
 
   addBuildFirstSettlementListener() {
@@ -206,7 +215,9 @@ export default class Controller {
         ];
         places.forEach((e) => {
           e.classList.remove("select");
+
         });
+        chousen.classList.add("build"); // Не добавляется анимация постройки города и дорог
         // this.state?.setNewSettlement(this.player as IPlayerInfo, chousen.id);
         // console.log(this.player)
         // console.log('---------')
