@@ -1,4 +1,4 @@
-export function roadCounter(map, playerColor, roadId) {
+export default function roadCounter(map, playerColor, roadId) {
   let roadChainLength = 1;
 
   // Делаем список из всех достунпых (4х) веток идущих от основного узла дороги
