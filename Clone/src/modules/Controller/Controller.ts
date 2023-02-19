@@ -73,8 +73,9 @@ export default class Controller {
       // this.addRoadListener();
       // this.addSettlementListener();
       // this.addCityListener();
-      // this.addPlayCardsListener(this.player);  // error of type
+      // error of type
       this.addBuildAndTradeListeners();
+      // this.addPlayCardsListener(this.player); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
       // this.createNewTurn()
     }, 0);
   }
@@ -152,7 +153,7 @@ export default class Controller {
               break;
             case "trade__btn":
 
-              this.view?.showTradePopup(); // вызовется? или нужно создавать инстанс View
+              this.view?.showTradePopup();
 
               // this.trade();   // logic of trade
             case "trade-devcard__btn":
@@ -248,7 +249,7 @@ export default class Controller {
         );
         // this.updateBuildCounter(".settlement__counter"); // unused function, need delete?
         this.view?.renderFullMap();
-        chousen.classList.add("build"); // Не добавляется анимация постройки города и дорог
+        chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
 
         // this.state?.updateMap();
         // this.map?.removeEventListener("click", this.choosePlaceSettlement.bind(this)); //.bind(this) , {once: true}
@@ -322,7 +323,7 @@ export default class Controller {
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
           // this.updateBuildCounter(".road__counter"); // unused function
-          road.classList.add("build"); // need add class after render map (can add movedown class)
+          road.classList.add("moveDown"); // need add class after render map (can add movedown class)
         });
       }
     });
@@ -340,7 +341,7 @@ export default class Controller {
         settlement.classList.add("select");
         settlement.addEventListener("click", (e) => {
           // this.updateBuildCounter(".settlement__counter"); // unused function
-          settlement.classList.add("build"); //need add class after render map
+          settlement.classList.add("moveDown"); //need add class after render map
         });
       }
     });
@@ -356,7 +357,7 @@ export default class Controller {
         // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
         // this.state?.updateMap();
         if (e.target && e.target instanceof HTMLElement)
-          e.target.classList.add("city", "build"); //need add animation,
+          e.target.classList.add("city", "moveDown"); //need add animation,
         // maybe city need add in another place
       });
     });
@@ -377,9 +378,7 @@ export default class Controller {
   }
 
   addPlayCardsListener(player: IPlayerInfo) {
-    document
-      .getElementById("develop-card-list")
-      ?.addEventListener("click", (e) => {
+    document.getElementById("develop-card-list")?.addEventListener("click", (e) => {
         if (e.target instanceof HTMLElement) {
           const target = e.target.closest(".game-btn");
           if (target) {
@@ -387,6 +386,7 @@ export default class Controller {
             console.log(name);
             switch (name) {
               case "knight":
+                console.log(name, "knight");
                 // this.state?.playKnigthCard(player);
                 this.playKnightCard(player);
                 this.setRobber(player);

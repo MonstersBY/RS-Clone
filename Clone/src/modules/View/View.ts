@@ -81,6 +81,8 @@ export default class View {
   }
 
   renderStock(player: IPlayerInfo) {
+    //Вариант, где есть вопросы с типами
+
     const ids = ["build-road", "build-settlement", "build-city"];
     const stockElements: any = []; // what type?
     ids.forEach(id => {
@@ -100,7 +102,7 @@ export default class View {
           break;
       }
     }
-
+    // Точно рабочий вариант
     /* const stockRoad = document.getElementById("build-road");
     stockRoad?.classList.add(`player-stock__road_${player.color}`);
     const stockSettlement = document.getElementById("build-settlement");
@@ -206,3 +208,11 @@ export default class View {
     return sum;
   }
 }
+
+// Classes: _animation.scss
+
+// city - меняет поселение на город надо добавлять, когда строим город уже
+// select - для подсветки поля, где нужно построить поселение
+// select__road - для подстветки дороги, которую можно построить
+// moveDown - нужно добавлять robber после отрисовки карты (иначе будет срабатывать не на том гексе), в функции где его переставляют
+// этот же класс можно добавлять и для поселений, городов, дорог при строительстве(или есть класс build - но он не очень)
