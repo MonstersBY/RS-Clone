@@ -14,16 +14,17 @@ export default class View {
   constructor(
     private renderer: MapRenderer = new MapRenderer(),
     private ui?: PlayerInterface,
-    public dice: Dice = new Dice,
+    // public dice: Dice = new Dice,
   ) {}
 
     init() {
       setTimeout(() => {
-      modificatePage();
+        modificatePage();
+      // this.renderStaticUI(playerInfo, player) //need player and playerINfo[]
       this.renderFullMap();
       this.CreatePlayers()
       this.Resources()
-      this.dice.init()
+      // this.dice.init()
 
       // add renderfullUI(player: number)
       }, 0);
@@ -66,28 +67,68 @@ export default class View {
 
   renderfullUI(playerInfo: IPlayerInfo[], player: number) {
     // hey, ui, transfer this.state.playersInfo[player] object to UI
-    this.renderStaticUI(playerInfo);
+    this.renderStaticUI(playerInfo, player);
     // Fthis.renderDynamicUI(playerInfo);
   }
 
-  renderStaticUI(playerInfo: IPlayerInfo[]) {
-
+  renderStaticUI(playerInfo: IPlayerInfo[], player: number) {
+    this.renderStock(playerInfo[player])
     // transfer this.state.playersInfo object to UI
   }
 
   renderDynamicUI(player: IPlayerInfo) {
     // transfer this.state.playersInfo[player].hand object to UI
-    const stockRoad = document.getElementById("build-road");
+  }
+
+  renderStock(player: IPlayerInfo) {
+    const ids = ["build-road", "build-settlement", "build-city"];
+    const stockElements: any = []; // what type?
+    ids.forEach(id => {
+      stockElements.push(document.getElementById(id));
+    });
+
+    for (let i = 0; i < stockElements; i++) {
+      switch (stockElements[i].id) {
+        case "build-road":
+          stockElements[i].classList.add(`player-stock__road_${player.color}`);
+          break;
+        case "build-settlement":
+          stockElements[i].classList.add(`player-stock__settlement_${player.color}`);
+          break;
+        case "build-city":
+          stockElements[i].classList.add(`player-stock__city_${player.color}`);
+          break;
+      }
+    }
+
+    /* const stockRoad = document.getElementById("build-road");
     stockRoad?.classList.add(`player-stock__road_${player.color}`);
     const stockSettlement = document.getElementById("build-settlement");
     stockSettlement?.classList.add(`player-stock__settlement_${player.color}`);
     const stockCity = document.getElementById("build-city");
-    stockCity?.classList.add(`player-stock__city_${player.color}`);
+    stockCity?.classList.add(`player-stock__city_${player.color}`); */
   }
-  
-  showPlentyPopup() {}
 
-  showMonopolyPopup() {}
+  showPlentyPopup() {
+    const modalPlenty = document.querySelector(".plenty-choose");
+    modalPlenty?.classList.toggle("modal");
+  }
+
+  showMonopolyPopup() {
+    const modalMonopoly = document.querySelector(".monopoly-choose");
+    modalMonopoly?.classList.toggle("modal");
+  }
+
+  showTradePopup() {
+    const modalTrade = document.querySelector(".modal-trade");
+    modalTrade?.classList.toggle("modal");
+  }
+
+  showConstructionCost() {
+    const constructionBlock = document.querySelector(".construction-cost");
+    constructionBlock?.classList.toggle("modal");
+  }
+
 
   CreatePlayers() {
     socket.emit('give-room-list-players', localStorage.getItem('Room'), localStorage.getItem('Name'))

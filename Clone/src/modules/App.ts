@@ -6,8 +6,6 @@ import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import  Dice  from "./diceRoll/diceRoll";
-import { modificatePage } from "./StartPage/templates/modificateIngamePage";
-import { costListener, monopolyListener, plentyListener, tradeListener } from "./GameListeners/modalListeners";
 
 import socket from "./Socket";
 
@@ -29,12 +27,6 @@ export default class App {
     addHelper();
     this.setRouter();
     this.router.setRoutes();
-    
-    costListener();
-    tradeListener();
-    monopolyListener();
-    plentyListener();
-    modificatePage();
     this.CreateRoom();
     this.CreateMode();
   }
