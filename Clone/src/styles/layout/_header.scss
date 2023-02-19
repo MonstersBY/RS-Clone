@@ -1,8 +1,4 @@
 .header {
-  margin: 0 auto;
-  padding: 0.75rem 1.5rem 0 1.5rem;
-  width: $content-width;
-
   &__logo {
     @include font(1.25rem, 120%, 700);
     flex-basis: 0;
@@ -12,7 +8,9 @@
   }
   &__wrapper {
     position:relative;
-    width: 100%;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem 0 1.5rem;
+    width: $content-width;
     justify-content: space-between;
     @media min-media-desktop {
       max-width: 1400px;

@@ -2,7 +2,7 @@ export const core = `
   <header class="header">
   <div class="header__wrapper flex-row">
     <a href="/" class="logo header__logo flex-bs">
-          <img src="assets/images/logo.png" alt="logo" class="logo__img">
+        <img src="assets/images/logo.png" alt="logo" class="logo__img">
     </a>
     <h1 class="title">Online Alternative to Settlers of Catan</h1>
   </div>

@@ -386,7 +386,7 @@ export default class Controller {
             switch (name) {
               case "knight":
                 // this.state?.playKnigthCard(player);
-                this.playKnightCard;
+                this.playKnightCard(player);
                 this.setRobber(player);
                 break;
               case "monopoly":
@@ -402,7 +402,7 @@ export default class Controller {
                 // this.state?.playRoadCard(player);
                 this.buildRoad(player);
                 window.addEventListener(
-                  "road-builded",
+                  "road-builded",  // this event doesn't generate 
                   () => {
                     this.buildRoad(player);
                   },
