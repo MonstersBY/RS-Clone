@@ -151,8 +151,10 @@ export default class Controller {
               this.view?.showConstructionCost();
               break;
             case "trade__btn":
+
               this.view?.showTradePopup(); // вызовется? или нужно создавать инстанс View
-            // this.trade();
+
+              // this.trade();   // logic of trade
             case "trade-devcard__btn":
               this.buyDevelopCard();
               break;
@@ -402,7 +404,7 @@ export default class Controller {
                 // this.state?.playRoadCard(player);
                 this.buildRoad(player);
                 window.addEventListener(
-                  "road-builded",  // this event doesn't generate 
+                  "road-builded",  // this event doesn't generate
                   () => {
                     this.buildRoad(player);
                   },
