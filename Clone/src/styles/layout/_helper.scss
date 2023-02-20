@@ -12,8 +12,6 @@
     padding: 20px;
     width: 100vh;
     height: 90vh;
-    /* width: 50%;
-    height: 90%; */
     background: wheat;
     color: black;
     border-radius: 8px;
@@ -43,18 +41,6 @@
     &:hover {
       background-color: darken($color-btn-primary, 10%);
     }
-    /* @media(min-width: 768px) {
-      left: 18%;
-    }
-    @media(min-width: 1000px) {
-      left: 16%;
-    }
-    @media(min-width: 1380px) {
-      left: 18%;
-    }
-    @include min-media-desktop {
-      left: 21%;
-    } */
   }
   &__title {
     margin-bottom: 5px;
