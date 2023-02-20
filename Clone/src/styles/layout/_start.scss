@@ -36,6 +36,11 @@
   }
 }
 
+.logo__wrap {
+  display: flex;
+  justify-content: space-between;
+}
+
 .content__wrapper {
   flex-grow: 1;
   height: 75vh;

@@ -1,7 +1,9 @@
 export const game = `
       <div class="main__wrapper">
         <div class="left__sidebar">
-           <a href="/" class="link menu__link">Home</a>
+          <div id="game-menu__wrap" class="game-menu__wrap flex-bs">
+            <a href="/" class="link menu__link">Home</a>
+          </div>
           <div id='hand' class="player-hand">
             <div class="player-hand__title">Hand</div>
             <div class="player-hand__resources">

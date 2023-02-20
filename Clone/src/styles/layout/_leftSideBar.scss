@@ -4,7 +4,14 @@
   gap: 1rem;
   width: 15%;
 }
-
+.game-menu__wrap {
+  position: relative;
+  justify-content: space-between;
+  align-items: flex-start;
+  .menu__link {
+    padding: 0;
+  }
+}
 .game-btns__wrapper {
   width: 100%;
   justify-content: space-between;
@@ -36,6 +43,7 @@
   position: absolute;
   left: -150%;
   bottom: 0;
+  visibility: hidden;
   width: 38vh;
   height: 40vh;
   margin-bottom: 2rem;
@@ -52,6 +60,7 @@
 }
 .construction-cost.modal {
   left: 16%;
+  visibility: visible;
 }
 .construction-content {
   &__wrap {

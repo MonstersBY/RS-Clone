@@ -8,6 +8,7 @@ import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
 import  Dice  from "./diceRoll/diceRoll";
 
 import socket from "./Socket";
+import { modificatePage } from "./StartPage/templates/modificateIngamePage";
 
 export default class App {
   constructor(
@@ -25,6 +26,7 @@ export default class App {
     this.addGameListener();
     renderCore();
     addHelper();
+    modificatePage();
     this.setRouter();
     this.router.setRoutes();
     this.CreateRoom();
@@ -61,6 +63,9 @@ export default class App {
         // console.log(this.controller.view)
         this.controller.init();
       })
+      setTimeout(() => {
+        addHelper();
+      }, 0)
     }
   }
 }

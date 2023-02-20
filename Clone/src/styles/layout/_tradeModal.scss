@@ -2,13 +2,14 @@
   @extend %transition;
   position: absolute;
   top: 4%;
-  // bottom: 1rem;
   left: -100%;
+  visibility: hidden;
   z-index: 5;
   background: transparent;
 }
 
 .modal-trade.modal {
+  visibility: visible;
   left: 50%;
 }
 .trade__subtitle {
@@ -59,9 +60,17 @@
   position: absolute;
   top: 22%;
   left: -116%;
+  visibility: hidden;
   width: 100%;
   z-index: 5;
   background: transparent;
+}
+.modal-trade__counteroffer.modal {
+  visibility: visible;
+  left: 35%;
+  @media (max-width: 768px) {
+    left: 45%;
+  }
 }
 .counteroffer {
   left: 35%;

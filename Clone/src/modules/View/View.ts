@@ -4,11 +4,8 @@ import { IHex, ISettlement, IResources, IDevCards } from "../types/types";
 import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
 import { game } from "../StartPage/templates/gamePage";
-
 import socket from "../Socket";
-import { modificatePage } from "../StartPage/templates/modificateIngamePage";
 import { IPlayerInfo } from "../types/types";
-import Dice from "../diceRoll/diceRoll";
 
 export default class View {
   constructor(
@@ -19,7 +16,6 @@ export default class View {
 
     init() {
       setTimeout(() => {
-        modificatePage();
       // this.renderStaticUI(playerInfo, player) //need player and playerINfo[]
       this.renderFullMap();
       this.CreatePlayers()
@@ -216,3 +212,4 @@ export default class View {
 // select__road - для подстветки дороги, которую можно построить
 // moveDown - нужно добавлять robber после отрисовки карты (иначе будет срабатывать не на том гексе), в функции где его переставляют
 // этот же класс можно добавлять и для поселений, городов, дорог при строительстве(или есть класс build - но он не очень)
+//  modal - для появления окошка встречной торговли

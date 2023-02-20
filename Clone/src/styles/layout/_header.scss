@@ -7,10 +7,9 @@
     }
   }
   &__wrapper {
-    position:relative;
     margin: 0 auto;
     padding: 0.75rem 1.5rem 0 1.5rem;
-    width: $content-width;
+    max-width: 1400px;
     justify-content: space-between;
     @media min-media-desktop {
       max-width: 1400px;
@@ -71,6 +70,10 @@
       display: none;
     }
   }
+}
+
+.logo__wrap{
+  position: relative;
 }
 
 .header-login__wrapper {

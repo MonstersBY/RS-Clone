@@ -1,3 +1,3 @@
 export const errorPage = `
-  <h1>404</h1>
+  <h1 class="error flex-bs">404</h1>
 `

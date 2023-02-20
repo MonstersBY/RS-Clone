@@ -3,6 +3,7 @@
   position: absolute;
   bottom: 1rem;
   left: -116%;
+  visibility: hidden;
   &__wrap {
     width: 16vh;
     flex-wrap: wrap;
@@ -34,4 +35,5 @@
 }
 .modal-choose.modal {
   left: 16%;
+  visibility: visible;
 }

@@ -1,8 +1,6 @@
 import View from "../View/View";
 import Dice from "../diceRoll/diceRoll";
-
 import { getElementBySelector, IPlayerInfo } from "../types/types";
-import { randomDiceRoll } from "../diceRoll/randomDiceRoll";
 import socket from "../Socket";
 
 export default class Controller {
@@ -68,6 +66,7 @@ export default class Controller {
       });
       this.map = document.getElementById("map") as HTMLDivElement;
       document.body.insertAdjacentHTML("afterbegin", buttons);
+
       this.addBuildFirstSettlementListener();
       // this.addRefreshListener();
       // this.addRoadListener();
