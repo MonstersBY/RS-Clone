@@ -34,7 +34,7 @@ body ::-webkit-scrollbar-track {
   padding: 0 1.5rem;
 
   @include min-media-desktop {
-    max-width: 100%;
+    max-width: 1400px;
   }
   @include max-media-small-desktop {
     max-width: 1000px;
@@ -88,6 +88,9 @@ body ::-webkit-scrollbar-track {
 .ico {
   padding: -2px;
 }
+.status__icon {
+  cursor: pointer;
+}
 .hidden {
   display: none;
 }
@@ -110,4 +113,11 @@ img {
 }
 .modal {
   left: 16%;
+}
+input[type="checkbox"] {
+  cursor: pointer;
+}
+.error {
+  @include font(4rem, 130%, 700);
+  justify-content: center;
 }

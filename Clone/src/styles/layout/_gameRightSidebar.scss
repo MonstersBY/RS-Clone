@@ -12,6 +12,9 @@
     flex-direction: column;
     gap: 1vh;
   }
+  @media (max-width: 768px) {
+    width: 19%;
+  }
 }
 .miniboard__img {
   width: 5vh;
@@ -90,6 +93,9 @@
   width: 3vh;
 }
 .game-chat {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
   height: 30%;
   &__text {
     width: 100%;

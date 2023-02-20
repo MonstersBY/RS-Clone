@@ -1,32 +1,17 @@
 export const game = `
       <div class="main__wrapper">
         <div class="left__sidebar">
-          <div class="menu">
-            <nav class="menu header-menu game-menu">
-              <a href="/" class="logo burger__logo flex-bs">
-                <img src="assets/images/logo.png" alt="logo" class="logo__img">
-              </a>
-              <ul class="menu__list header-menu__list flex-row">
-                <li class="menu__list-item mode__page">
-                  <a href="#" class="link menu__link active">Play Page</a>
-                </li>
-              </ul>
-              <div class="overlay"></div>
-            </nav>
-            <div class="hamburger game-burger">
-              <span class="line"></span>
-              <span class="line"></span>
-              <span class="line"></span>
-            </div>
+          <div id="game-menu__wrap" class="game-menu__wrap flex-bs">
+            <a href="/" class="link menu__link">Home</a>
           </div>
           <div id='hand' class="player-hand">
             <div class="player-hand__title">Hand</div>
-            <div class="player-hand__resources flex-bs">
+            <div class="player-hand__resources">
               <div id="player-hand_lumber" class="resource player-hand__resource flex-bs">
                 <div class="resource-icon icon-lumber"></div>
                 <div id="hand-counter_lumber" class="resource-counter flex-bs">0</div>
               </div>
-              <div id="player-hand_brick" class=" resource player-hand__resource flex-bs">
+              <div id="player-hand_brick" class="resource player-hand__resource flex-bs">
                 <div class="resource-icon icon-brick"></div>
                 <div id="hand-counter_brick" class="resource-counter flex-bs">0</div>
               </div>
@@ -43,180 +28,6 @@ export const game = `
                 <div id="hand-counter_ore" class="resource-counter flex-bs">0</div>
               </div>
             </div>
-          </div>
-          <div><button id="create-new-turn" class="turn-not-active">Next-turn<button></div>
-          <div class="game-btns__wrapper flex-bs">
-              <div class="game-btn flex-bs">
-                <div id="build-road" class="player-stock__icon player-stock__road_red">
-                  <div class="player-stock__counter flex-bs road__counter">15</div>
-                </div>
-              </div>
-              <div class="game-btn">
-                <div id="build-settlement" class="player-stock__icon player-stock__settlement_red">
-                  <div class="player-stock__counter flex-bs settlement__counter">5</div>
-                </div>
-              </div>
-              <div class="game-btn">
-                <div id="build-city" class="player-stock__icon player-stock__city_red">
-                  <div class="player-stock__counter flex-bs city__counter">4</div>
-                </div>
-              </div>
-            <button class="game-btn construction__btn">Cost</button>
-            <div class="game-btn trade__btn">
-              <div class="trade__btn-icon"></div>
-            </div>
-            <div class="game-btn trade-devcard__btn">
-              <div class="trade-devcard__btn-icon"></div>
-            </div>
-          </div>
-          <div id="develop-card-list" class="game-btns__wrapper flex-bs develop-cards__wrapper">
-            <div class="game-btn monopoly develop__btn">
-              <div class="devcard__btn-icon dev-monopoly">
-                <div class="player-stock__counter flex-bs devcard__counter">1</div>
-              </div>
-            </div>
-            <div class="game-btn plenty develop__btn empty">
-              <div class="devcard__btn-icon dev-plenty">
-                <div class="player-stock__counter flex-bs devcard__counter">0</div>
-              </div>
-            </div>
-            <div class="game-btn road develop__btn">
-              <div class="devcard__btn-icon dev-road">
-                <div class="player-stock__counter flex-bs devcard__counter">1</div>
-              </div>
-            </div>
-            <div class="game-btn develop__btn">
-              <div class="devcard__btn-icon dev-victory">
-                <div class="player-stock__counter flex-bs devcard__counter">3</div>
-              </div>
-            </div>
-            <div class="game-btn knight develop__btn">
-              <div id="robber" class="devcard__btn-icon dev-knight">
-                <div class="player-stock__counter flex-bs devcard__counter">5</div>
-              </div>
-            </div>
-          </div>
-          <div class="construction-cost">
-            <div class="construction-content__wrap">
-              <h3 class="construction-cost__title">Construction Cost</h3>
-              <div class="cost__subtitle__wrap flex-row">
-                <div class="cost__subtitle">Road</div>
-                <div class="player-stock__counter flex-bs road__counter">13</div>
-              </div>
-              <div class="cost__wrapper road-cost">
-                <div class="cost-icon icon-lumber">
-                  <div class="icon-check"></div>
-                </div>
-                <div class="cost-icon icon-brick">
-                  <div class="icon-check hidden"></div>
-                </div>
-              </div>
-              <div class="cost__subtitle__wrap flex-row">
-                <div class="cost__subtitle">Settlement</div>
-                <div class="player-stock__counter flex-bs road__counter">3</div>
-              </div>
-              <div class="cost__wrapper settlement-cost">
-                <div class="cost-icon icon-lumber">
-                  <div class="icon-check"></div>
-                </div>
-                <div class="cost-icon icon-brick">
-                  <div class="icon-check hidden"></div>
-                </div>
-                <div class="cost-icon icon-wool">
-                  <div class="icon-check"></div>
-                </div>
-                <div class="cost-icon icon-grain">
-                  <div class="icon-check hidden"></div>
-                </div>
-              </div>
-              <div class="cost__subtitle__wrap flex-row">
-                <div class="cost__subtitle">City</div>
-                <div class="player-stock__counter flex-bs road__counter">4</div>
-              </div>
-              <div class="cost__wrapper city-cost">
-                <div class="cost-icon icon-grain">
-                  <div class="icon-check hidden"></div>
-                </div>
-                <div class="cost-icon icon-grain">
-                  <div class="icon-check hidden"></div>
-                </div>
-                <div class="cost-icon icon-ore">
-                  <div class="icon-check hidden"></div>
-                </div>
-                <div class="cost-icon icon-ore">
-                  <div class="icon-check hidden"></div>
-                </div>
-                <div class="cost-icon icon-ore">
-                  <div class="icon-check hidden"></div>
-                </div>
-              </div>
-              <div class="cost__subtitle">Devcards</div>
-              <div class="cost__wrapper devcard-cost">
-                <div class="cost-icon icon-grain">
-                  <div class="icon-check hidden"></div>
-                </div>
-                <div class="cost-icon icon-wool">
-                  <div class="icon-check"></div>
-                </div>
-                <div class="cost-icon icon-ore">
-                  <div class="icon-check hidden"></div>
-                </div>
-              </div>
-              <div class="cost__subtitle">Rate</div>
-              <div class="cost__wrapper rate-cost">
-                <div class="icon__wrap">
-                  <div class="cost-icon icon-lumber"></div>
-                  <span>4:1</span>
-                </div>
-                <div class="icon__wrap">
-                  <div class="cost-icon icon-brick"></div>
-                  <span>4:1</span>
-                </div>
-                <div class="icon__wrap">
-                  <div class="cost-icon icon-wool"></div>
-                  <span>4:1</span>
-                </div>
-                <div class="icon__wrap">
-                  <div class="cost-icon icon-grain"></div>
-                  <span>4:1</span>
-                </div>
-                <div class="icon__wrap">
-                  <div class="cost-icon icon-ore"></div>
-                  <span>4:1</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="map-background__container">
-          <div class="map__container" id="map"></div>
-          <div class="coastline__wrap">
-            <div class="hex__coastline_1 pos_1"></div>
-            <div class="hex__coastline_2 pos_2"></div>
-            <div class="hex__coastline_1 pos_3"></div>
-            <div class="hex__coastline_2 pos_4"></div>
-            <div class="hex__coastline_1 pos_5"></div>
-            <div class="hex__coastline_2 pos_6"></div>
-          </div>
-        </div>
-        <div class="right__sidebar">
-          <div class="game-chat">
-            <div class="game-chat__text"></div>
-            <form action="#" class="chat__form">
-              <input type="text" autocomplete="off" placeholder="Say hello" maxlength='200' aria-label="Send message input"
-                class="chat__input">
-              <button class="form-send__btn">
-                <img src="assets/images//icons/chat/icon__send.svg" alt="send icon" class="send__icon">
-              </button>
-            </form>
-          </div>
-          <div class = "all-player-board">
-          </div>
-        </div>
-        <div class="timer game-btn flex-bs">Time:
-          <span class="minutes">1:</span>
-          <span class="seconds">45</span>
-        </div>
         <div class="modal-trade">
           <div class="modal-trade__wrap">
             <div class="trade-container__wrap flex-row">
@@ -293,7 +104,7 @@ export const game = `
               <h4 class="trade__subtitle">You Give</h4>
               <h4 class="trade__subtitle">You Get from Arantola</h4>
             </div>
-            <div class="trade-container__wrap flex-row">
+            <div class="trade-container-counteroffer__wrap flex-row">
               <div class="trade-offer">
                 <div class="resources">
                   <div class="resource resource__container trade__resource empty flex-bs">
@@ -322,6 +133,185 @@ export const game = `
             </div>
           </div>
         </div>
+          </div>
+          <div>
+            <button id="create-new-turn" class="turn-not-active btn">Next-turn<button>
+          </div>
+          <div id="build-trade-card-list" class="game-btns__wrapper  flex-bs">
+              <div class="game-btn road__btn">
+                <div id="build-road" class="player-stock__icon player-stock__road_red">
+                  <div class="player-stock__counter flex-bs road__counter">15</div>
+                </div>
+              </div>
+              <div class="game-btn settlement__btn">
+                <div id="build-settlement" class="player-stock__icon player-stock__settlement_red">
+                  <div class="player-stock__counter flex-bs settlement__counter">5</div>
+                </div>
+              </div>
+              <div class="game-btn city__btn">
+                <div id="build-city" class="player-stock__icon player-stock__city_red">
+                  <div class="player-stock__counter flex-bs city__counter">4</div>
+                </div>
+              </div>
+            <button class="game-btn construction__btn">Cost</button>
+            <div class="game-btn trade__btn">
+              <div class="trade__btn-icon"></div>
+            </div>
+            <div class="game-btn trade-devcard__btn">
+              <div class="trade-devcard__btn-icon"></div>
+            </div>
+          </div>
+          <div id="develop-card-list" class="game-btns__wrapper flex-bs develop-cards__wrapper">
+            <div class="game-btn monopoly develop__btn">
+              <div class="devcard__btn-icon dev-monopoly">
+                <div class="player-stock__counter flex-bs devcard__counter">1</div>
+              </div>
+            </div>
+            <div class="game-btn plenty develop__btn empty">
+              <div class="devcard__btn-icon dev-plenty">
+                <div class="player-stock__counter flex-bs devcard__counter">0</div>
+              </div>
+            </div>
+            <div class="game-btn road develop__btn">
+              <div class="devcard__btn-icon dev-road">
+                <div class="player-stock__counter flex-bs devcard__counter">1</div>
+              </div>
+            </div>
+            <div class="game-btn develop__btn">
+              <div class="devcard__btn-icon dev-victory">
+                <div class="player-stock__counter flex-bs devcard__counter">3</div>
+              </div>
+            </div>
+            <div class="game-btn knight develop__btn">
+              <div id="robber" class="devcard__btn-icon dev-knight">
+                <div class="player-stock__counter flex-bs devcard__counter">5</div>
+              </div>
+            </div>
+          </div>
+          <div class="construction-cost">
+            <div class="construction-content__wrap">
+              <h3 class="construction-cost__title">Construction Cost</h3>
+              <div class="cost__subtitle__wrap flex-row">
+                <div class="cost__subtitle">Road</div>
+              </div>
+              <div class="cost__wrapper road-cost">
+                <div class="cost-icon icon-lumber">
+                  <div class="icon-check"></div>
+                </div>
+                <div class="cost-icon icon-brick">
+                  <div class="icon-check hidden"></div>
+                </div>
+              </div>
+              <div class="cost__subtitle__wrap flex-row">
+                <div class="cost__subtitle">Settlement</div>
+              </div>
+              <div class="cost__wrapper settlement-cost">
+                <div class="cost-icon icon-lumber">
+                  <div class="icon-check"></div>
+                </div>
+                <div class="cost-icon icon-brick">
+                  <div class="icon-check hidden"></div>
+                </div>
+                <div class="cost-icon icon-wool">
+                  <div class="icon-check"></div>
+                </div>
+                <div class="cost-icon icon-grain">
+                  <div class="icon-check hidden"></div>
+                </div>
+              </div>
+              <div class="cost__subtitle__wrap flex-row">
+                <div class="cost__subtitle">City</div>
+              </div>
+              <div class="cost__wrapper city-cost">
+                <div class="cost-icon icon-grain">
+                  <div class="icon-check hidden"></div>
+                </div>
+                <div class="cost-icon icon-grain">
+                  <div class="icon-check hidden"></div>
+                </div>
+                <div class="cost-icon icon-ore">
+                  <div class="icon-check hidden"></div>
+                </div>
+                <div class="cost-icon icon-ore">
+                  <div class="icon-check hidden"></div>
+                </div>
+                <div class="cost-icon icon-ore">
+                  <div class="icon-check hidden"></div>
+                </div>
+              </div>
+              <div class="cost__subtitle">Devcards</div>
+              <div class="cost__wrapper devcard-cost">
+                <div class="cost-icon icon-grain">
+                  <div class="icon-check hidden"></div>
+                </div>
+                <div class="cost-icon icon-wool">
+                  <div class="icon-check"></div>
+                </div>
+                <div class="cost-icon icon-ore">
+                  <div class="icon-check hidden"></div>
+                </div>
+              </div>
+              <div class="cost__subtitle">Rate</div>
+              <div class="cost__wrapper rate-cost">
+                <div class="icon__wrap">
+                  <div class="cost-icon icon-lumber"></div>
+                  <span>4:1</span>
+                </div>
+                <div class="icon__wrap">
+                  <div class="cost-icon icon-brick"></div>
+                  <span>4:1</span>
+                </div>
+                <div class="icon__wrap">
+                  <div class="cost-icon icon-wool"></div>
+                  <span>4:1</span>
+                </div>
+                <div class="icon__wrap">
+                  <div class="cost-icon icon-grain"></div>
+                  <span>4:1</span>
+                </div>
+                <div class="icon__wrap">
+                  <div class="cost-icon icon-ore"></div>
+                  <span>4:1</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="map-background__container">
+          <div class="map__container" id="map"></div>
+          <div class="coastline__wrap">
+            <div class="hex__coastline_1 pos_1"></div>
+            <div class="hex__coastline_2 pos_2"></div>
+            <div class="hex__coastline_1 pos_3"></div>
+            <div class="hex__coastline_2 pos_4"></div>
+            <div class="hex__coastline_1 pos_5"></div>
+            <div class="hex__coastline_2 pos_6"></div>
+          </div>
+        </div>
+        <div class="right__sidebar">
+          <div class="game-chat">
+            <div class="chat__messages game-chat__text">
+              <div class="message__post">
+                <img src="assets/images/icons/icon_player.svg" alt="player icon" class="nick">
+                <b>some:</b> Hi
+              </div>
+            </div>
+            <form action="#" class="chat__form">
+              <input type="text" autocomplete="off" placeholder="Say hello" maxlength='200' aria-label="Send message input"
+                class="chat__input">
+              <button class="form-send__btn">
+                <img src="assets/images//icons/chat/icon__send.svg" alt="send icon" class="send__icon">
+              </button>
+            </form>
+          </div>
+          <div class = "all-player-board">
+          </div>
+        </div>
+        <div class="timer game-btn flex-bs">Time:
+          <span class="minutes">1:</span>
+          <span class="seconds">45</span>
+        </div>
+
         <div class="modal-choose plenty-choose">
           <div class="modal-choose__wrap flex-bs">
             <div id="plenty-choose_lumber" class="resource__container choose-resource resource flex-bs">
