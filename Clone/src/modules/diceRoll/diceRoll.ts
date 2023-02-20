@@ -1,10 +1,23 @@
-import { randomDiceRoll } from './randomDiceRoll'
+// import { randomDiceRoll } from './randomDiceRoll'
 
-const renderDice = () => {
-  const mainWrap = document.querySelector('.main__wrapper');
-  const gameField = document.createElement('div');
-  gameField.classList.add("game");
-  gameField.innerHTML = `
+export default class Dice {
+  constructor(
+    public audio = new Audio(),
+    ) {}
+
+  init() {
+    this.renderDice();
+    this.audio.currentTime = 0;
+    this.audio.src = "../../assets/files/6f488185486f9cf.mp3";
+    // this.randomDiceRoll
+  }
+
+  renderDice = () => {
+    const mainWrap = document.querySelector(".main__wrapper");
+    const gameField = document.createElement("div");
+    gameField.classList.add("game");
+    gameField.setAttribute("id", "roll-dice");
+    gameField.innerHTML = `
     <div class="dice__container dice__container_one">
           <div id='dice1' class="dice dice-one">
             <img class="dice__img" id="die-1">
@@ -82,10 +95,83 @@ const renderDice = () => {
           </div>
         </div>
   `;
-  mainWrap?.append(gameField);
+    mainWrap?.append(gameField);
+  };
+
+  randomDiceRoll = () => {
+    const images = [
+      "../../assets/images/dice/dice-01.svg",
+      "../../assets/images/dice/dice-02.svg",
+      "../../assets/images/dice/dice-03.svg",
+      "../../assets/images/dice/dice-04.svg",
+      "../../assets/images/dice/dice-05.svg",
+      "../../assets/images/dice/dice-06.svg",
+    ];
+    const diceElements = document.querySelectorAll(".dice");
+
+    /* const audio = new Audio();
+    audio.currentTime = 0;
+    audio.src = "../../assets/files/6f488185486f9cf.mp3"; */
+
+    function randomDice() {
+      const dieOneValue = Math.floor(Math.random() * 10);
+      const dieTwoValue = Math.floor(Math.random() * 10);
+
+      // console.log({dieOneValue, dieTwoValue})
+      if (
+        dieOneValue >= 1 &&
+        dieOneValue <= 6 &&
+        dieTwoValue >= 1 &&
+        dieTwoValue <= 6
+      ) {
+        roll(dieOneValue, dieTwoValue);
+        return [dieOneValue, dieTwoValue];
+      } else {
+        randomDice();
+      }
+    }
+
+    function roll(random1: number, random2: number) {
+      const sides = document.querySelectorAll(".side");
+      diceElements.forEach(function (die) {
+        die.classList.add("rolling");
+      });
+      sides.forEach((side) => {
+        side.classList.remove("hidden");
+      });
+
+      // console.log({ random1, random2 });
+      setTimeout(function () {
+        diceElements.forEach(function (die) {
+          die.classList.remove("rolling");
+        });
+        sides.forEach((side) => {
+          side.classList.add("hidden");
+        });
+
+        const die1 = document.querySelector("#die-1");
+        if (die1) die1.setAttribute("src", images[random1 - 1]);
+        const die2 = document.querySelector("#die-2");
+        if (die2) die2.setAttribute("src", images[random2 - 1]);
+      }, 1000);
+    }
+
+
+     const rollNums = randomDice();
+     return rollNums;
+   /*  gameField?.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      if (target && target.closest(".dice__container")) {
+        randomDice();
+        audio.play();
+      }
+    }); */
+    
+  };
 }
 
-export const diceRoll = () => {
+
+/* export const diceRoll = () => {
   renderDice();
   randomDiceRoll();
-}
+} */

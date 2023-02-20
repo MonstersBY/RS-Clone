@@ -1,7 +1,9 @@
 .modal-choose {
+  @extend %transition;
   position: absolute;
   bottom: 1rem;
   left: -116%;
+  visibility: hidden;
   &__wrap {
     width: 16vh;
     flex-wrap: wrap;
@@ -11,8 +13,8 @@
   width: 100%;
   justify-content: space-between;
   .resource-icon {
-    width: 7vh;
-    height: 7vh;
+    width: 6vh;
+    height: 6vh;
   }
 }
 .choose-checkbox {
@@ -25,7 +27,13 @@
 .choose__btns {
   width: 100%;
   justify-content: space-between;
+  margin-top: 0.2rem;
+  .status__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }
 .modal-choose.modal {
   left: 16%;
+  visibility: visible;
 }

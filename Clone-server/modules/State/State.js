@@ -1,11 +1,11 @@
 import MapGenerator from "./MapGenerator.js"
 
 export default class State {
-  constructor (){
-    // public view?: View,
+  constructor () {
     this.playersCount = 4;
     this.gameMode = "classic";
     this.gameMap = "newbie";
+    this.turn = -1;
     this.foundingStage = true;
     this.activePlayer = 0;
     this.diceRoll = [1, 1];
@@ -18,39 +18,36 @@ export default class State {
   }
 
   initialState() {
-    const generator = new MapGenerator();
-    this.mapObject = generator.generateMap(this.gameMap);
-    this.playersInfo = generator.generatePlayers(this.playersCount);
-    this.developmentDeck = generator.generateDevelopmentDeck();
-
+    const generator = new MapGenerator(); //
+    this.mapObject = JSON.parse(JSON.stringify(generator.generateMap(this.gameMap))); //разрываем связь
+    this.playersInfo = JSON.parse(JSON.stringify(generator.generatePlayers(this.playersCount)));
+    this.developmentDeck = JSON.parse(JSON.stringify(generator.generateDevelopmentDeck()));
+    //копирование объектов
     this.activePlayer = 0;
     this.foundingStage = true;
   }
 
-  // updateMap() {
-  //   this.view?.renderFullMap(this.mapObject);
-  // }
-
   // Turn based events
-  setDiceRoll(roll) {
+  /* setDiceRoll(roll) {
     this.diceRoll = roll;
+    this.addResoursesThisTurn(roll[0]+roll[1]);
   }
-
-  addResoursesThisTurn(dice) {
-    if (this.mapObject && this.playersInfo) {
+ */
+  addResoursesThisTurn(dice, map, players) {
+    if (map && players) {
 
       let currentHexes = []
       for (let i = 0; i < this.HEX_COUNT; i++) {
-        if (this.mapObject[i].token === dice && !this.mapObject[i].robber) {
+        if (map[i].token === dice && !map[i].robber) {
           currentHexes.push(i);
         }
       }
 
-      for (const player of this.playersInfo) {
+      for (const player of players) {
         for (let i = 0; i < player.hexes.length; i++) {
           for (let j = 0; j < currentHexes.length; j++) {
             if (player.hexes[i] === currentHexes[j]) {
-              switch (this.mapObject[j].type) {
+              switch (map[j].type) {
                 case "hills":
                   player.hand.resources.brick += 1;
                 break;
@@ -123,6 +120,7 @@ export default class State {
 
   makeExchangeProposal(player) {}// !!!
 
+  // Building
   setNewSettlement(player, id) {
     // add to mapObject
     const hex = id.split("_")[0];
@@ -151,6 +149,7 @@ export default class State {
 
     // add to playerInfo
     player.settlements.push(id);
+    // console.log(player)
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
     // player.hexes.sort();
@@ -201,6 +200,7 @@ export default class State {
     this.calculateRoadChain(player, id, nearNodes);
   }
 
+  // Development
   buyDevelopmentCard(player) {
     const resources = player.hand.resources;
     const development = player.hand.development;
@@ -275,7 +275,23 @@ export default class State {
     }
   }
 
-  calculateArmySize() {
+  calculateMaxRoadChain() {
+    for (const player of this.playersInfo) {
+      if (this.longestRoad < 5 && player.roadChain === 5) {
+        player.longestRoad = true;
+        this.longestRoad = 5;
+      }
+      if (this.longestRoad >= 5 && player.roadChain > this.longestRoad) {
+        for (const player of this.playersInfo) {
+          player.longestRoad = false;
+        }
+        this.longestRoad = player.roadChain;
+        player.longestRoad = true;
+      }
+    }
+  }
+
+  calculateMaxArmySize() {
     for (const player of this.playersInfo) {
       if (this.largestArmy < 3 && player.armySize === 3) {
         player.largestArmy = true;
@@ -286,7 +302,7 @@ export default class State {
           player.largestArmy = false;
         }
         this.largestArmy = player.armySize;
-        player.largestArmy = false;
+        player.largestArmy = true;
       }
     }
   }

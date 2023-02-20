@@ -10,6 +10,8 @@ export default class MapGenerator {
   }
 
   generateMap(map) {
+    // console.log(this.#getNewbieMap())
+    // console.log('-------------------------')
     return map === "newbie" ? this.#getNewbieMap() : this.#getRandomMap();
   }
 

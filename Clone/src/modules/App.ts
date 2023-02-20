@@ -5,18 +5,18 @@ import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
-import { diceRoll } from "./diceRoll/diceRoll";
-import { burger } from "./hamburger/burger";
-import { modificatePage } from "./StartPage/templates/modificateIngamePage";
-import { costListener, monopolyListener, plentyListener, tradeListener } from "./GameListeners/modalListeners";
+import  Dice  from "./diceRoll/diceRoll";
 
 import socket from "./Socket";
+import { modificatePage } from "./StartPage/templates/modificateIngamePage";
 
 export default class App {
   constructor(
     public router: Router = new Router(),
     public controller: Controller = new Controller(),
     public view: View = new View(),
+    // public dice: Dice = new Dice,
+
     // public state: State = new State(),
 
     public inGame: boolean = false, // unused
@@ -26,21 +26,9 @@ export default class App {
     this.addGameListener();
     renderCore();
     addHelper();
+    modificatePage();
     this.setRouter();
     this.router.setRoutes();
-    diceRoll();
-    burger(
-      ".header-menu",
-      ".menu__list",
-      ".hamburger",
-      ".burger__logo",
-      ".overlay"
-    );
-    costListener();
-    tradeListener();
-    monopolyListener();
-    plentyListener();
-    modificatePage();
     this.CreateRoom();
     this.CreateMode();
   }
@@ -70,10 +58,14 @@ export default class App {
       socket.emit('join-game-room', localStorage.getItem('Room'))
 
       socket.on('Map-object', (obj, players) => {
-        this.view.init(obj, players);
+        this.view.init();
         this.controller.view = this.view;
+        // console.log(this.controller.view)
         this.controller.init();
       })
+      setTimeout(() => {
+        addHelper();
+      }, 0)
     }
   }
 }

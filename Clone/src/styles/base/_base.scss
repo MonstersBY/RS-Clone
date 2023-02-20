@@ -34,7 +34,7 @@ body ::-webkit-scrollbar-track {
   padding: 0 1.5rem;
 
   @include min-media-desktop {
-    max-width: 100%;
+    max-width: 1400px;
   }
   @include max-media-small-desktop {
     max-width: 1000px;
@@ -48,6 +48,16 @@ body ::-webkit-scrollbar-track {
     padding: 0 10px;
   }
 }
+
+.title {
+  text-align: center;
+  font-size: min(max(1.8rem,4vh),4.4rem);
+  margin-bottom: 0.8rem;
+  line-height: 1.5;
+  font-weight: 700;
+  margin: 0 auto;
+}
+
 .subtitle {
   @include font(2.4rem, 130%, 700);
   margin: 1.2rem 0 0.8rem 0;
@@ -78,6 +88,9 @@ body ::-webkit-scrollbar-track {
 .ico {
   padding: -2px;
 }
+.status__icon {
+  cursor: pointer;
+}
 .hidden {
   display: none;
 }
@@ -98,7 +111,13 @@ img {
   vertical-align: middle;
   border-style: none;
 }
-
 .modal {
   left: 16%;
+}
+input[type="checkbox"] {
+  cursor: pointer;
+}
+.error {
+  @include font(4rem, 130%, 700);
+  justify-content: center;
 }

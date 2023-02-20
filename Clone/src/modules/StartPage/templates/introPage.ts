@@ -1,36 +1,36 @@
 export const intro = `
-  <div class="container">
       <div class="main-page__wrapper">
-      <h1 class="title">#1 Free Online Alternative to Settlers of Catan</h1>
       <div class="content__wrapper flex-bs">
-          <div class="main-page__sidebar">
-              <a class="link sidebar__link link_active flex-bs" href="#about">About game</a>
-              <a class="link sidebar__link flex-bs" href="#team">Team</a>
-              <a class="link sidebar__link flex-bs" href="#video">Video</a>
-          </div>
           <div class="main-page__right">
-              <h2 id="about" class="subtitle">What is Colonist?</h2>
-              <p class="main-page__text">
-                  <b>Short description:</b>
-                  Colonist.io is a web game alternative to the top selling board game
-                  Settlers of Catan
-              </p>
-              <p class="main-page__text">
-                  <b>Genres:</b>
-                  Multiplayer, Board Game, Strategy, IO Game, Puzzle, Social
-              </p>
-              <p class="main-page__text">
-                  <b>Platform:</b>
-                  HTML5, PC browser, Tablet browser
-              </p>
-              <p class="main-page__text">
-                  <b>Long description:</b>
-                  Colonist.io is a web based, free online alternative to the challenging social and strategy based board game Settlers of
-                  Catan. You take on the role of a Colonist by building settlements and expanding your territory. Colonist combines
-                  extremely simple rules with tremendously deep gameplay. Use strategy, planning, and cunning negotiation to win.
-                  Base game is 4 players. The first player to reach 10 points wins. Can be played solo versus bots, with friends or with
-                  online players all over the world.
-              </p>
+            <div class="subtitle__wrap flex-row">
+            <h2 id="about" class="subtitle">What is Colonist?</h2>
+            <a href="/mode" class="btn start__btn mode__page flex-bs">START</a>
+            </div>
+            <p class="main-page__text">
+                <b>Short description:</b>
+                Colonist.io is a web game alternative to the top selling board game
+                Settlers of Catan
+            </p>
+            <p class="main-page__text">
+                <b>Link to game rules:</b>
+                <button class="helper___button btn description__btn">?</button>
+            </p>
+            <p class="main-page__text">
+                <b>Genres:</b>
+                Multiplayer, Board Game, Strategy, IO Game, Puzzle, Social
+            </p>
+            <p class="main-page__text">
+                <b>Platform:</b>
+                HTML5, PC browser, Tablet browser
+            </p>
+            <p class="main-page__text">
+                <b>Long description:</b>
+                Colonist.io is a web based, free online alternative to the challenging social and strategy based board game Settlers of
+                Catan. You take on the role of a Colonist by building settlements and expanding your territory. Colonist combines
+                extremely simple rules with tremendously deep gameplay. Use strategy, planning, and cunning negotiation to win.
+                Base game is 4 players. The first player to reach 10 points wins. Can be played solo versus bots, with friends or with
+                online players all over the world.
+            </p>
               <h2 id="team" class="subtitle">The Team</h2>
               <div class="main-page__grid">
                   <div class="team__card">
@@ -124,7 +124,5 @@ export const intro = `
               </div>
           </div>
       </div>
-          <a href="/mode" class="btn start__btn mode__page flex-bs">START</a>
       </div>
-  </div>
-`
+`;
