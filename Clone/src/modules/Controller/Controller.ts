@@ -1,12 +1,12 @@
 import View from "../View/View";
-
+import Dice from "../diceRoll/diceRoll";
 import { getElementBySelector, IPlayerInfo } from "../types/types";
-import { randomDiceRoll } from "../diceRoll/randomDiceRoll";
 import socket from "../Socket";
 
 export default class Controller {
   constructor(
     public view?: View,
+    public dice: Dice = new Dice(),
     // public state?: State,
     // public room?: Room,
     public player?: IPlayerInfo,
@@ -18,7 +18,9 @@ export default class Controller {
   ) 
   {}
 
+
   init() {
+    this.dice.init();
     const buttons = `
     <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
     <button id="first-set">first-set<button>
@@ -28,6 +30,7 @@ export default class Controller {
     </div>
 
     `;
+    // this.dice.init();
 
     setTimeout(() => {
       socket.emit(
@@ -55,9 +58,9 @@ export default class Controller {
 
         const nextBtn = document.getElementById("create-new-turn");
         if (this.activePlayer) {
-          nextBtn?.classList.remove("active");
-          this.addListenerDices()
-          // randomDiceRoll
+
+          nextBtn?.classList.add("active");
+          this.addListenerDices();
         } else {
           nextBtn?.classList.remove("active");
         }
@@ -68,13 +71,11 @@ export default class Controller {
 
       this.map = document.getElementById("map") as HTMLDivElement;
       document.body.insertAdjacentHTML("afterbegin", buttons);
+
       this.addBuildFirstSettlementListener();
       // this.addRefreshListener();
-      this.addRoadListener();
-      this.addSettlementListener();
-      this.addCityListener();
-      this.addCardsListener();
       this.createNewTurn()
+      // this.addBuildAndTradeListeners();
     }, 0);
   }
 
@@ -96,20 +97,37 @@ export default class Controller {
 
   addListenerDices() {
     // TODO Как типизировать callback?
-    const nextBtn = document.getElementById("create-new-turn");
-    document.querySelector(".game")?.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement;
-      if (target && target.closest(".dice__container")) {
-        if (this.canRoll) {
-          const roll = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
-          // const roll = randomDiceRoll.randomDice()
-          this.canRoll = false;
-          socket.emit("weRollDice", localStorage.getItem("Room"), roll);
-          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-        }
-        nextBtn?.classList.add("active");
-      }
-    });
+
+    // const nextBtn = document.getElementById("create-new-turn");
+    // document.querySelector(".game")?.addEventListener("click", (e) => {
+    //   const target = e.target as HTMLElement;
+    //   if (target && target.closest(".dice__container")) {
+    //     if (this.canRoll) {
+    //       const roll = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+    //       // const roll = randomDiceRoll.randomDice()
+    //       this.canRoll = false;
+    //       socket.emit("weRollDice", localStorage.getItem("Room"), roll);
+    //       socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+    //     }
+    //     nextBtn?.classList.add("active");
+    //   }
+    // });
+    console.log("ROLL");
+    if (this.canRoll) {
+      document.getElementById("roll-dice")?.addEventListener(
+        "click",
+        (e: Event) => {
+          const target = e.target as HTMLElement;
+          if (target && target.closest(".dice__container") && this.dice) {
+            const roll = this.dice.randomDiceRoll();
+            this.dice.audio.play();
+            this.canRoll = false;
+            socket.emit("weRollDice", localStorage.getItem("Room"), roll);
+          }
+        },
+        { once: true }
+      );
+    }
   }
 
   addBuildFirstSettlementListener() {
@@ -122,50 +140,64 @@ export default class Controller {
   //   document.getElementById("refresh")?.addEventListener("click", () => { this.state?.updateMap(); })
   // }
 
-  addRoadListener() {
-    document.getElementById("build-road")?.addEventListener("click", () => {
-      this.buildRoad(this.player as IPlayerInfo);
+  addBuildAndTradeListeners() {
+    const btnsWrap = document.getElementById("build-trade-card-list");
+
+    btnsWrap?.addEventListener("click", (e: Event) => {
+      if (e.target instanceof HTMLElement) {
+        const target = e.target.closest(".game-btn");
+        if (target) {
+          const name = target.className.split(" ")[1];
+          switch (name) {
+            case "road__btn":
+              this.buildRoad(this.player as IPlayerInfo);
+              break;
+            case "settlement__btn":
+              this.buildSettlement(this.player as IPlayerInfo);
+              break;
+            case "city__btn":
+              this.buildCity(this.player as IPlayerInfo);
+              break;
+            case "construction__btn":
+              this.view?.showConstructionCost();
+              break;
+            case "trade__btn":
+
+              this.view?.showTradePopup();
+
+              // this.trade();   // logic of trade
+            case "trade-devcard__btn":
+              this.buyDevelopCard();
+              break;
+          }
+        }
+      }
     });
   }
 
-  addSettlementListener() {
+  /*   addRoadListener() {
+    document.getElementById("build-road")?.addEventListener("click", () => {
+      this.buildRoad(this.player as IPlayerInfo);
+    });
+  } */
+
+  /*   addSettlementListener() {
     document
       .getElementById("build-settlement")
       ?.addEventListener("click", () => {
         this.buildSettlement(this.player as IPlayerInfo);
       });
-  }
+  } */
 
-  addCityListener() {
+  /*  addCityListener() {
     document.getElementById("build-city")?.addEventListener("click", () => {
       this.buildCity(this.player as IPlayerInfo);
     });
-  }
+  } */
 
   /* addRobberListener() {
     document.getElementById("robber")?.addEventListener("click", () => { this.setRobber(this.player1 as IPlayerInfo); })
   } */
-
-  addCardsListener() {
-    document
-      .getElementById("develop-card-list")
-      ?.addEventListener("click", (e) => {
-        if (e.target instanceof HTMLDivElement) {
-          const target = e.target.closest(".knight");
-          if (target && target.classList.contains("knight")) {
-            // console.log(target);
-            this.playKnightCard(this.player as IPlayerInfo);
-          }
-        }
-      }); // , { once: true }
-  }
-
-  playKnightCard(player: IPlayerInfo) {
-    player.hand.development.knights -= 1;
-    player.armySize += 1;
-    // this.state?.calculateArmySize();
-    // this.setRobber(player);
-  }
 
   // addAvaliableListener(player: IPlayerInfo) {
   //   const mapContainer = document.querySelector("#map");
@@ -219,15 +251,17 @@ export default class Controller {
           chousen.id,
           localStorage.getItem("Room")
         );
-        this.updateBuildCounter(".settlement__counter");
+        // this.updateBuildCounter(".settlement__counter"); // unused function, need delete?
         this.view?.renderFullMap();
+        // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
+
 
         if (this.map) {
           this.map.onclick = null;
         }
         setTimeout(() => {
           this.buildFirstRoadMode(chousen.dataset.next || "");
-        }, 50);
+        }, 100);
       }
     }
   }
@@ -244,10 +278,40 @@ export default class Controller {
             road.id,
             localStorage.getItem("Room")
           );
-          this.updateBuildCounter(".road__counter");
+
+          // this.updateBuildCounter(".road__counter");
           this.view?.renderFullMap()
           socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
         })
+
+          // this.updateBuildCounter(".road__counter"); // unused function, need delete?
+
+          /*       settlementsToRob?.forEach((e: string) => {
+          const settlement = document.getElementById(e) as HTMLDivElement;
+          if (
+            settlement.classList.contains("own") &&
+            !settlement.classList.contains("own_nobody") &&
+            !settlement.classList.contains(`own_${player.color}`)
+          ) {
+            settlement.classList.add("select");
+            settlement.addEventListener(
+              "click",
+              (e) => {
+                this.state?.transferOneToAnother(
+                  player,
+                  settlement.classList[3]
+                );
+              },
+              { once: true }
+            );
+          }
+        }); */
+
+        //   this.view?.renderFullMap();
+
+        //   const robber = document.querySelector(".robber"); // need add class after render map
+        //   if (robber) robber.classList.add("moveDown");
+        // });
       }
     })
   }
@@ -264,7 +328,8 @@ export default class Controller {
       if (road && !road.classList.contains("own")) {
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
-          this.updateBuildCounter(".road__counter");
+          // this.updateBuildCounter(".road__counter"); // unused function
+          road.classList.add("moveDown"); // need add class after render map (can add movedown class)
         });
       }
     });
@@ -281,7 +346,8 @@ export default class Controller {
       if (settlement && !settlement.classList.contains("own")) {
         settlement.classList.add("select");
         settlement.addEventListener("click", (e) => {
-          this.updateBuildCounter(".settlement__counter");
+          // this.updateBuildCounter(".settlement__counter"); // unused function
+          settlement.classList.add("moveDown"); //need add class after render map
         });
       }
     });
@@ -293,58 +359,77 @@ export default class Controller {
       const settlement = document.getElementById(e) as HTMLDivElement;
       settlement.style.transform = "scale(0.8)";
       settlement.addEventListener("click", (e) => {
-        this.updateBuildCounter(".city__counter");
+        // this.updateBuildCounter(".city__counter"); //unused function
         // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
         // this.state?.updateMap();
+        if (e.target && e.target instanceof HTMLElement)
+          e.target.classList.add("city", "moveDown"); //need add animation,
+        // maybe city need add in another place
       });
     });
   }
 
-  updateBuildCounter(sel: string) {
+  // Unused function
+
+  /*  updateBuildCounter(sel: string) {
     const counter = document.querySelector(sel);
     let counterNumber = Number(counter?.textContent);
     if (counterNumber <= 0) return;
     if (counter) counter.textContent = `${--counterNumber}`;
   }
-
-  /*   // Development cards
+ */
+  // Development cards
   buyDevelopCard() {
-    this.state?.buyDevelopmentCard(this.player1 as IPlayerInfo);
+    // this.state?.buyDevelopmentCard(this.player1 as IPlayerInfo);
   }
 
-  addPlayCardListener(player: IPlayerInfo) {
-    document
-      .getElementById("develop-card-list")
-      ?.addEventListener("click", (e) => {
-        if (e.target instanceof HTMLDivElement) {
-          const name = e.target.className.split(" ")[1];
-          switch (name) {
-            case "knight":
-              this.state?.playKnigthCard(player);
-              this.setRobber(player);
-              break;
-            case "monopoly":
-              this.state?.playMonopolyCard(player);
-              this.state?.useMonopolyEffect(player, this.choiceHandler());
-              break;
-            case "plenty":
-              this.state?.playPlentyCard(player);
-              break;
-            case "road":
-              this.state?.playRoadCard(player);
-              this.buildRoad(player);
-              window.addEventListener(
-                "road-builded",
-                () => {
-                  this.buildRoad(player);
-                },
-                { once: true }
-              );
-              break;
+  addPlayCardsListener(player: IPlayerInfo) {
+    document.getElementById("develop-card-list")?.addEventListener("click", (e) => {
+        if (e.target instanceof HTMLElement) {
+          const target = e.target.closest(".game-btn");
+          if (target) {
+            const name = e.target.className.split(" ")[1];
+            console.log(name);
+            switch (name) {
+              case "knight":
+                console.log(name, "knight");
+                // this.state?.playKnigthCard(player);
+                this.playKnightCard(player);
+                this.setRobber(player);
+                break;
+              case "monopoly":
+                this.view?.showMonopolyPopup();
+                // this.state?.playMonopolyCard(player);
+                // this.state?.useMonopolyEffect(player, this.choiceHandler());
+                break;
+              case "plenty":
+                this.view?.showPlentyPopup();
+                // this.state?.playPlentyCard(player);
+                break;
+              case "road":
+                // this.state?.playRoadCard(player);
+                this.buildRoad(player);
+                window.addEventListener(
+                  "road-builded",  // this event doesn't generate
+                  () => {
+                    this.buildRoad(player);
+                  },
+                  { once: true }
+                );
+                break;
+            }
           }
         }
       });
-  } */
+  }
+
+  playKnightCard(player: IPlayerInfo) {
+    player.hand.development.knights -= 1;
+    player.armySize += 1;
+    // this.state?.calculateArmySize();
+    // this.setRobber(player);
+  }
+
   setRobber(player: IPlayerInfo) {
     //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
     this.map?.addEventListener("click", (e: MouseEvent) => {
@@ -355,7 +440,7 @@ export default class Controller {
           // this.state?.updateMap();
 
           const robber = document.querySelector(".robber");
-          if (robber) robber.classList.add("moveDown");
+          if (robber) robber.classList.add("moveDown"); //need add class after render map
 
           /*           settlementsToRob?.forEach((e) => {
             const settlement = document.getElementById(e) as HTMLDivElement;
@@ -408,4 +493,6 @@ export default class Controller {
   checkIsWinner() {}
 
   endGame() {}
+
+  // Maybe need modal with game over??
 }

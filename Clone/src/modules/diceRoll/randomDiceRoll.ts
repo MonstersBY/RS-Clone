@@ -10,10 +10,9 @@ export const randomDiceRoll = () => {
   const gameField = document.querySelector(".game");
   const diceElements = document.querySelectorAll(".dice");
 
-   const audio = new Audio();
-    audio.currentTime = 0;
-    audio.src = '../../assets/files/6f488185486f9cf.mp3';
-
+  const audio = new Audio();
+  audio.currentTime = 0;
+  audio.src = '../../assets/files/6f488185486f9cf.mp3';
 
   function randomDice() {
     const dieOneValue = Math.floor(Math.random() * 10);

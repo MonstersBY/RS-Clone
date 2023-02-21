@@ -35,6 +35,12 @@
     grid-gap: 1rem;
   }
 }
+
+.logo__wrap {
+  display: flex;
+  justify-content: space-between;
+}
+
 .content__wrapper {
   flex-grow: 1;
   height: 75vh;
@@ -122,12 +128,12 @@
   }
 }
 .start__btn {
-  width: 100%;
+  width: 70%;
   height: 5rem;
   margin: 1rem auto 1rem;
-  background-color: $color-btn-primary;
+  background-color: $color-btn-secondary;
   &:hover {
-    background-color: darken($color-btn-primary, 10%);
+    background-color: darken($color-btn-secondary, 10%);
   }
 }
 .helper___button.description__btn{

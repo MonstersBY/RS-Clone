@@ -1,29 +1,33 @@
 .player-hand {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 38vh;
+  margin-bottom: 1rem;
   &__title {
     @include font(1.6rem, 120%, 700);
     text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid $color-primary;
+    margin-bottom: 0.5rem;
   }
   &__resources {
-   width: 100%;
-   flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
   }
   &__resource {
-    height: calc(9vh * 1.1);
-    width: calc(10vh * 1.5);
+    height: calc(6vh * 1.1);
+    width: calc(7vh * 1.5);
   }
 }
 .resource-icon {
   position: relative;
   flex-grow: 0;
   flex-shrink: 0;
-  height: 10.5vh;
-  width: 10.5vh;
+  height: 6.5vh;
+  width: 6.5vh;
   padding: 2px;
   background-image: url(../assets/images/ingame/cat_icons.png);
   background-position-y: 0;
@@ -49,12 +53,12 @@
   opacity: 0.3;
 }
 .resource-counter {
-  @include font(3vh, 120%);
+  @include font(2vh, 120%);
   position: relative;
   left: -1rem;
   padding: 0.2vh;
-  width: 4vh;
-  height: 4vh;
+  width: 3vh;
+  height: 3vh;
   justify-content: center;
   flex-grow: 0;
   flex-shrink: 0;

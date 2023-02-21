@@ -1,4 +1,4 @@
-const helperNode = `
+export const helperNode = `
   <div class="helper__wrapper hidden"></div>
   <button class="helper___button btn">?</button>
   <div class="helper__body hidden">
@@ -95,7 +95,15 @@ const helperNode = `
 `;
 
 export const addHelper = () => {
-  document.body.insertAdjacentHTML("beforeend", helperNode);
+  if (window.location.pathname === "/game") {
+    const gameMenuWrap = document.getElementById("game-menu__wrap");
+    console.log(gameMenuWrap);
+    gameMenuWrap?.insertAdjacentHTML("beforeend", helperNode);
+  } else {
+    const logoWrap = document.querySelector(".logo__wrap");
+    logoWrap?.insertAdjacentHTML("beforeend", helperNode);
+  }
+
   const helperWrapper = document.querySelector(".helper__wrapper");
   const helperBtn = document.querySelector(".helper___button");
   const helperBody = document.querySelector(".helper__body");
