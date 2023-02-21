@@ -2,8 +2,8 @@ import { IPlayerInfo } from "../../../types/types";
 
 export const modal = document.createElement("div");
 
-export function closeModal() {
-  const element = document.querySelector(".modal");
+export function closePopup() {
+  const element = document.querySelector(".popup");
   if (element) {
     element.classList.add("slideInUp");
     element.classList.remove("slideInDown");
@@ -15,24 +15,24 @@ export function closeModal() {
   document.body.style.marginRight = "0px";
 }
 
-const createModal = (player: IPlayerInfo) => {
+const createPopup = (player: IPlayerInfo) => {
   const scroll = calcScroll();
 
-  modal.classList.add("modal", "slideInDown");
+  modal.classList.add("popup", "slideInDown");
   modal.setAttribute("id", "exampleModal2");
   modal.innerHTML = `
-        <div class="modal-dialog">
-          <div class="modal-content">
+        <div class="popup-dialog">
+          <div class="popup-content">
             <button class="close" data-close>
               <span>&times;</span>
             </button>
-            <div class="modal-header">
-              <div class="modal-title">GAME OVER!</div>
+            <div class="popup-header">
+              <div class="popup-title">GAME OVER!</div>
             </div>
-            <div class="modal-body">
+            <div class="popup-body">
               ${player.name} win in this game!
             </div>
-            <div class="modal-footer">
+            <div class="popup-footer">
               <span class="congratulation">Congratulations!</span>
             </div>
           </div>
@@ -40,7 +40,7 @@ const createModal = (player: IPlayerInfo) => {
       `;
   modal.addEventListener("click", (e) => {
     if (e.target === modal) {
-      closeModal();
+      closePopup();
     }
   });
 
@@ -70,9 +70,9 @@ const createModal = (player: IPlayerInfo) => {
         target instanceof HTMLElement &&
         target.closest("[data-close]")
       ) {
-        closeModal();
+        closePopup();
       }
     });
   }
 };
-export default createModal;
+export default createPopup;
