@@ -77,7 +77,8 @@ export default class Mode {
   CheckRoom() {
     const CreateRoom = document.getElementById('create-room-bot');
     CreateRoom?.addEventListener('click', () => {
-        socket.emit('getRooms')
+      socket.emit('getRooms')
+      this.changeRoomTitle();
     })
   }
 
@@ -95,5 +96,9 @@ export default class Mode {
       socket.emit('leave-lobby', localStorage.getItem('Room'), localStorage.getItem('Name'))
       localStorage.setItem('Room', '')
     }
+  }
+  changeRoomTitle() {
+    const title = document.querySelector(".ranked-cards__title");
+    if (title) title.textContent = "ROOMS:";
   }
 }

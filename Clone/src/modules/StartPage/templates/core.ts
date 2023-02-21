@@ -1,36 +1,12 @@
 export const core = `
-  <header class="header header__wrapper flex-row">
-      <a href="/" class="logo header__logo flex-bs">
-          <img src="assets/images/logo.png" alt="logo" class="logo__img">
-      </a>
-    <nav class="menu header-menu">
-        <a href="/" class="logo burger__logo flex-bs">
-        <img src="assets/images/logo.png" alt="logo" class="logo__img">
+  <header class="header">
+  <div class="header__wrapper flex-row">
+    <div class="logo__wrap">
+        <a href="/" class="logo header__logo flex-bs">
+            <img src="assets/images/logo.png" alt="logo" class="logo__img">
         </a>
-      <ul class="menu__list header-menu__list flex-row">
-          <li class="menu__list-item mode__page">
-              <a href="/mode" class="link menu__link active">Play Page</a>
-          </li>
-      </ul>
-      <div class="overlay"></div>
-    </nav>
-    <div class="hamburger">
-      <span class="line"></span>
-      <span class="line"></span>
-      <span class="line"></span>
     </div>
-  <div class="header__profile">
-      <div class="header-login__wrapper">
-          <div class="login__container flex-row">
-              <div class="header-icon__wrap">
-                  <img src="assets/images/icons/icon_player.svg" alt="player icon" class="player__icon">
-                  <img src="#" alt="membership icon" class="player__icon-membership">
-              </div>
-              <div class="login__nickname">
-                  <p class="nickname">YaniaR#1000</p>
-              </div>
-          </div>
-      </div>
+    <h1 class="title">Online Alternative to Settlers of Catan</h1>
   </div>
   </header>
   <main class="main-content">

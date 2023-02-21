@@ -2,18 +2,29 @@
   &__logo {
     @include font(1.25rem, 120%, 700);
     flex-basis: 0;
-    margin-right: 6.4rem;
     &.hidden {
       display: none;
     }
   }
   &__wrapper {
-    position:relative;
-    width: 100%;
-    max-width: 1400px;
-    // min-height: 7rem;
-    padding: 0.75rem 1rem 0 1rem;
     margin: 0 auto;
+    padding: 0.75rem 1.5rem 0 1.5rem;
+    max-width: 1400px;
+    justify-content: space-between;
+    @media min-media-desktop {
+      max-width: 1400px;
+    }
+    @include max-media-small-desktop {
+      max-width: 1000px;
+   }
+    @include max-media-tablet {
+      max-width: 740px;
+      padding: 0 1.5rem;
+    }
+    @include max-media-mobile {
+      max-width: 500px;
+      padding: 0 1rem;
+    }
   }
   &-menu {
     @extend %transition;
@@ -61,6 +72,10 @@
   }
 }
 
+.logo__wrap{
+  position: relative;
+}
+
 .header-login__wrapper {
   display: flex;
   flex-direction: column;
@@ -83,7 +98,7 @@
 }
 .menu {
   &__link {
-    padding: 1rem 2rem;
+    padding: 1rem 0;
   }
 }
 .login__container {
