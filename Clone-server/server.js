@@ -150,15 +150,18 @@ io.on("connection", (socket) => {
         allGame.get(room).playersInfo[index] = player
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
     })
-    socket.on('setNewRoad', (player, id, room) =>{
-        allGame.get(room).setNewRoad(player, id)
-        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
-        allGame.get(room).playersInfo[index] = player
-        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+
+    socket.on('setNewRoad', (player, id, room) => {
+        const map = allGame.get(room).mapObject;
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name);
+        allGame.get(room).setNewRoad(map, player, id);
+        allGame.get(room).playersInfo[index] = player;
+        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index]);
     })
 
     socket.on('updateMap', (room) => {
         io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
+        console.log(room)
     })
 
     socket.on('Next-person', (room, name) => {

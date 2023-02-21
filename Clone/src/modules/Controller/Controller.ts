@@ -7,12 +7,12 @@ export default class Controller {
   constructor(
     public view?: View,
     public dice: Dice = new Dice(),
-    // public state?: State,
-    // public room?: Room,
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
-    public canRoll?: boolean // private timer: Timer = new Timer(), // private master: GameMaster = new GameMaster(),
+    public canRoll?: boolean 
+    // private timer: Timer = new Timer(), 
+    // private master: GameMaster = new GameMaster(),
   ) {}
 
   init() {
@@ -35,18 +35,16 @@ export default class Controller {
       );
 
       socket.on("firstSettlementMode", (player, active) => {
-        // console.log(player)
         this.player = player;
         this.activePlayer = active;
 
-        console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
+        console.log("Сейчас ходит " + `${localStorage.getItem("Name")}: ${this.activePlayer}`);
 
         if (this.activePlayer) {
           this.buildFirstSettlementMode();
         }
       });
       socket.on("Turn-player", (player, active) => {
-        // console.log(player)
         this.player = player;
         this.activePlayer = active;
         this.canRoll = active;
@@ -64,18 +62,11 @@ export default class Controller {
       socket.on("Change-playerInfo", (player) => {
         this.player = player;
       });
+
       this.map = document.getElementById("map") as HTMLDivElement;
       document.body.insertAdjacentHTML("afterbegin", buttons);
 
-      this.addBuildFirstSettlementListener();
-      // this.addRefreshListener();
-      // this.addRoadListener();
-      // this.addSettlementListener();
-      // this.addCityListener();
-      // error of type
       this.addBuildAndTradeListeners();
-      // this.addPlayCardsListener(this.player); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
-      // this.createNewTurn()
     }, 0);
   }
 
@@ -118,16 +109,6 @@ export default class Controller {
       );
     }
   }
-
-  addBuildFirstSettlementListener() {
-    document
-      .getElementById("first-set")
-      ?.addEventListener("click", this.buildFirstSettlementMode.bind(this)); // , { once: true }
-  }
-
-  // addRefreshListener() {
-  //   document.getElementById("refresh")?.addEventListener("click", () => { this.state?.updateMap(); })
-  // }
 
   addBuildAndTradeListeners() {
     const btnsWrap = document.getElementById("build-trade-card-list");
@@ -214,63 +195,66 @@ export default class Controller {
     if (this.map) {
       this.map.onclick = this.choosePlaceSettlement.bind(this);
     }
-    // this.map?.addEventListener("click", this.choosePlaceSettlement.bind(this)); //.bind(this) , {once: true}
   }
 
   choosePlaceSettlement(e: Event) {
+    const chousen = e.target;
     if (
-      e.target instanceof HTMLDivElement &&
-      e.target.classList.contains("select")
+      chousen instanceof HTMLDivElement
+      && chousen.classList.contains("select")
+      && (chousen.classList.contains("hex__settlement_N")
+          || chousen.classList.contains("hex__settlement_S"))
     ) {
-      if (
-        e.target.classList.contains("hex__settlement_N") ||
-        e.target.classList.contains("hex__settlement_S")
-      ) {
-        const chousen = e.target;
-        const places = [
-          ...document.querySelectorAll(".hex__settlement_N"),
-          ...document.querySelectorAll(".hex__settlement_S"),
-        ];
-        places.forEach((e) => {
-          e.classList.remove("select");
-        });
-        // this.state?.setNewSettlement(this.player as IPlayerInfo, chousen.id);
-        // console.log(this.player)
-        // console.log('---------')
-        // console.log(chousen.id)
-        // console.log('---------')
-        console.log(localStorage.getItem("Room"));
-        socket.emit(
-          "setNewSettlement",
-          this.player,
-          chousen.id,
-          localStorage.getItem("Room")
-        );
-        // this.updateBuildCounter(".settlement__counter"); // unused function, need delete?
-        this.view?.renderFullMap();
-        chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
 
-        // this.state?.updateMap();
-        // this.map?.removeEventListener("click", this.choosePlaceSettlement.bind(this)); //.bind(this) , {once: true}
-        if (this.map) {
-          this.map.onclick = null;
-        }
-        setTimeout(() => {
-          // window.addEventListener("mapLoad", () => {
-          this.buildFirstRoadMode(chousen.dataset.next || "");
-        }, 100);
-      }
+      if (this.map) { this.map.onclick = null }
+
+      const places = [
+        ...document.querySelectorAll(".hex__settlement_N"),
+        ...document.querySelectorAll(".hex__settlement_S"),
+      ];
+
+      places.forEach((e) => {
+        e.classList.remove("select");
+      });
+
+      socket.emit(
+        "setNewSettlement",
+        this.player,
+        chousen.id,
+        localStorage.getItem("Room")
+      );
+
+      /* Если привязать запуск постройки к событию загрузки карты 
+         Каждый раз при постройке карта будет перезагружаться и
+         начинаться новая постройка */
+
+      // window.addEventListener("mapLoaded", () => {
+      //   this.buildFirstRoadMode(chousen.dataset.next || "");
+      // });
+
+      // let settlementSet = new CustomEvent('settlementSet');
+      // window.addEventListener("settlementSet", () => {
+      //   this.buildFirstRoadMode(chousen.dataset.next || "");
+      // });
+      // window.dispatchEvent(settlementSet);
+
+      // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
+
+      setTimeout(() => {
+        this.buildFirstRoadMode(chousen.dataset.next || "");
+      }, 100);
+
+      this.view?.renderFullMap();
     }
   }
 
   buildFirstRoadMode(next: string) {
-    console.log(next);
     next.split(",").forEach((e) => {
       const road = document.getElementById(e) as HTMLDivElement;
+      console.log(road);
       if (!road.classList.contains("own")) {
         road.classList.add("select__road");
-        road.addEventListener("click", (e) => {
-          console.log(this.player);
+        road.addEventListener("click", () => {
           socket.emit(
             "setNewRoad",
             this.player,
@@ -301,9 +285,6 @@ export default class Controller {
         }); */
 
           this.view?.renderFullMap();
-
-          const robber = document.querySelector(".robber"); // need add class after render map
-          if (robber) robber.classList.add("moveDown");
         });
       }
     });
@@ -321,7 +302,6 @@ export default class Controller {
       if (road && !road.classList.contains("own")) {
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
-          // this.updateBuildCounter(".road__counter"); // unused function
           road.classList.add("moveDown"); // need add class after render map (can add movedown class)
         });
       }

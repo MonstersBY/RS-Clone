@@ -27,26 +27,6 @@ export default class View {
 
   }
 
-  // Possable useless function
-  //   renderGamePage() {
-  //     const container = document.getElementById("main");
-  //     if (container) container.innerHTML = "";
-  //     container?.insertAdjacentHTML("afterbegin", game);
-
-  //   //   if (container) {
-  //   //     container.addEventListener("click", (e: Event) => {
-  //   //       const constructionBlock = document.querySelector(".construction-cost");
-  //   //       console.log(e.target);
-  //   //       if (
-  //   //         e.target instanceof HTMLDivElement &&
-  //   //         e.target.classList.contains("cost__btn")
-  //   //       ) {
-  //   //         constructionBlock?.classList.toggle("cost");
-  //   //       }
-  //   //     });
-  //   // }
-  // }
-
   renderFullMap() {
     socket.emit('updateMap', localStorage.getItem('Room'))
     socket.on('renderFullMapView', mapObj => {
@@ -55,10 +35,13 @@ export default class View {
         mapContainer.innerHTML = "";
         const mapTree = this.renderer.getMapAsNodeTree(mapObj as Array<IHex>) as string;
         mapContainer?.insertAdjacentHTML("beforeend", mapTree);
+
+        let mapLoadedEvent = new CustomEvent('mapLoaded');
+        window.dispatchEvent(mapLoadedEvent);
+        console.log("mapLoaded")
+        // console.log(mapObj);
       }
     })
-    let event = new Event('mapLoad');
-    window.dispatchEvent(event);
   }
 
   renderfullUI(playerInfo: IPlayerInfo[], player: number) {
