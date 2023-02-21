@@ -140,10 +140,6 @@ io.on("connection", (socket) => {
         } else {
             socket.emit('firstSettlementMode', allGame.get(room).playersInfo[index], active)
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> d55dad2f8a60d0e06a590b2ac220178d826648a3
     })
 
     socket.on('setNewSettlement', (player, id, room) => {
@@ -201,12 +197,11 @@ io.on("connection", (socket) => {
             (roll[0] + roll[1]),
             allGame.get(room).mapObject,
             allGame.get(room).playersInfo);
-<<<<<<< HEAD
-=======
 
-        console.log(allGame.get(room).diceRoll);
-        console.log(allGame.get(room).playersInfo[0].hand)
->>>>>>> d55dad2f8a60d0e06a590b2ac220178d826648a3
+
+        // console.log(allGame.get(room).diceRoll);
+        // console.log(allGame.get(room).playersInfo[0].hand)
+
     });
 
     socket.on('disconnect', () => {

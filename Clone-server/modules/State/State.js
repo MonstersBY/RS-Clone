@@ -27,19 +27,16 @@ export default class State {
   }
 
   // Turn based events
-<<<<<<< HEAD
+
   // setDiceRoll(roll) {
   //   this.diceRoll = roll;
   // }
-=======
   /* setDiceRoll(roll) {
     this.diceRoll = roll;
     this.addResoursesThisTurn(roll[0]+roll[1]);
   }
  */
-  addResoursesThisTurn(dice, map, players) {
-    if (map && players) {
->>>>>>> d55dad2f8a60d0e06a590b2ac220178d826648a3
+
 
   addResoursesThisTurn(dice, map, players) {
     if (map  && players) {
@@ -49,19 +46,12 @@ export default class State {
           currentHexes.push(i);
         }
       }
-<<<<<<< HEAD
-=======
 
->>>>>>> d55dad2f8a60d0e06a590b2ac220178d826648a3
       for (const player of players) {
         for (let i = 0; i < player.hexes.length; i++) {
           for (let j = 0; j < currentHexes.length; j++) {
             if (player.hexes[i] === currentHexes[j]) {
-<<<<<<< HEAD
               switch (map[currentHexes[j]].type) {
-=======
-              switch (map[j].type) {
->>>>>>> d55dad2f8a60d0e06a590b2ac220178d826648a3
                 case "hills":
                   player.hand.resources.brick += 1;
                 break;
