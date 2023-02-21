@@ -10,10 +10,12 @@ export default class Controller {
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
-    public canRoll?: boolean 
-    // private timer: Timer = new Timer(), 
+    public canRoll?: boolean,
+    // private timer: Timer = new Timer(),
     // private master: GameMaster = new GameMaster(),
-  ) {}
+  ) 
+  {}
+
 
   init() {
     this.dice.init();
@@ -22,6 +24,7 @@ export default class Controller {
     <button id="first-set">first-set<button>
     <button id="refresh">refresh<button>
     <button id="random-number">random-number<button>
+    <button id="random-dice">random-dice<button>
     </div>
 
     `;
@@ -34,15 +37,16 @@ export default class Controller {
         localStorage.getItem("Name")
       );
 
+
       socket.on("firstSettlementMode", (player, active) => {
         this.player = player;
         this.activePlayer = active;
-
-        console.log("Сейчас ходит " + `${localStorage.getItem("Name")}: ${this.activePlayer}`);
+        console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
 
         if (this.activePlayer) {
           this.buildFirstSettlementMode();
         }
+
       });
       socket.on("Turn-player", (player, active) => {
         this.player = player;
@@ -52,13 +56,13 @@ export default class Controller {
 
         const nextBtn = document.getElementById("create-new-turn");
         if (this.activePlayer) {
+
           nextBtn?.classList.add("active");
           this.addListenerDices();
         } else {
           nextBtn?.classList.remove("active");
         }
       });
-
       socket.on("Change-playerInfo", (player) => {
         this.player = player;
       });
@@ -66,7 +70,10 @@ export default class Controller {
       this.map = document.getElementById("map") as HTMLDivElement;
       document.body.insertAdjacentHTML("afterbegin", buttons);
 
-      this.addBuildAndTradeListeners();
+      this.addBuildFirstSettlementListener();
+      // this.addRefreshListener();
+      this.createNewTurn()
+      // this.addBuildAndTradeListeners();
     }, 0);
   }
 
@@ -82,11 +89,7 @@ export default class Controller {
       }
     });
     socket.on("Client-turn", () => {
-      socket.emit(
-        "isYouTurnPlayer",
-        localStorage.getItem("Room"),
-        localStorage.getItem("Name")
-      );
+      socket.emit("isYouTurnPlayer", localStorage.getItem("Room"), localStorage.getItem("Name"));
     });
   }
 
@@ -109,6 +112,16 @@ export default class Controller {
       );
     }
   }
+
+  addBuildFirstSettlementListener() {
+    document
+      .getElementById("first-set")
+      ?.addEventListener("click", this.buildFirstSettlementMode.bind(this)); // , { once: true }
+  }
+
+  // addRefreshListener() {
+  //   document.getElementById("refresh")?.addEventListener("click", () => { this.state?.updateMap(); })
+  // }
 
   addBuildAndTradeListeners() {
     const btnsWrap = document.getElementById("build-trade-card-list");
@@ -205,46 +218,35 @@ export default class Controller {
       && (chousen.classList.contains("hex__settlement_N")
           || chousen.classList.contains("hex__settlement_S"))
     ) {
+      if (
+        chousen.classList.contains("hex__settlement_N") ||
+        chousen.classList.contains("hex__settlement_S")
+      ) {
+        const places = [
+          ...document.querySelectorAll(".hex__settlement_N"),
+          ...document.querySelectorAll(".hex__settlement_S"),
+        ];
+        places.forEach((e) => {
+          e.classList.remove("select");
+        });
+        socket.emit(
+          "setNewSettlement",
+          this.player,
+          chousen.id,
+          localStorage.getItem("Room")
+        );
+        // this.updateBuildCounter(".settlement__counter"); // unused function, need delete?
+        this.view?.renderFullMap();
+        // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
 
-      if (this.map) { this.map.onclick = null }
 
-      const places = [
-        ...document.querySelectorAll(".hex__settlement_N"),
-        ...document.querySelectorAll(".hex__settlement_S"),
-      ];
-
-      places.forEach((e) => {
-        e.classList.remove("select");
-      });
-
-      socket.emit(
-        "setNewSettlement",
-        this.player,
-        chousen.id,
-        localStorage.getItem("Room")
-      );
-
-      /* Если привязать запуск постройки к событию загрузки карты 
-         Каждый раз при постройке карта будет перезагружаться и
-         начинаться новая постройка */
-
-      // window.addEventListener("mapLoaded", () => {
-      //   this.buildFirstRoadMode(chousen.dataset.next || "");
-      // });
-
-      // let settlementSet = new CustomEvent('settlementSet');
-      // window.addEventListener("settlementSet", () => {
-      //   this.buildFirstRoadMode(chousen.dataset.next || "");
-      // });
-      // window.dispatchEvent(settlementSet);
-
-      // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
-
-      setTimeout(() => {
-        this.buildFirstRoadMode(chousen.dataset.next || "");
-      }, 100);
-
-      this.view?.renderFullMap();
+        if (this.map) {
+          this.map.onclick = null;
+        }
+        setTimeout(() => {
+          this.buildFirstRoadMode(chousen.dataset.next || "");
+        }, 100);
+      }
     }
   }
 
@@ -254,13 +256,19 @@ export default class Controller {
       console.log(road);
       if (!road.classList.contains("own")) {
         road.classList.add("select__road");
-        road.addEventListener("click", () => {
+        road.addEventListener("click", (e) => {
           socket.emit(
             "setNewRoad",
             this.player,
             road.id,
             localStorage.getItem("Room")
           );
+
+          // this.updateBuildCounter(".road__counter");
+          this.view?.renderFullMap()
+          socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
+        })
+
           // this.updateBuildCounter(".road__counter"); // unused function, need delete?
 
           /*       settlementsToRob?.forEach((e: string) => {
@@ -284,10 +292,13 @@ export default class Controller {
           }
         }); */
 
-          this.view?.renderFullMap();
-        });
+        //   this.view?.renderFullMap();
+
+        //   const robber = document.querySelector(".robber"); // need add class after render map
+        //   if (robber) robber.classList.add("moveDown");
+        // });
       }
-    });
+    })
   }
 
   // Building

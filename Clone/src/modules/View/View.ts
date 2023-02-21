@@ -20,7 +20,7 @@ export default class View {
       this.renderFullMap();
       this.CreatePlayers()
       this.Resources()
-      // this.dice.init()
+      this.BuildingStock()
 
       // add renderfullUI(player: number)
       }, 0);
@@ -113,7 +113,7 @@ export default class View {
 
   CreatePlayers() {
     socket.emit('give-room-list-players', localStorage.getItem('Room'), localStorage.getItem('Name'))
-    socket.on('list-players', (users, usersInfo) => {
+    socket.on('list-players', (usersInfo) => {
 
         const list = document.querySelector('.all-player-board')
 
@@ -122,7 +122,7 @@ export default class View {
             list.removeChild(list.firstChild);
         }
 
-        for (let i = 0; i < users.length; i++) {
+        for (let i = 0; i < usersInfo.length; i++) {
           const allRes = this.SummCards(usersInfo[i].hand.resources)
           const allDev = this.SummCards(usersInfo[i].hand.development)
           const div = document.createElement('div')
@@ -133,9 +133,9 @@ export default class View {
               <div class="avatar__wrap avatar__${color[i]} flex-bs">
                 <img src="assets/images/icons/icon_player.svg" alt="avatar" class="player__icon">
               </div>
-              <div class="nickname">${users[i].username}</div>
+              <div class="nickname">${usersInfo[i].name}</div>
               <div class="player-score flex-bs">
-                <span>${i+1}</span>
+                <span>${usersInfo[i].settlements.length}</span>
               </div>
             </div>
             <div class="player-miniboard flex-bs">
@@ -176,6 +176,16 @@ export default class View {
       if (grainCount != null) grainCount.innerHTML = `${resources.grain}`;
       const oreCount = document.getElementById('hand-counter_ore');
       if (oreCount != null) oreCount.innerHTML = `${resources.ore}`;
+    })
+  }
+  BuildingStock() {
+    socket.on('players-stock', players => {
+      const road = document.getElementById('build-road')?.querySelector('.player-stock__counter');
+      if (road != null) road.innerHTML = `${players.roadsStock}`;
+      const settlement = document.getElementById('build-settlement')?.querySelector('.player-stock__counter');
+      if (settlement != null) settlement.innerHTML = `${players.settlementsStock}`;
+      const city = document.getElementById('build-city')?.querySelector('.player-stock__counter');
+      if (city != null) city.innerHTML = `${players.citiesStock}`;
     })
   }
 
