@@ -12,9 +12,10 @@ export default class Controller {
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
-    public canRoll?: boolean
-  ) // private timer: Timer = new Timer(),
-  // private master: GameMaster = new GameMaster(),
+    public canRoll?: boolean,
+    // private timer: Timer = new Timer(),
+    // private master: GameMaster = new GameMaster(),
+  ) 
   {}
 
   init() {
@@ -101,6 +102,7 @@ export default class Controller {
       if (target && target.closest(".dice__container")) {
         if (this.canRoll) {
           const roll = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+          // const roll = randomDiceRoll.randomDice()
           this.canRoll = false;
           socket.emit("weRollDice", localStorage.getItem("Room"), roll);
           socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))

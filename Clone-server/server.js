@@ -135,14 +135,11 @@ io.on("connection", (socket) => {
     socket.on('isYouTurnPlayer', (room, name) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === name)
         const active = allGame.get(room).activePlayer === index ? true : false
-        // console.log(allGame.get(room))
-        // console.log('-----------------')
         if (allGame.get(room).turn > 0) {
             socket.emit('Turn-player', allGame.get(room).playersInfo[index], active)
         } else {
             socket.emit('firstSettlementMode', allGame.get(room).playersInfo[index], active)
         }
-        
     })
 
     socket.on('setNewSettlement', (player, id, room) => {
@@ -150,9 +147,15 @@ io.on("connection", (socket) => {
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
         allGame.get(room).playersInfo[index].settlementsStock--
+        if (allGame.get(room).turn == 0) {
+            // console.log(allGame.get(room).mapObject[6])
+            allGame.get(room).addResoursesFirstSettlement(allGame.get(room).mapObject, allGame.get(room).playersInfo[index])
+            socket.emit('players-hand', allGame.get(room).playersInfo[index].hand.resources)
+        }
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
         io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
+
     socket.on('setNewRoad', (player, id, room) =>{
         allGame.get(room).setNewRoad(player, id)
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
@@ -189,15 +192,11 @@ io.on("connection", (socket) => {
     })
 
     socket.on('weRollDice', (room, roll) => {
-        console.log(roll)
         allGame.get(room).diceRoll = roll;
         allGame.get(room).addResoursesThisTurn(
             (roll[0] + roll[1]),
             allGame.get(room).mapObject,
             allGame.get(room).playersInfo);
-
-        console.log(allGame.get(room).diceRoll);
-        console.log(allGame.get(room).playersInfo[0].hand)
     });
 
     socket.on('disconnect', () => {
