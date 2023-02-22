@@ -7,8 +7,6 @@ export default class Controller {
   constructor(
     public view?: View,
     public dice: Dice = new Dice(),
-    // public state?: State,
-    // public room?: Room,
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
@@ -57,12 +55,11 @@ export default class Controller {
         console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
 
         const nextBtn = document.getElementById("create-new-turn");
-        nextBtn?.classList.remove("active");
         if (this.activePlayer) {
-          this.addListenerDices();
-        } else {
           nextBtn?.classList.remove("active");
+          this.addListenerDices();
         }
+
       });
       socket.on("Change-playerInfo", (player) => {
         this.player = player;
@@ -74,13 +71,14 @@ export default class Controller {
       this.addBuildFirstSettlementListener();
       // this.addRefreshListener();
       this.createNewTurn()
+      // this.addBuildAndTradeListeners();
     }, 0);
   }
 
   createNewTurn() {
     const btn = document.getElementById("create-new-turn");
     btn?.addEventListener("click", (e) => {
-      if (btn.classList.length == 3) {
+      if (btn.classList.length == 2) {
         socket.emit(
           "Next-person",
           localStorage.getItem("Room"),
@@ -94,7 +92,9 @@ export default class Controller {
   }
 
   addListenerDices() {
+    // TODO Как типизировать callback?
     const nextBtn = document.getElementById("create-new-turn");
+
     if (this.canRoll) {
       document.getElementById("roll-dice")?.addEventListener(
         "click",
@@ -104,7 +104,6 @@ export default class Controller {
             const roll = this.dice.randomDiceRoll();
             this.dice.audio.play();
             this.canRoll = false;
-            nextBtn?.classList.add("active");
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
             socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
             
@@ -191,44 +190,37 @@ export default class Controller {
     if (this.map) {
       this.map.onclick = this.choosePlaceSettlement.bind(this);
     }
-    // this.map?.addEventListener("click", this.choosePlaceSettlement.bind(this)); //.bind(this) , {once: true}
   }
 
   choosePlaceSettlement(e: Event) {
+    const chousen = e.target;
     if (
-      e.target instanceof HTMLDivElement &&
-      e.target.classList.contains("select")
+      chousen instanceof HTMLDivElement
+      && chousen.classList.contains("select")
+      && (chousen.classList.contains("hex__settlement_N")
+          || chousen.classList.contains("hex__settlement_S"))
     ) {
       if (
-        e.target.classList.contains("hex__settlement_N") ||
-        e.target.classList.contains("hex__settlement_S")
+        chousen.classList.contains("hex__settlement_N") ||
+        chousen.classList.contains("hex__settlement_S")
       ) {
-        const chousen = e.target;
         const places = [
           ...document.querySelectorAll(".hex__settlement_N"),
           ...document.querySelectorAll(".hex__settlement_S"),
         ];
-        places.forEach((e) => {
-          e.classList.remove("select");
-        });
-        socket.emit(
-          "setNewSettlement",
-          this.player,
-          chousen.id,
-          localStorage.getItem("Room")
-        );
-        // this.updateBuildCounter(".settlement__counter"); // unused function, need delete?
+
+        places.forEach((e) => { e.classList.remove("select") });
+
+        socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
         socket.emit('updateMap', localStorage.getItem('Room'))
         socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+
         // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
 
-
         if (this.map) {
-          this.map.onclick = null;
+          this.map.onclick = () => this.buildFirstRoadMode(chousen.dataset.next || "");
         }
-        setTimeout(() => {
-          this.buildFirstRoadMode(chousen.dataset.next || "");
-        }, 100);
+
       }
     }
   }
@@ -237,19 +229,13 @@ export default class Controller {
     next.split(",").forEach((e) => {
       const road = document.getElementById(e) as HTMLDivElement;
       if (!road.classList.contains("own")) {
-        road.classList.add("select__road");
+        road.classList.add("select");
         road.addEventListener("click", (e) => {
-          socket.emit(
-            "setNewRoad",
-            this.player,
-            road.id,
-            localStorage.getItem("Room")
-          );
-
-          // this.updateBuildCounter(".road__counter");
+          socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
           socket.emit('updateMap', localStorage.getItem('Room'))
           socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
           socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
+          if (this.map) this.map.onclick = null;
         })
       }
     })

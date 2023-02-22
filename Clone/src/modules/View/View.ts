@@ -28,26 +28,6 @@ export default class View {
 
   }
 
-  // Possable useless function
-  //   renderGamePage() {
-  //     const container = document.getElementById("main");
-  //     if (container) container.innerHTML = "";
-  //     container?.insertAdjacentHTML("afterbegin", game);
-
-  //   //   if (container) {
-  //   //     container.addEventListener("click", (e: Event) => {
-  //   //       const constructionBlock = document.querySelector(".construction-cost");
-  //   //       console.log(e.target);
-  //   //       if (
-  //   //         e.target instanceof HTMLDivElement &&
-  //   //         e.target.classList.contains("cost__btn")
-  //   //       ) {
-  //   //         constructionBlock?.classList.toggle("cost");
-  //   //       }
-  //   //     });
-  //   // }
-  // }
-
   renderFullMap() {
     socket.on('renderFullMapView', mapObj => {
       const mapContainer = document.getElementById("map");
@@ -56,8 +36,9 @@ export default class View {
         const mapTree = this.renderer.getMapAsNodeTree(mapObj as Array<IHex>) as string;
         mapContainer?.insertAdjacentHTML("beforeend", mapTree);
 
-        let event = new Event('mapLoad');
-        window.dispatchEvent(event);
+        let mapLoadedEvent = new CustomEvent('mapLoaded');
+        window.dispatchEvent(mapLoadedEvent);
+        console.log("mapLoaded")
       }
     })
   }

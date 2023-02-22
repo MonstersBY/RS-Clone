@@ -1,4 +1,5 @@
 import MapGenerator from "./MapGenerator.js"
+import roadCounter from "./RoadCounter.js";
 
 export default class State {
   constructor () {
@@ -227,7 +228,7 @@ export default class State {
     player.roads.push(id);
     player.avalible.push(...nearRoads, ...nearNodes);
 
-    this.calculateRoadChain(player, id, nearNodes);
+    // this.calculateRoadChain(player, id, nearNodes);
   }
 
   // Development
@@ -270,11 +271,11 @@ export default class State {
   playRoadCard(player) {}// !!!
 
   // Tecnical checks and events
-  isAnyResourse(res) {
+  #isAnyResourse(res) {
     return res.brick + res.grain + res.lumber + res.ore + res.wool;
   }
 
-  chooseRandomResourse(res) {
+  #chooseRandomResourse(res) {
     const randomNumber = new MapGenerator().randomNumber;
     const resources = ["grain", "wool", "ore", "lumber", "brick"];
     let chosen = 0;
@@ -290,8 +291,8 @@ export default class State {
   transferOneToAnother(player, victimColor) {
     for (const playerVictim of this.playersInfo) {
       if (playerVictim.color === victimColor) {
-        if (this.isAnyResourse(playerVictim.hand.resources)) {
-          const type = this.chooseRandomResourse(playerVictim.hand.resources);
+        if (this.#isAnyResourse(playerVictim.hand.resources)) {
+          const type = this.#chooseRandomResourse(playerVictim.hand.resources);
           playerVictim.hand.resources[type] -= 1;
           player.hand.resources[type] += 1;
         };
@@ -299,39 +300,37 @@ export default class State {
     }
   }
 
-  calculateRoadChain(player, id) {
-    if (player.roads.length > 4) {
-      // better start from top-left
-    }
+  calculateRoadChain(map, playerInfo, id) {
+    playerInfo.roadChain = roadCounter(map, playerInfo.color, id);
   }
 
-  calculateMaxRoadChain() {
-    for (const player of this.playersInfo) {
-      if (this.longestRoad < 5 && player.roadChain === 5) {
+  calculateMaxRoadChain(map, playersInfo) {
+    for (const player of playersInfo) {
+      if (map.longestRoad < 5 && player.roadChain === 5) {
         player.longestRoad = true;
-        this.longestRoad = 5;
+        map.longestRoad = 5;
       }
-      if (this.longestRoad >= 5 && player.roadChain > this.longestRoad) {
+      if (map.longestRoad >= 5 && player.roadChain > map.longestRoad) {
         for (const player of this.playersInfo) {
           player.longestRoad = false;
         }
-        this.longestRoad = player.roadChain;
+        map.longestRoad = player.roadChain;
         player.longestRoad = true;
       }
     }
   }
 
-  calculateMaxArmySize() {
-    for (const player of this.playersInfo) {
-      if (this.largestArmy < 3 && player.armySize === 3) {
+  calculateMaxArmySize(map, playersInfo) {
+    for (const player of playersInfo) {
+      if (map.largestArmy < 3 && player.armySize === 3) {
         player.largestArmy = true;
-        this.largestArmy = 3;
+        map.largestArmy = 3;
       }
-      if (this.largestArmy >= 3 && player.armySize > this.largestArmy) {
-        for (const player of this.playersInfo) {
+      if (map.largestArmy >= 3 && player.armySize > map.largestArmy) {
+        for (const player of playersInfo) {
           player.largestArmy = false;
         }
-        this.largestArmy = player.armySize;
+        map.largestArmy = player.armySize;
         player.largestArmy = true;
       }
     }

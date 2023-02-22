@@ -129,7 +129,7 @@ io.on("connection", (socket) => {
 
         socket.emit('players-hand', allGame.get(room).playersInfo[indexUser].hand.resources)
         socket.emit('players-stock', allGame.get(room).playersInfo[indexUser])
-        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[indexUser])
         io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
 
@@ -190,6 +190,7 @@ io.on("connection", (socket) => {
 
     socket.on('updateMap', (room) => {
         io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
+        console.log(room)
     })
 
     socket.on('Next-person', (room, name) => {
