@@ -157,7 +157,8 @@ io.on("connection", (socket) => {
     })
 
     socket.on('setNewRoad', (player, id, room) =>{
-        allGame.get(room).setNewRoad(player, id)
+        const map = allGame.get(room).mapObject;
+        allGame.get(room).setNewRoad(map, player, id)
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
         allGame.get(room).playersInfo[index].roadsStock--
