@@ -247,7 +247,7 @@ export default class Controller {
     next.split(",").forEach((e) => {
       const road = document.getElementById(e) as HTMLDivElement;
       if (!road.classList.contains("own")) {
-        road.classList.add("select__road");
+        road.classList.add("select");
         road.addEventListener("click", (e) => {
           socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
           socket.emit('updateMap', localStorage.getItem('Room'))
@@ -269,7 +269,7 @@ export default class Controller {
     roads.forEach((e) => {
       const road = document.getElementById(e);
       if (road && !road.classList.contains("own")) {
-        road.classList.add("select__road");
+        road.classList.add("select");
         road.addEventListener("click", (e) => {
           socket.emit(
             "setNewRoad",

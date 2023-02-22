@@ -8,7 +8,7 @@
   height: 80vmin;
   width: 90vmin;
   overflow: visible;
-  z-index: 3;
+  z-index: 2;
 }
 
 .map-background__container {
@@ -45,47 +45,45 @@
   z-index: 1;
 }
 
-.hex__coastline_1 {
-  background-position: 0 -100%;
+.hex__coastline {
+  &_1 {
+    background-position: 0 -100%;
+  }
+  &_1 {
+    background-position: 0 0;
+  }
 }
 
-.hex__coastline_2 {
-  background-position: 0 0;
-}
-
-.pos_1 {
-  bottom: -0.9%;
-  left: 31.9%;
-}
-
-.pos_2  {
-  bottom: 25.8%;
-  left: 60.8%;
-  transform: rotate(-60deg);
-}
-
-.pos_3 {
-  bottom: 66%;
-  left: 54.3%;
-  transform: rotate(-120deg);
-}
-
-.pos_4 {
-  left: 20%;
-  top: 2.4%;
-  transform: rotate(-180deg);
-}
-
-.pos_5 {
-  left: -8%;
-  top: 29%;
-  transform: rotate(120deg);
-}
-
-.pos_6 {
-  bottom: 12.8%;
-  left: -1.8%;
-  transform: rotate(60deg);
+.pos {
+  &_1 {
+    bottom: -0.9%;
+    left: 31.9%;
+  }
+  &_2  {
+    bottom: 25.8%;
+    left: 60.8%;
+    transform: rotate(-60deg);
+  }
+  &_3 {
+    bottom: 66%;
+    left: 54.3%;
+    transform: rotate(-120deg);
+  }
+  &_4 {
+    left: 20%;
+    top: 2.4%;
+    transform: rotate(-180deg);
+  }
+  &_5 {
+    left: -8%;
+    top: 29%;
+    transform: rotate(120deg);
+  }
+  &_6 {
+    bottom: 12.8%;
+    left: -1.8%;
+    transform: rotate(60deg);
+  }
 }
 
 .hex {
@@ -99,151 +97,6 @@
   background: url("../assets/images/ingame/terrains_hexes.png");
   background-size: 700% 400%;
   background-position-y: 0;
-
-  &:nth-child(1) {
-    grid-column-start: 4;
-    top: 5px;
-    left: 0px;
-  }
-  &:nth-child(2) {
-    grid-column-start: 6;
-  }
-  &:nth-child(3) {
-    grid-column-start: 8;
-  }
-  &:nth-child(4) {
-    grid-column-start: 10;
-  }
-  &:nth-child(5) {
-    grid-column-start: 3;
-  }
-  // mountains variant1
-  &:nth-child(6) {
-    grid-column-start: 5;
-  }
-  // pasture variant1
-  &:nth-child(7) {
-    grid-column-start: 7;
-  }
-  // forest variant1
-  &:nth-child(8) {
-    grid-column-start: 9;
-  }
-  &:nth-child(9) {
-    grid-column-start: 11;
-    top: 13px;
-    left: 9px;
-  }
-  &:nth-child(10) {
-    grid-column-start: 2;
-    top: 0px;
-    left: 7px;
-  }
-  // field variant1
-  &:nth-child(11) {
-    grid-column-start: 4;
-  }
-  // hills variant1
-  &:nth-child(12) {
-    grid-column-start: 6;
-    background-position-x: -300%;
-  }
-  // pasture variant2
-  &:nth-child(13) {
-    grid-column-start: 8;
-  }
-  // hills variant2
-  &:nth-child(14) {
-    grid-column-start: 10;
-  }
-  &:nth-child(15) {
-    grid-column-start: 12;
-  }
-  &:nth-child(16) {
-    grid-column-start: 1;
-  }
-  // field variant2
-  &:nth-child(17) {
-    grid-column-start: 3;
-  }
-  // forest variant2
-  &:nth-child(18) {
-    grid-column-start: 5;
-  }
-  &:nth-child(19) {
-    grid-column-start: 7;
-  }
-  // forest variant3
-  &:nth-child(20) {
-    grid-column-start: 9;
-  }
-  // mountains variant2
-  &:nth-child(21) {
-    grid-column-start: 11;
-  }
-  &:nth-child(22) {
-    grid-column-start: 13;
-    /* top: 12px;
-    left: 0; */
-  }
-  &:nth-child(23) {
-    grid-column-start: 2;
-    top: 13px;
-    left: 5px;
-  }
-   // forest variant4
-  &:nth-child(24) {
-    grid-column-start: 4;
-  }
-  // mountains variant3
-  &:nth-child(25) {
-    grid-column-start: 6;
-  }
-  // field variant3
-  &:nth-child(26) {
-    grid-column-start: 8;
-  }
-  // pasture variant3
-  &:nth-child(27) {
-    grid-column-start: 10;
-  }
-  &:nth-child(28) {
-    grid-column-start: 12;
-  }
-  &:nth-child(29) {
-    grid-column-start: 3;
-  }
-   // hills variant3
-  &:nth-child(30) {
-    grid-column-start: 5;
-  }
-  // field variant4
-  &:nth-child(31) {
-    grid-column-start: 7;
-  }
-  // pasture variant4
-  &:nth-child(32) {
-    grid-column-start: 9;
-  }
-  &:nth-child(33) {
-    grid-column-start: 11;
-    top: -1px;
-    left: 16px;
-  }
-  &:nth-child(34) {
-    grid-column-start: 4;
-  }
-  &:nth-child(35) {
-    grid-column-start: 6;
-  }
-  &:nth-child(36) {
-    grid-column-start: 8;
-    top: 8px;
-    left: 0;
-  }
-  &:nth-child(37) {
-    grid-column-start: 10;
-  }
 }
 
 .hex {
@@ -265,21 +118,21 @@
     &_N {
       z-index: 4;
       position: absolute;
-      width: 30%;
-      height: 30%;
+      width: 3.8vmin;
+      height: 3.8vmin;
       border-radius: 50%;
       top: -18%;
-      right: calc(50% - 13%);
+      right: calc(50% - 1.9vmin);
       opacity: 0;
     }
     &_S {
       z-index: 4;
       position: absolute;
-      width: 30%;
-      height: 30%;
+      width: 3.8vmin;
+      height: 3.8vmin;
       border-radius: 50%;
-      bottom: -5%;
-      right: calc(50% - 13%);
+      bottom: -10%;
+      right: calc(50% - 1.9vmin);
       opacity: 0;
     }
   }
@@ -289,129 +142,34 @@
       z-index: 3;
       position: absolute;
       width: 10%;
-      height: 50%;
-      left: 18%;
-      top: -13%;
+      height: 51%;
+      left: 20%;
+      top: -14%;
       transform: rotate(60deg);
       opacity: 0;
-      // background-color: rgb(203, 219, 26);
+      // background-color: rgba(219, 145, 26, 0.478);
     }
     &_W {
       z-index: 3;
       position: absolute;
       width: 10%;
       height: 52%;
-      left: -7%;
-      top: 20%;
+      left: -4.5%;
+      top: 24%;
       opacity: 0;
-      // background-color: rgb(89, 39, 11);
+      // background-color: rgba(89, 40, 11, 0.244);
     }
     &_S {
       z-index: 3;
       position: absolute;
       width: 10%;
-      height: 50%;
+      height: 51%;
       left: 20%;
-      bottom: -13%;
+      bottom: -14%;
       transform: rotate(-60deg);
       opacity: 0;
-      // background-color: rgb(75, 163, 38);
+      // background-color: rgba(75, 163, 38, 0.327);
     }
-  }
-}
-.hex_harbor {
-  .hex__settlement_S {
-    width: 38.7%;
-    height: 45%;
-    bottom: -43%;
-    right: 23%;
-  }
-  .hex__settlement_N {
-    width: 38.7%;
-    height: 45%;
-    top: -30%;
-    right: 18%;
-  }
-  .hex__road_W {
-    height: 77.8%;
-    width: 12.8%;
-  }
-  .hex__road_N {
-    height: 77.8%;
-    width: 12.8%;
-  }
-  .hex__road_S {
-    height: 77.8%;
-    width: 12.8%;
-  }
-
-}
-.harbor_wool {
-  .hex__road_W {
-    left: -31%;
-    top: 31%;
-  }
-  .hex__road_N {
-    left: 0;
-    top: -24%;
-  }
-  .hex__settlement_N  {
-    top: -29%;
-    right: 53%;
-  }
-}
-.harbor_all {
-  .hex__road_W {
-    left: -6%;
-    top: 30%;
-  }
-   .hex__road_N {
-    left: 24%;
-    top: -40%;
-  }
-  .hex__settlement_S {
-    bottom: -48%;
-    right: 18%;
-  }
-  .hex__settlement_N {
-    top: -37%;
-    right: 18%;
-  }
-}
-.harbor_ore {
-  .hex__road_S {
-    left: 15%;
-    top: 68%;
-  }
-  .hex__road_W {
-    left: -23%;
-    top: 10%;
-  }
-  .hex__settlement_S {
-    bottom: -43%;
-    right: 35%;
-  }
-}
-.harbor_grain {
-  .hex__road_S {
-    left: 27%;
-    top: 94%;
-  }
-  .hex__settlement_S {
-    bottom: -54%;
-    right: 21%;
-  }
-}
-.harbor_lumber {
-  .hex__settlement_S {
-    bottom: -61%;
-    right: 29%;
-  }
-}
-.harbor_brick {
-  .hex__settlement_N {
-    top: -53%;
-    right: 28%;
   }
 }
 
@@ -443,36 +201,34 @@
   &_fields {
     background-position-x: -600%;
   }
-  &_harbor {
-    position: relative;
-    width: 10vmin;
-    height: 10vmin;
-    background: url('../assets/images/ingame/harbors.png');
-    background-size: 700% 100%;
-  }
   &_desert {
     background-position-x: -100%;
+  }
+  &_harbor {
+    background: url('../assets/images/ingame/harbors3.webp');
+    background-size: 700%;
+    background-position-y: 0;
   }
 }
 
 .harbor {
   &_all{
-    background-position: -500%;
+    background-position-x: -500%;
   }
   &_brick{
-    background-position: -200%;
+    background-position-x: -200%;
   }
   &_grain{
-    background-position: -100%;
+    background-position-x: -100%;
   }
   &_lumber{
-    background-position: -300%;
+    background-position-x: -300%;
   }
   &_ore{
-    background-position: -400%;
+    background-position-x: -400%;
   }
   &_wool{
-    background-position: 0;
+    background-position-x: 0;
   }
 }
 
@@ -498,84 +254,86 @@
   opacity: 1;
 }
 
+.hex__road_N.own_red,
+.hex__road_W.own_red,
+.hex__road_S.own_red {
+  background: url('../assets/images/map_animation/road_red.svg') no-repeat;
+  background-size: 100% 100%;
+}
+
 .hex__road_N.own_blue,
 .hex__road_W.own_blue,
 .hex__road_S.own_blue{
-  background: url('../assets/images/map_animation/road_blue.svg');
+  background: url('../assets/images/map_animation/road_blue.svg') no-repeat;
   background-size: 100% 100%;
 }
 
 .hex__road_N.own_green,
 .hex__road_W.own_green,
 .hex__road_S.own_green{
-  background: url('../assets/images/map_animation/road_green.svg');
+  background: url('../assets/images/map_animation/road_green.svg') no-repeat;
   background-size: 100% 100%;
 }
 
 .hex__road_N.own_orange,
 .hex__road_W.own_orange,
 .hex__road_S.own_orange {
-  background: url('../assets/images/map_animation/road_orange.svg');
+  background: url('../assets/images/map_animation/road_orange.svg') no-repeat;
   background-size: 100% 100%;
 }
 
-.hex__road_N.own_red,
-.hex__road_W.own_red,
-.hex__road_S.own_red {
-  background: url('../assets/images/map_animation/road_red.svg');
-  background-size: 100% 100%;
-}
 
 .hex__settlement_N.own_red,
 .hex__settlement_S.own_red {
   background: url('../assets/images/map_animation/settlement_red.svg');
-  background-size: 100% 100%;
+  background-size: 100% 110%;
+  background-position: center bottom;
 }
 
 .hex__settlement_N.own_blue,
 .hex__settlement_S.own_blue {
   background: url('../assets/images/map_animation/settlement_blue.svg');
-  background-size: 100% 100%;
+  background-size: 100% 110%;
+  background-position: center bottom;
 }
 
 .hex__settlement_N.own_green,
 .hex__settlement_S.own_green {
   background: url('../assets/images/map_animation/settlement_green.svg');
-  background-size: 100% 100%;
+  background-size: 100% 110%;
+  background-position: center bottom;
 }
 
 .hex__settlement_N.own_orange,
 .hex__settlement_S.own_orange {
   background: url('../assets/images/map_animation/settlement_orange.svg');
-  background-size: 100% 100%;
+  background-size: 100% 110%;
+  background-position: center bottom;
 }
 
-.hex__settlement_N.own_red,
-.hex__settlement_S.own_red{
-  background: url('../assets/images/map_animation/settlement_red.svg');
-  background-size: 100% 100%;
-}
 
-.hex__settlement_N.own_blue.city,
-.hex__settlement_S.own_blue.city {
-  background: url('../assets/images/map_animation/city_blue.svg');
-  background-size: 100% 100%;
-}
-
-.hex__settlement_N.own_green.city,
-.hex__settlement_S.own_green.city {
-  background: url('../assets/images/map_animation/city_green.svg');
-  background-size: 100% 100%;
-}
-
-.hex__settlement_N.own_orange.city,
-.hex__settlement_S.own_orange.city {
-  background: url('../assets/images/map_animation/city_orange.svg');
-  background-size: 100% 100%;
-}
-
-.hex__settlement_N.own_red.city,
-.hex__settlement_S.own_red.city{
+.own_red.city {
   background: url('../assets/images/map_animation/city_red.svg');
-  background-size: 100% 100%;
+  background-size: 100% 105%;
+  background-position: center bottom;
 }
+
+.own_blue.city {
+  background: url('../assets/images/map_animation/city_blue.svg');
+  background-size: 100% 105%;
+  background-position: center bottom;
+}
+
+.own_green.city {
+  background: url('../assets/images/map_animation/city_green.svg');
+  background-size: 100% 105%;
+  background-position: center bottom;
+}
+
+.own_orange.city {
+  background: url('../assets/images/map_animation/city_orange.svg');
+  background-size: 100% 105%;
+  background-position: center bottom;
+}
+
+
