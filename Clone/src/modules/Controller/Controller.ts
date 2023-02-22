@@ -60,8 +60,6 @@ export default class Controller {
         nextBtn?.classList.remove("active");
         if (this.activePlayer) {
           this.addListenerDices();
-        } else {
-          nextBtn?.classList.remove("active");
         }
       });
       socket.on("Change-playerInfo", (player) => {
