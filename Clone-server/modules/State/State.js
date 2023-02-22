@@ -77,16 +77,15 @@ export default class State {
 
   addResoursesFirstSettlement(map, player) {
     let hex
-    for (let i = 0; i < map.length; i++) {
-      const arrMap = [this.mapObject[i].settlement_N, this.mapObject[i].settlement_S]
-      for (let i = 0; i < arrMap.length; i++) {
-        if (arrMap[i]){
-          if (arrMap[i].id == player.settlements[1]) {
-            hex = arrMap[i].nextHexes
-            break
-          }
-        }    
-      }
+
+    const arrMap = [this.mapObject[Number(player.settlements[1].split("_")[0])].settlement_N, this.mapObject[Number(player.settlements[1].split("_")[0])].settlement_S]
+    for (let i = 0; i < arrMap.length; i++) {
+      if (arrMap[i]){
+        if (arrMap[i].id == player.settlements[1]) {
+          hex = arrMap[i].nextHexes
+          break
+        }
+      }    
     }
     
     for (let i = 0; i < hex.length; i++) {
