@@ -56,12 +56,10 @@ export default class Controller {
 
         const nextBtn = document.getElementById("create-new-turn");
         if (this.activePlayer) {
-
-          nextBtn?.classList.add("active");
-          this.addListenerDices();
-        } else {
           nextBtn?.classList.remove("active");
+          this.addListenerDices();
         }
+
       });
       socket.on("Change-playerInfo", (player) => {
         this.player = player;
@@ -95,7 +93,8 @@ export default class Controller {
 
   addListenerDices() {
     // TODO Как типизировать callback?
-    console.log("ROLL");
+    const nextBtn = document.getElementById("create-new-turn");
+
     if (this.canRoll) {
       document.getElementById("roll-dice")?.addEventListener(
         "click",
