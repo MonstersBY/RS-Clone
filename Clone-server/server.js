@@ -129,7 +129,7 @@ io.on("connection", (socket) => {
 
         socket.emit('players-hand', allGame.get(room).playersInfo[indexUser].hand.resources)
         socket.emit('players-stock', allGame.get(room).playersInfo[indexUser])
-        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        // socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
         io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
 
@@ -162,6 +162,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on('setNewRoad', (player, id, room) =>{
+        console.log(allGame.get(room).playersInfo)
         allGame.get(room).setNewRoad(player, id)
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
