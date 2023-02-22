@@ -18,6 +18,7 @@ export default class View {
       setTimeout(() => {
       // this.renderStaticUI(playerInfo, player) //need player and playerINfo[]
       this.renderFullMap();
+      socket.emit('updateMap', localStorage.getItem('Room'))
       this.CreatePlayers()
       this.Resources()
       this.BuildingStock()
@@ -48,17 +49,18 @@ export default class View {
   // }
 
   renderFullMap() {
-    socket.emit('updateMap', localStorage.getItem('Room'))
     socket.on('renderFullMapView', mapObj => {
+      console.log('Load')
       const mapContainer = document.getElementById("map");
       if (mapContainer) {
         mapContainer.innerHTML = "";
         const mapTree = this.renderer.getMapAsNodeTree(mapObj as Array<IHex>) as string;
         mapContainer?.insertAdjacentHTML("beforeend", mapTree);
+
+        let event = new Event('mapLoad');
+        window.dispatchEvent(event);
       }
     })
-    let event = new Event('mapLoad');
-    window.dispatchEvent(event);
   }
 
   renderfullUI(playerInfo: IPlayerInfo[], player: number) {

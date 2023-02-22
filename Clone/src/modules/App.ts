@@ -60,7 +60,6 @@ export default class App {
       socket.on('Map-object', (obj, players) => {
         this.view.init();
         this.controller.view = this.view;
-        // console.log(this.controller.view)
         this.controller.init();
       })
       setTimeout(() => {
