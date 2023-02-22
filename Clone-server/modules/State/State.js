@@ -22,20 +22,24 @@ export default class State {
     this.mapObject = JSON.parse(JSON.stringify(generator.generateMap(this.gameMap))); //разрываем связь
     this.playersInfo = JSON.parse(JSON.stringify(generator.generatePlayers(this.playersCount)));
     this.developmentDeck = JSON.parse(JSON.stringify(generator.generateDevelopmentDeck()));
-    //копирование объектов
     this.activePlayer = 0;
     this.foundingStage = true;
   }
 
   // Turn based events
+
+  // setDiceRoll(roll) {
+  //   this.diceRoll = roll;
+  // }
   /* setDiceRoll(roll) {
     this.diceRoll = roll;
     this.addResoursesThisTurn(roll[0]+roll[1]);
   }
  */
-  addResoursesThisTurn(dice, map, players) {
-    if (map && players) {
 
+
+  addResoursesThisTurn(dice, map, players) {
+    if (map  && players) {
       let currentHexes = []
       for (let i = 0; i < this.HEX_COUNT; i++) {
         if (map[i].token === dice && !map[i].robber) {
@@ -47,7 +51,7 @@ export default class State {
         for (let i = 0; i < player.hexes.length; i++) {
           for (let j = 0; j < currentHexes.length; j++) {
             if (player.hexes[i] === currentHexes[j]) {
-              switch (map[j].type) {
+              switch (map[currentHexes[j]].type) {
                 case "hills":
                   player.hand.resources.brick += 1;
                 break;
@@ -67,6 +71,40 @@ export default class State {
             }
           }
         }
+      }
+    }
+  }
+
+  addResoursesFirstSettlement(map, player) {
+    let hex
+
+    const arrMap = [this.mapObject[Number(player.settlements[1].split("_")[0])].settlement_N, this.mapObject[Number(player.settlements[1].split("_")[0])].settlement_S]
+    for (let i = 0; i < arrMap.length; i++) {
+      if (arrMap[i]){
+        if (arrMap[i].id == player.settlements[1]) {
+          hex = arrMap[i].nextHexes
+          break
+        }
+      }    
+    }
+    
+    for (let i = 0; i < hex.length; i++) {
+      switch (map[hex[i]].type) {
+        case "hills":
+          player.hand.resources.brick += 1;
+        break;
+        case "fields":
+          player.hand.resources.grain += 1;
+        break;
+        case "forest":
+          player.hand.resources.lumber += 1;
+        break;
+        case "mountains":
+          player.hand.resources.ore += 1;
+        break;
+        case "pasture":
+          player.hand.resources.wool += 1;
+        break;
       }
     }
   }
@@ -149,12 +187,9 @@ export default class State {
 
     // add to playerInfo
     player.settlements.push(id);
-    // console.log(player)
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
-    // player.hexes.sort();
     player.avalible.push(...nearNodes);
-    // console.log(player.avalible);
   }
 
   setNewCity(player, id) {
@@ -168,11 +203,6 @@ export default class State {
     player.cities.push(id);
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
-    // player.hexes.sort();
-
-    console.log(player.hexes, "hexes")
-    console.log(player.cities, "cities")
-    console.log(player.settlements, "settlements")
   }
 
   setNewRoad(player, id) {

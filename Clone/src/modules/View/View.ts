@@ -18,9 +18,10 @@ export default class View {
       setTimeout(() => {
       // this.renderStaticUI(playerInfo, player) //need player and playerINfo[]
       this.renderFullMap();
-      this.CreatePlayers()
-      this.Resources()
-      // this.dice.init()
+      socket.emit('updateMap', localStorage.getItem('Room'))
+      this.createPlayers()
+      this.resources()
+      this.buildingStock()
 
       // add renderfullUI(player: number)
       }, 0);
@@ -48,17 +49,17 @@ export default class View {
   // }
 
   renderFullMap() {
-    socket.emit('updateMap', localStorage.getItem('Room'))
     socket.on('renderFullMapView', mapObj => {
       const mapContainer = document.getElementById("map");
       if (mapContainer) {
         mapContainer.innerHTML = "";
         const mapTree = this.renderer.getMapAsNodeTree(mapObj as Array<IHex>) as string;
         mapContainer?.insertAdjacentHTML("beforeend", mapTree);
+
+        let event = new Event('mapLoad');
+        window.dispatchEvent(event);
       }
     })
-    let event = new Event('mapLoad');
-    window.dispatchEvent(event);
   }
 
   renderfullUI(playerInfo: IPlayerInfo[], player: number) {
@@ -128,9 +129,9 @@ export default class View {
   }
 
 
-  CreatePlayers() {
+  createPlayers() {
     socket.emit('give-room-list-players', localStorage.getItem('Room'), localStorage.getItem('Name'))
-    socket.on('list-players', (users, usersInfo) => {
+    socket.on('list-players', (usersInfo) => {
 
         const list = document.querySelector('.all-player-board')
 
@@ -139,7 +140,7 @@ export default class View {
             list.removeChild(list.firstChild);
         }
 
-        for (let i = 0; i < users.length; i++) {
+        for (let i = 0; i < usersInfo.length; i++) {
           const allRes = this.SummCards(usersInfo[i].hand.resources)
           const allDev = this.SummCards(usersInfo[i].hand.development)
           const div = document.createElement('div')
@@ -150,9 +151,9 @@ export default class View {
               <div class="avatar__wrap avatar__${color[i]} flex-bs">
                 <img src="assets/images/icons/icon_player.svg" alt="avatar" class="player__icon">
               </div>
-              <div class="nickname">${users[i].username}</div>
+              <div class="nickname">${usersInfo[i].name}</div>
               <div class="player-score flex-bs">
-                <span>${i+1}</span>
+                <span>${usersInfo[i].settlements.length}</span>
               </div>
             </div>
             <div class="player-miniboard flex-bs">
@@ -181,7 +182,7 @@ export default class View {
     })
   }
 
-  Resources() {
+  resources() {
     socket.on('players-hand', resources => {
       const lumbCount = document.getElementById('hand-counter_lumber');
       if (lumbCount != null) lumbCount.innerHTML = `${resources.lumber}`;
@@ -193,6 +194,16 @@ export default class View {
       if (grainCount != null) grainCount.innerHTML = `${resources.grain}`;
       const oreCount = document.getElementById('hand-counter_ore');
       if (oreCount != null) oreCount.innerHTML = `${resources.ore}`;
+    })
+  }
+  buildingStock() {
+    socket.on('players-stock', players => {
+      const road = document.getElementById('build-road')?.querySelector('.player-stock__counter');
+      if (road != null) road.innerHTML = `${players.roadsStock}`;
+      const settlement = document.getElementById('build-settlement')?.querySelector('.player-stock__counter');
+      if (settlement != null) settlement.innerHTML = `${players.settlementsStock}`;
+      const city = document.getElementById('build-city')?.querySelector('.player-stock__counter');
+      if (city != null) city.innerHTML = `${players.citiesStock}`;
     })
   }
 
