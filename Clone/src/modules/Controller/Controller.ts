@@ -236,7 +236,9 @@ export default class Controller {
           localStorage.getItem("Room")
         );
         // this.updateBuildCounter(".settlement__counter"); // unused function, need delete?
-        this.view?.renderFullMap();
+        socket.emit('updateMap', localStorage.getItem('Room'))
+        // this.view?.renderFullMap('create first settlement');
+        socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
         // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
 
 
@@ -263,7 +265,10 @@ export default class Controller {
             localStorage.getItem("Room")
           );
 
-          this.view?.renderFullMap()
+          // this.updateBuildCounter(".road__counter");
+          socket.emit('updateMap', localStorage.getItem('Room'))
+          // this.view?.renderFullMap('create first road')
+          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
           socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
         })
       }
@@ -282,6 +287,16 @@ export default class Controller {
       if (road && !road.classList.contains("own")) {
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
+          socket.emit(
+            "setNewRoad",
+            this.player,
+            road.id,
+            localStorage.getItem("Room")
+          );
+          // this.view?.renderFullMap('create road')
+          socket.emit('updateMap', localStorage.getItem('Room'))
+          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+          // this.updateBuildCounter(".road__counter"); // unused function
           road.classList.add("moveDown"); // need add class after render map (can add movedown class)
         });
       }
@@ -290,15 +305,25 @@ export default class Controller {
 
   buildSettlement(player: IPlayerInfo) {
     const settlements = [
-      ...new Set(
-        this.player?.avalible.filter((e) => e.split("_")[1] === "settlement")
-      ),
+      ...document.querySelectorAll(".hex__settlement_N"),
+      ...document.querySelectorAll(".hex__settlement_S"),
     ];
     settlements.forEach((e) => {
-      const settlement = document.getElementById(e);
-      if (settlement && !settlement.classList.contains("own")) {
-        settlement.classList.add("select");
-        settlement.addEventListener("click", (e) => {
+      // const settlement = document.getElementById(e);
+      if (!e.classList.contains("own")) {
+        e.classList.add("select");
+        e.addEventListener("click", (x) => {
+          console.log('CREATE')
+          const chousen = x.target as HTMLDivElement;
+          socket.emit(
+            "setNewSettlement",
+            this.player,
+            chousen.id,
+            localStorage.getItem("Room")
+          );
+          // this.view?.renderFullMap('create settlement');
+          socket.emit('updateMap', localStorage.getItem('Room'))
+          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
           // this.updateBuildCounter(".settlement__counter"); // unused function
           settlement.classList.add("moveDown"); //need add class after render map
         });
@@ -316,21 +341,22 @@ export default class Controller {
         // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
         // this.state?.updateMap();
         if (e.target && e.target instanceof HTMLElement)
-          e.target.classList.add("city", "moveDown"); //need add animation,
-        // maybe city need add in another place
+          socket.emit(
+            "setNewCity",
+            this.player,
+            settlement.id,
+            localStorage.getItem("Room")
+          );
+          // this.view?.renderFullMap('create city');
+          socket.emit('updateMap', localStorage.getItem('Room'))
+          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+          // e.target.classList.add("city", "moveDown"); //need add animation,
+          // maybe city need add in another place
       });
     });
   }
 
-  // Unused function
 
-  /*  updateBuildCounter(sel: string) {
-    const counter = document.querySelector(sel);
-    let counterNumber = Number(counter?.textContent);
-    if (counterNumber <= 0) return;
-    if (counter) counter.textContent = `${--counterNumber}`;
-  }
- */
   // Development cards
   buyDevelopCard() {
     // this.state?.buyDevelopmentCard(this.player1 as IPlayerInfo);
@@ -342,7 +368,6 @@ export default class Controller {
           const target = e.target.closest(".game-btn");
           if (target) {
             const name = e.target.className.split(" ")[1];
-            console.log(name);
             switch (name) {
               case "knight":
                 console.log(name, "knight");
