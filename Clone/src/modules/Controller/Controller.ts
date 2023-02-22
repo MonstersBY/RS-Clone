@@ -106,6 +106,9 @@ export default class Controller {
             this.dice.audio.play();
             this.canRoll = false;
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
+            socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+            
+            this.addBuildAndTradeListeners();
           }
         },
         { once: true }
@@ -157,26 +160,6 @@ export default class Controller {
       }
     });
   }
-
-  /*   addRoadListener() {
-    document.getElementById("build-road")?.addEventListener("click", () => {
-      this.buildRoad(this.player as IPlayerInfo);
-    });
-  } */
-
-  /*   addSettlementListener() {
-    document
-      .getElementById("build-settlement")
-      ?.addEventListener("click", () => {
-        this.buildSettlement(this.player as IPlayerInfo);
-      });
-  } */
-
-  /*  addCityListener() {
-    document.getElementById("build-city")?.addEventListener("click", () => {
-      this.buildCity(this.player as IPlayerInfo);
-    });
-  } */
 
   /* addRobberListener() {
     document.getElementById("robber")?.addEventListener("click", () => { this.setRobber(this.player1 as IPlayerInfo); })
@@ -266,73 +249,125 @@ export default class Controller {
         this.player?.avalible.filter((e) => e.split("_")[1] === "road")
       ),
     ];
-    roads.forEach((e) => {
-      const road = document.getElementById(e);
-      if (road && !road.classList.contains("own")) {
-        road.classList.add("select");
-        road.addEventListener("click", (e) => {
-          socket.emit(
-            "setNewRoad",
-            this.player,
-            road.id,
-            localStorage.getItem("Room")
-          );
-          // this.view?.renderFullMap('create road')
-          socket.emit('updateMap', localStorage.getItem('Room'))
-          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-          // this.updateBuildCounter(".road__counter"); // unused function
-          road.classList.add("moveDown"); // need add class after render map (can add movedown class)
-        });
-      }
-    });
+    const buildConst = {
+      lumber: 1,
+      brick: 1,
+    }
+    const hand = {
+      lumber: player.hand.resources.lumber,
+      brick: player.hand.resources.brick,
+    }
+    if (player.roadsStock) {
+      roads.forEach((e) => {
+        const road = document.getElementById(e);
+        if (buildConst.lumber <= hand.lumber && buildConst.brick <= hand.brick) {
+          if (road && !road.classList.contains("own" ) ) {
+            road.classList.add("select__road");
+            road.addEventListener("click", (e) => {
+              socket.emit(
+                "setNewRoad",
+                this.player,
+                road.id,
+                localStorage.getItem("Room")
+              );
+              socket.emit('updateMap', localStorage.getItem('Room'))
+              socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+              // this.updateBuildCounter(".road__counter"); // unused function
+              road.classList.add("moveDown"); // need add class after render map (can add movedown class)
+            });
+          }
+        } else {
+          console.log('not money')
+        }
+      })
+    } else {console.log('no road')};
   }
 
   buildSettlement(player: IPlayerInfo) {
     const settlements = [
-      ...document.querySelectorAll(".hex__settlement_N"),
-      ...document.querySelectorAll(".hex__settlement_S"),
+      ...new Set(
+        this.player?.avalible.filter((e) => e.split("_")[1] === "settlement")
+      ),
     ];
-    settlements.forEach((settlement) => {
-      // const settlement = document.getElementById(e);
-      if (!settlement.classList.contains("own")) {
-        settlement.classList.add("select");
-        settlement.addEventListener("click", (e) => {
-          const chousen = e.target as HTMLDivElement;
-          socket.emit(
-            "setNewSettlement",
-            this.player,
-            chousen.id,
-            localStorage.getItem("Room")
-          );
-          // this.view?.renderFullMap('create settlement');
-          socket.emit('updateMap', localStorage.getItem('Room'))
-          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-          // this.updateBuildCounter(".settlement__counter"); // unused function
-          settlement.classList.add("moveDown"); //need add class after render map
-        });
-      }
-    });
+    const buildConst = {
+      lumber: 1,
+      brick: 1,
+      wool: 1,
+      grain: 1,
+    }
+    const hand = {
+      lumber: player.hand.resources.lumber,
+      brick: player.hand.resources.brick,
+      wool: player.hand.resources.wool,
+      grain: player.hand.resources.grain,
+    }
+    if (player.settlementsStock) {
+      settlements.forEach((e) => {
+        const settlement = document.getElementById(e);
+        if (buildConst.lumber <= hand.lumber && 
+            buildConst.brick <= hand.brick && 
+            buildConst.wool <= hand.wool && 
+            buildConst.grain <= hand.grain) {
+          if (settlement && !settlement?.classList.contains("own")) {
+            settlement.classList.add("select");
+            settlement.addEventListener("click", (x) => {
+              const chousen = x.target as HTMLDivElement;
+              socket.emit(
+                "setNewSettlement",
+                this.player,
+                chousen.id,
+                localStorage.getItem("Room")
+              );
+              socket.emit('updateMap', localStorage.getItem('Room'))
+              socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+              // this.updateBuildCounter(".settlement__counter"); // unused function
+              // settlement.classList.add("moveDown"); //need add class after render map
+            });
+          }
+        } else {
+          console.log('not money')
+        }
+      });
+    } else {console.log('no settlements')}
   }
 
   buildCity(player: IPlayerInfo) {
     const settlements = this.player?.settlements as Array<string>;
-    settlements.forEach((e) => {
-      const settlement = document.getElementById(e) as HTMLDivElement;
-      settlement.style.transform = "scale(0.8)";
-      settlement.addEventListener("click", (e) => {
-        if (e.target && e.target instanceof HTMLElement)
-          socket.emit(
-            "setNewCity",
-            this.player,
-            settlement.id,
-            localStorage.getItem("Room")
-          );
-          socket.emit('updateMap', localStorage.getItem('Room'))
-          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-          // e.target.classList.add("city", "moveDown"); //need add animation,
-          // maybe city need add in another place
+    const buildConst = {
+      ore: 3,
+      grain: 2,
+    }
+    const hand = {
+      ore: player.hand.resources.ore,
+      grain: player.hand.resources.grain,
+    }
+    if (player.settlementsStock) {
+      settlements.forEach((e) => {
+        const settlement = document.getElementById(e) as HTMLDivElement;
+        
+        if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain) {
+          settlement.style.transform = "scale(1.5)";
+          settlement.addEventListener("click", (e) => {
+            // this.updateBuildCounter(".city__counter"); //unused function
+            // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
+            // this.state?.updateMap();
+            if (e.target && e.target instanceof HTMLElement)
+              socket.emit(
+                "setNewCity",
+                this.player,
+                settlement.id,
+                localStorage.getItem("Room")
+              );
+              socket.emit('updateMap', localStorage.getItem('Room'))
+              socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+              // e.target.classList.add("city", "moveDown"); //need add animation,
+              // maybe city need add in another place
+          });
+        } else {
+          console.log('not money')
+        }
       });
-    });
+    } else {console.log('no city')}
   }
 
 

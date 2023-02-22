@@ -77,18 +77,16 @@ export default class State {
   }
 
   addResoursesFirstSettlement(map, player) {
-    // console.log(map[0])
     let hex
-    for (let i = 0; i < map.length; i++) {
-      const arrMap = [this.mapObject[i].settlement_N, this.mapObject[i].settlement_S]
-      for (let i = 0; i < arrMap.length; i++) {
-        if (arrMap[i]){
-          if (arrMap[i].id == player.settlements[1]) {
-            hex = arrMap[i].nextHexes
-            break
-          }
-        }    
-      }
+
+    const arrMap = [this.mapObject[Number(player.settlements[1].split("_")[0])].settlement_N, this.mapObject[Number(player.settlements[1].split("_")[0])].settlement_S]
+    for (let i = 0; i < arrMap.length; i++) {
+      if (arrMap[i]){
+        if (arrMap[i].id == player.settlements[1]) {
+          hex = arrMap[i].nextHexes
+          break
+        }
+      }    
     }
     
     for (let i = 0; i < hex.length; i++) {
@@ -175,9 +173,6 @@ export default class State {
     for (let i = 0; i < nearNodes.length; i++) {
       const hex = nearNodes[i].split("_")[0];
       const roadId = "road_" + nearNodes[i].split("_")[2];
-      // console.log('hex: '+ hex)
-      // console.log('roadId: '+ roadId)
-      // console.log(this.mapObject[hex][roadId].id)
       nearSettlments.push(...this.mapObject[hex][roadId].nextNodes);
     }
     const nearSettlmentsSet = new Set(nearSettlments);
@@ -193,7 +188,6 @@ export default class State {
 
     // add to playerInfo
     player.settlements.push(id);
-    // console.log(player)
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
     player.avalible.push(...nearNodes);
@@ -210,11 +204,6 @@ export default class State {
     player.cities.push(id);
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
-    // player.hexes.sort();
-
-    console.log(player.hexes, "hexes")
-    console.log(player.cities, "cities")
-    console.log(player.settlements, "settlements")
   }
 
   setNewRoad(map, player, id) {

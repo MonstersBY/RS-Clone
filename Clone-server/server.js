@@ -129,6 +129,7 @@ io.on("connection", (socket) => {
 
         socket.emit('players-hand', allGame.get(room).playersInfo[indexUser].hand.resources)
         socket.emit('players-stock', allGame.get(room).playersInfo[indexUser])
+        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
         io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
 
@@ -148,9 +149,13 @@ io.on("connection", (socket) => {
         allGame.get(room).playersInfo[index] = player
         allGame.get(room).playersInfo[index].settlementsStock--
         if (allGame.get(room).turn == 0) {
-            // console.log(allGame.get(room).mapObject[6])
             allGame.get(room).addResoursesFirstSettlement(allGame.get(room).mapObject, allGame.get(room).playersInfo[index])
-            socket.emit('players-hand', allGame.get(room).playersInfo[index].hand.resources)
+        }
+        if (allGame.get(room).turn > 0) {
+            allGame.get(room).playersInfo[index].hand.resources.lumber -= 1
+            allGame.get(room).playersInfo[index].hand.resources.brick -= 1
+            allGame.get(room).playersInfo[index].hand.resources.wool -= 1
+            allGame.get(room).playersInfo[index].hand.resources.grain -= 1
         }
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
         io.to(room).emit('list-players', allGame.get(room).playersInfo)
@@ -162,7 +167,12 @@ io.on("connection", (socket) => {
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
         allGame.get(room).playersInfo[index].roadsStock--
+        if (allGame.get(room).turn > 0) {
+            allGame.get(room).playersInfo[index].hand.resources.lumber -= 1
+            allGame.get(room).playersInfo[index].hand.resources.brick -= 1
+        }
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
 
     socket.on('setNewCity', (player, id, room) =>{
@@ -171,7 +181,12 @@ io.on("connection", (socket) => {
         allGame.get(room).playersInfo[index] = player
         allGame.get(room).playersInfo[index].settlementsStock++
         allGame.get(room).playersInfo[index].citiesStock--
+
+        allGame.get(room).playersInfo[index].hand.resources.ore -= 3
+        allGame.get(room).playersInfo[index].hand.resources.grain -= 2
+
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
 
     socket.on('updateMap', (room) => {
@@ -203,17 +218,11 @@ io.on("connection", (socket) => {
     })
 
     socket.on('weRollDice', (room, roll) => {
-        console.log(roll)
         allGame.get(room).diceRoll = roll;
         allGame.get(room).addResoursesThisTurn(
             (roll[0] + roll[1]),
             allGame.get(room).mapObject,
             allGame.get(room).playersInfo);
-
-
-        // console.log(allGame.get(room).diceRoll);
-        // console.log(allGame.get(room).playersInfo[0].hand)
-
     });
 
     socket.on('disconnect', () => {
