@@ -55,8 +55,9 @@ export default class Controller {
         console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
 
         const nextBtn = document.getElementById("create-new-turn");
-        nextBtn?.classList.remove("active");
         if (this.activePlayer) {
+
+          nextBtn?.classList.add("active");
           this.addListenerDices();
         } else {
           nextBtn?.classList.remove("active");
@@ -72,13 +73,14 @@ export default class Controller {
       this.addBuildFirstSettlementListener();
       // this.addRefreshListener();
       this.createNewTurn()
+      // this.addBuildAndTradeListeners();
     }, 0);
   }
 
   createNewTurn() {
     const btn = document.getElementById("create-new-turn");
     btn?.addEventListener("click", (e) => {
-      if (btn.classList.length == 3) {
+      if (btn.classList.length == 2) {
         socket.emit(
           "Next-person",
           localStorage.getItem("Room"),
@@ -92,7 +94,8 @@ export default class Controller {
   }
 
   addListenerDices() {
-    const nextBtn = document.getElementById("create-new-turn");
+    // TODO Как типизировать callback?
+    console.log("ROLL");
     if (this.canRoll) {
       document.getElementById("roll-dice")?.addEventListener(
         "click",
@@ -102,12 +105,7 @@ export default class Controller {
             const roll = this.dice.randomDiceRoll();
             this.dice.audio.play();
             this.canRoll = false;
-            nextBtn?.classList.add("active");
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
-            socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-
-            
-            this.addBuildAndTradeListeners();
           }
         },
         { once: true }
@@ -239,7 +237,6 @@ export default class Controller {
         );
         // this.updateBuildCounter(".settlement__counter"); // unused function, need delete?
         this.view?.renderFullMap();
-        socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
         // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
 
 
@@ -266,9 +263,7 @@ export default class Controller {
             localStorage.getItem("Room")
           );
 
-          // this.updateBuildCounter(".road__counter");
           this.view?.renderFullMap()
-          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
           socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
         })
       }
@@ -287,15 +282,6 @@ export default class Controller {
       if (road && !road.classList.contains("own")) {
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
-          socket.emit(
-            "setNewRoad",
-            this.player,
-            road.id,
-            localStorage.getItem("Room")
-          );
-          this.view?.renderFullMap()
-          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-          // this.updateBuildCounter(".road__counter"); // unused function
           road.classList.add("moveDown"); // need add class after render map (can add movedown class)
         });
       }
@@ -304,31 +290,17 @@ export default class Controller {
 
   buildSettlement(player: IPlayerInfo) {
     const settlements = [
-      ...document.querySelectorAll(".hex__settlement_N"),
-      ...document.querySelectorAll(".hex__settlement_S"),
+      ...new Set(
+        this.player?.avalible.filter((e) => e.split("_")[1] === "settlement")
+      ),
     ];
-    // const settlements = [
-    //   ...new Set(
-    //     this.player?.avalible.filter((e) => e.split("_")[1] === "settlement")
-    //   ),
-    // ];
     settlements.forEach((e) => {
-      // const settlement = document.getElementById(e);
-      if (!e.classList.contains("own")) {
-        e.classList.add("select");
-        e.addEventListener("click", (x) => {
-          console.log('CREATE')
-          const chousen = x.target as HTMLDivElement;
-          socket.emit(
-            "setNewSettlement",
-            this.player,
-            chousen.id,
-            localStorage.getItem("Room")
-          );
-          this.view?.renderFullMap();
-          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+      const settlement = document.getElementById(e);
+      if (settlement && !settlement.classList.contains("own")) {
+        settlement.classList.add("select");
+        settlement.addEventListener("click", (e) => {
           // this.updateBuildCounter(".settlement__counter"); // unused function
-          // settlement.classList.add("moveDown"); //need add class after render map
+          settlement.classList.add("moveDown"); //need add class after render map
         });
       }
     });
@@ -344,21 +316,21 @@ export default class Controller {
         // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
         // this.state?.updateMap();
         if (e.target && e.target instanceof HTMLElement)
-          socket.emit(
-            "setNewCity",
-            this.player,
-            settlement.id,
-            localStorage.getItem("Room")
-          );
-          this.view?.renderFullMap();
-          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-          // e.target.classList.add("city", "moveDown"); //need add animation,
-          // maybe city need add in another place
+          e.target.classList.add("city", "moveDown"); //need add animation,
+        // maybe city need add in another place
       });
     });
   }
 
+  // Unused function
 
+  /*  updateBuildCounter(sel: string) {
+    const counter = document.querySelector(sel);
+    let counterNumber = Number(counter?.textContent);
+    if (counterNumber <= 0) return;
+    if (counter) counter.textContent = `${--counterNumber}`;
+  }
+ */
   // Development cards
   buyDevelopCard() {
     // this.state?.buyDevelopmentCard(this.player1 as IPlayerInfo);
@@ -370,6 +342,7 @@ export default class Controller {
           const target = e.target.closest(".game-btn");
           if (target) {
             const name = e.target.className.split(" ")[1];
+            console.log(name);
             switch (name) {
               case "knight":
                 console.log(name, "knight");
