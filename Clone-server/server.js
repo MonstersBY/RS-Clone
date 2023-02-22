@@ -216,8 +216,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on('weRollDice', (room, roll) => {
-        // allGame.get(room).diceRoll = roll;
-        allGame.get(room).diceRoll = [2,2];
+        allGame.get(room).diceRoll = roll;
         allGame.get(room).addResoursesThisTurn(
             (roll[0] + roll[1]),
             allGame.get(room).mapObject,
