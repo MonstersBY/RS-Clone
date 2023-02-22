@@ -19,9 +19,9 @@ export default class View {
       // this.renderStaticUI(playerInfo, player) //need player and playerINfo[]
       this.renderFullMap();
       socket.emit('updateMap', localStorage.getItem('Room'))
-      this.CreatePlayers()
-      this.Resources()
-      this.BuildingStock()
+      this.createPlayers()
+      this.resources()
+      this.buildingStock()
 
       // add renderfullUI(player: number)
       }, 0);
@@ -129,7 +129,7 @@ export default class View {
   }
 
 
-  CreatePlayers() {
+  createPlayers() {
     socket.emit('give-room-list-players', localStorage.getItem('Room'), localStorage.getItem('Name'))
     socket.on('list-players', (usersInfo) => {
 
@@ -182,7 +182,7 @@ export default class View {
     })
   }
 
-  Resources() {
+  resources() {
     socket.on('players-hand', resources => {
       const lumbCount = document.getElementById('hand-counter_lumber');
       if (lumbCount != null) lumbCount.innerHTML = `${resources.lumber}`;
@@ -196,7 +196,7 @@ export default class View {
       if (oreCount != null) oreCount.innerHTML = `${resources.ore}`;
     })
   }
-  BuildingStock() {
+  buildingStock() {
     socket.on('players-stock', players => {
       const road = document.getElementById('build-road')?.querySelector('.player-stock__counter');
       if (road != null) road.innerHTML = `${players.roadsStock}`;
