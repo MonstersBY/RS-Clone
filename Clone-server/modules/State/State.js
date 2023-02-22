@@ -76,7 +76,6 @@ export default class State {
   }
 
   addResoursesFirstSettlement(map, player) {
-    // console.log(map[0])
     let hex
     for (let i = 0; i < map.length; i++) {
       const arrMap = [this.mapObject[i].settlement_N, this.mapObject[i].settlement_S]
@@ -213,9 +212,9 @@ export default class State {
     player.hexes.push(...nextHexes);
     // player.hexes.sort();
 
-    console.log(player.hexes, "hexes")
-    console.log(player.cities, "cities")
-    console.log(player.settlements, "settlements")
+    // console.log(player.hexes, "hexes")
+    // console.log(player.cities, "cities")
+    // console.log(player.settlements, "settlements")
   }
 
   setNewRoad(player, id) {
