@@ -172,9 +172,6 @@ export default class State {
     for (let i = 0; i < nearNodes.length; i++) {
       const hex = nearNodes[i].split("_")[0];
       const roadId = "road_" + nearNodes[i].split("_")[2];
-      // console.log('hex: '+ hex)
-      // console.log('roadId: '+ roadId)
-      // console.log(this.mapObject[hex][roadId].id)
       nearSettlments.push(...this.mapObject[hex][roadId].nextNodes);
     }
     const nearSettlmentsSet = new Set(nearSettlments);
@@ -190,12 +187,9 @@ export default class State {
 
     // add to playerInfo
     player.settlements.push(id);
-    // console.log(player)
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
-    // player.hexes.sort();
     player.avalible.push(...nearNodes);
-    // console.log(player.avalible);
   }
 
   setNewCity(player, id) {
@@ -209,11 +203,6 @@ export default class State {
     player.cities.push(id);
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
-    // player.hexes.sort();
-
-    // console.log(player.hexes, "hexes")
-    // console.log(player.cities, "cities")
-    // console.log(player.settlements, "settlements")
   }
 
   setNewRoad(player, id) {
