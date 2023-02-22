@@ -206,19 +206,19 @@ export default class State {
     player.hexes.push(...nextHexes);
   }
 
-  setNewRoad(map, player, id) {
+  setNewRoad(player, id) {
     // add to mapObject
     const hex = id.split("_")[0];
     const hode = "road_" + id.split("_")[2];
-    map[hex][hode].player = player.color;
+    this.mapObject[hex][hode].player = player.color;
 
-    const nearNodes = map[hex][hode].nextNodes;
+    const nearNodes = this.mapObject[hex][hode].nextNodes;
 
     let nearRoads = [];
     for (let i = 0; i < nearNodes.length; i++) {
       const hex = nearNodes[i].split("_")[0];
       const settlementId = "settlement_" + nearNodes[i].split("_")[2];
-      nearRoads.push(...map[hex][settlementId].nextNodes);
+      nearRoads.push(...this.mapObject[hex][settlementId].nextNodes);
     }
     const nearRoadsSet = new Set(nearRoads);
     nearRoadsSet.delete(id);
