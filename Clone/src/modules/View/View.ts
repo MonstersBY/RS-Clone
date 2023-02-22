@@ -30,7 +30,6 @@ export default class View {
 
   renderFullMap() {
     socket.on('renderFullMapView', mapObj => {
-      console.log('Load')
       const mapContainer = document.getElementById("map");
       if (mapContainer) {
         mapContainer.innerHTML = "";

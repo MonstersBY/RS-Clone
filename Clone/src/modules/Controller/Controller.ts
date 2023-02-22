@@ -226,28 +226,19 @@ export default class Controller {
           ...document.querySelectorAll(".hex__settlement_N"),
           ...document.querySelectorAll(".hex__settlement_S"),
         ];
-        places.forEach((e) => {
-          e.classList.remove("select");
-        });
-        socket.emit(
-          "setNewSettlement",
-          this.player,
-          chousen.id,
-          localStorage.getItem("Room")
-        );
-        // this.updateBuildCounter(".settlement__counter"); // unused function, need delete?
+
+        places.forEach((e) => { e.classList.remove("select") });
+
+        socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
         socket.emit('updateMap', localStorage.getItem('Room'))
-        // this.view?.renderFullMap('create first settlement');
         socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+
         // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
 
-
         if (this.map) {
-          this.map.onclick = null;
+          this.map.onclick = () => this.buildFirstRoadMode(chousen.dataset.next || "");
         }
-        setTimeout(() => {
-          this.buildFirstRoadMode(chousen.dataset.next || "");
-        }, 100);
+
       }
     }
   }
@@ -258,18 +249,11 @@ export default class Controller {
       if (!road.classList.contains("own")) {
         road.classList.add("select__road");
         road.addEventListener("click", (e) => {
-          socket.emit(
-            "setNewRoad",
-            this.player,
-            road.id,
-            localStorage.getItem("Room")
-          );
-
-          // this.updateBuildCounter(".road__counter");
+          socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
           socket.emit('updateMap', localStorage.getItem('Room'))
-          // this.view?.renderFullMap('create first road')
           socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
           socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
+          if (this.map) this.map.onclick = null;
         })
       }
     })
@@ -308,13 +292,12 @@ export default class Controller {
       ...document.querySelectorAll(".hex__settlement_N"),
       ...document.querySelectorAll(".hex__settlement_S"),
     ];
-    settlements.forEach((e) => {
+    settlements.forEach((settlement) => {
       // const settlement = document.getElementById(e);
-      if (!e.classList.contains("own")) {
-        e.classList.add("select");
-        e.addEventListener("click", (x) => {
-          console.log('CREATE')
-          const chousen = x.target as HTMLDivElement;
+      if (!settlement.classList.contains("own")) {
+        settlement.classList.add("select");
+        settlement.addEventListener("click", (e) => {
+          const chousen = e.target as HTMLDivElement;
           socket.emit(
             "setNewSettlement",
             this.player,
@@ -337,9 +320,6 @@ export default class Controller {
       const settlement = document.getElementById(e) as HTMLDivElement;
       settlement.style.transform = "scale(0.8)";
       settlement.addEventListener("click", (e) => {
-        // this.updateBuildCounter(".city__counter"); //unused function
-        // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
-        // this.state?.updateMap();
         if (e.target && e.target instanceof HTMLElement)
           socket.emit(
             "setNewCity",
@@ -347,7 +327,6 @@ export default class Controller {
             settlement.id,
             localStorage.getItem("Room")
           );
-          // this.view?.renderFullMap('create city');
           socket.emit('updateMap', localStorage.getItem('Room'))
           socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
           // e.target.classList.add("city", "moveDown"); //need add animation,
