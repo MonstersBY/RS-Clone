@@ -219,7 +219,6 @@ export default class Controller {
         );
         // this.updateBuildCounter(".settlement__counter"); // unused function, need delete?
         socket.emit('updateMap', localStorage.getItem('Room'))
-        // this.view?.renderFullMap('create first settlement');
         socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
         // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
 
@@ -249,7 +248,6 @@ export default class Controller {
 
           // this.updateBuildCounter(".road__counter");
           socket.emit('updateMap', localStorage.getItem('Room'))
-          // this.view?.renderFullMap('create first road')
           socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
           socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
         })
@@ -285,7 +283,6 @@ export default class Controller {
                 road.id,
                 localStorage.getItem("Room")
               );
-              // this.view?.renderFullMap('create road')
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
               // this.updateBuildCounter(".road__counter"); // unused function
@@ -334,7 +331,6 @@ export default class Controller {
                 chousen.id,
                 localStorage.getItem("Room")
               );
-              // this.view?.renderFullMap('create settlement');
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
               // this.updateBuildCounter(".settlement__counter"); // unused function
@@ -375,7 +371,6 @@ export default class Controller {
                 settlement.id,
                 localStorage.getItem("Room")
               );
-              // this.view?.renderFullMap('create city');
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
               // e.target.classList.add("city", "moveDown"); //need add animation,
