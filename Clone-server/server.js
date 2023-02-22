@@ -165,6 +165,15 @@ io.on("connection", (socket) => {
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
     })
 
+    socket.on('setNewCity', (player, id, room) =>{
+        allGame.get(room).setNewCity(player, id)
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
+        allGame.get(room).playersInfo[index] = player
+        allGame.get(room).playersInfo[index].settlementsStock++
+        allGame.get(room).playersInfo[index].citiesStock--
+        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+    })
+
     socket.on('updateMap', (room) => {
         io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
         console.log(room)
@@ -194,6 +203,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on('weRollDice', (room, roll) => {
+        console.log(roll)
         allGame.get(room).diceRoll = roll;
         allGame.get(room).addResoursesThisTurn(
             (roll[0] + roll[1]),

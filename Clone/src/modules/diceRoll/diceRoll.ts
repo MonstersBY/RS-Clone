@@ -114,21 +114,25 @@ export default class Dice {
     audio.src = "../../assets/files/6f488185486f9cf.mp3"; */
 
     function randomDice() {
-      const dieOneValue = Math.floor(Math.random() * 10);
-      const dieTwoValue = Math.floor(Math.random() * 10);
+      // Маргарита говорила  Math.round(Math.random() * 10)
+      const dieOneValue = Math.round(Math.random() * 5) +1;
+      const dieTwoValue = Math.round(Math.random() * 5) +1;
 
+      console.log(`2ROLL: ${dieOneValue} - ${dieTwoValue}`)
+      roll(dieOneValue, dieTwoValue);
+
+      return [dieOneValue, dieTwoValue];
       // console.log({dieOneValue, dieTwoValue})
-      if (
-        dieOneValue >= 1 &&
-        dieOneValue <= 6 &&
-        dieTwoValue >= 1 &&
-        dieTwoValue <= 6
-      ) {
-        roll(dieOneValue, dieTwoValue);
-        return [dieOneValue, dieTwoValue];
-      } else {
-        randomDice();
-      }
+      // if (
+      //   dieOneValue >= 1 &&
+      //   dieOneValue <= 6 &&
+      //   dieTwoValue >= 1 &&
+      //   dieTwoValue <= 6
+      // ) {
+
+      // } else {
+      //   randomDice();
+      // }
     }
 
     function roll(random1: number, random2: number) {
