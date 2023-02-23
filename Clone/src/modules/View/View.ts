@@ -112,7 +112,7 @@ export default class View {
                      ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-lumber"></div>
-                    <div id="trade__offer-counter_lumber" class="resource-counter flex-bs">0</div>
+                    <div id="trade__offer-counter_lumber" class="resource-counter invisible flex-bs">0</div>
                   `
                      : ""
                  }
@@ -145,7 +145,7 @@ export default class View {
                         ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-grain"></div>
-                    <div id="trade__offer-counter_grain" class="resource-counter flex-bs">0</div>
+                    <div id="trade__offer-counter_grain" class="resource-counter invisible flex-bs">0</div>
                     `
                         : ""
                     }

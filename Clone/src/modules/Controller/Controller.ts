@@ -266,7 +266,7 @@ export default class Controller {
         const road = document.getElementById(e);
         if (buildConst.lumber <= hand.lumber && buildConst.brick <= hand.brick) {
           if (road && !road.classList.contains("own" ) ) {
-            road.classList.add("select__road");
+            road.classList.add("select");
             road.addEventListener("click", (e) => {
               socket.emit(
                 "setNewRoad",
@@ -276,7 +276,6 @@ export default class Controller {
               );
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-              // this.updateBuildCounter(".road__counter"); // unused function
               road.classList.add("moveDown"); // need add class after render map (can add movedown class)
             });
           }
@@ -324,7 +323,7 @@ export default class Controller {
               );
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-              // this.updateBuildCounter(".settlement__counter"); // unused function
+
               // settlement.classList.add("moveDown"); //need add class after render map
             });
           }
@@ -352,7 +351,7 @@ export default class Controller {
         if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain) {
           settlement.style.transform = "scale(1.5)";
           settlement.addEventListener("click", (e) => {
-            // this.updateBuildCounter(".city__counter"); //unused function
+
             // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
             // this.state?.updateMap();
             if (e.target && e.target instanceof HTMLElement)
@@ -395,7 +394,7 @@ export default class Controller {
       this.makeOffer();
     });
     if (negativeCheck) negativeCheck.addEventListener("click", () => {
-      // this.cancellOffer();
+
       this.view?.showTradePopup(this.player as IPlayerInfo);
     });
   }
@@ -506,7 +505,6 @@ export default class Controller {
 
   increaseCounter(id: string) {
     const counterParent = document.getElementById(id);
-    console.log(counterParent);
     if (counterParent) {
       const counter = counterParent.querySelector(".resource-counter");
       counter?.classList.remove("invisible");
