@@ -127,8 +127,6 @@ io.on("connection", (socket) => {
         const index = allrooms.findIndex(findRoom => findRoom.room === room)
         const indexUser = allrooms[index].users.findIndex(findName => findName.username === name)
 
-        socket.emit('players-hand', allGame.get(room).playersInfo[indexUser].hand.resources)
-        socket.emit('players-stock', allGame.get(room).playersInfo[indexUser])
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[indexUser])
         io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
@@ -191,10 +189,18 @@ io.on("connection", (socket) => {
 
     socket.on('updateMap', (room) => {
         io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
-        console.log(room)
     })
 
-    socket.on('Next-person', (room, name) => {
+    socket.on('buy-develop-card', (player, room) => {
+        allGame.get(room).buyDevelopmentCard(player)
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
+        allGame.get(room).playersInfo[index] = player
+
+        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+    })
+
+    socket.on('Next-person', (room) => {
         if (allGame.get(room).turn) {
             if (allGame.get(room).activePlayer < allGame.get(room).playersInfo.length -1) {
                 allGame.get(room).activePlayer++

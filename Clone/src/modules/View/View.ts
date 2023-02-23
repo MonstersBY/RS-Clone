@@ -1,11 +1,16 @@
 // import State from "../../backend/State/State";
 // import Room from "../../backend/Room";
-import { IHex, ISettlement, IResources, IDevCards } from "../types/types";
+import { IHex, ISettlement, IResources, IDevCards, IPlayerInfo } from "../types/types";
 import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
 import { game } from "../StartPage/templates/gamePage";
 import socket from "../Socket";
-import { IPlayerInfo } from "../types/types";
+
+interface IStock {
+  road: number,
+  settlement: number,
+  city: number,
+}
 
 export default class View {
   constructor(
@@ -20,8 +25,8 @@ export default class View {
       this.renderFullMap();
       socket.emit('updateMap', localStorage.getItem('Room'))
       this.createPlayers()
-      this.resources()
-      this.buildingStock()
+      // this.resources()
+      // this.buildingStock()
 
       // add renderfullUI(player: number)
       }, 0);
@@ -266,29 +271,63 @@ export default class View {
     })
   }
 
-  resources() {
-    socket.on('players-hand', resources => {
-      const lumbCount = document.getElementById('hand-counter_lumber');
-      if (lumbCount != null) lumbCount.innerHTML = `${resources.lumber}`;
-      const brickCount = document.getElementById('hand-counter_brick');
-      if (brickCount != null) brickCount.innerHTML = `${resources.brick}`;
-      const woolCount = document.getElementById('hand-counter_wool');
-      if (woolCount != null) woolCount.innerHTML = `${resources.wool}`;
-      const grainCount = document.getElementById('hand-counter_grain');
-      if (grainCount != null) grainCount.innerHTML = `${resources.grain}`;
-      const oreCount = document.getElementById('hand-counter_ore');
-      if (oreCount != null) oreCount.innerHTML = `${resources.ore}`;
-    })
+  resources(player: IPlayerInfo) {
+    const resources = player.hand.resources
+    for (let key in resources) {
+      const div = document.getElementById(`player-hand_${key}`);
+      const addRes = document.getElementById(`hand-counter_${key}`);
+      if(resources[key as keyof IResources]) {
+        div?.classList.remove('empty')
+        addRes?.classList.remove('invisible')
+        if (addRes != null) addRes.innerHTML = `${resources[key as keyof IResources]}`;
+      } else {
+        div?.classList.add('empty')
+        addRes?.classList.add('invisible')
+      }
+    }
   }
-  buildingStock() {
-    socket.on('players-stock', players => {
-      const road = document.getElementById('build-road')?.querySelector('.player-stock__counter');
-      if (road != null) road.innerHTML = `${players.roadsStock}`;
-      const settlement = document.getElementById('build-settlement')?.querySelector('.player-stock__counter');
-      if (settlement != null) settlement.innerHTML = `${players.settlementsStock}`;
-      const city = document.getElementById('build-city')?.querySelector('.player-stock__counter');
-      if (city != null) city.innerHTML = `${players.citiesStock}`;
-    })
+  buildingStock(player: IPlayerInfo) {
+    const stock = {
+      road: player.roadsStock,
+      settlement: player.settlementsStock,
+      city: player.citiesStock,
+    }
+    for (let key in stock) {
+      const div = document.querySelector(`.${key}__btn`);
+      const infStock = div?.querySelector('.player-stock__counter')
+      if(stock[key as keyof IStock]) {
+        div?.classList.remove('empty')
+      } else {
+        div?.classList.add('empty')
+      }
+      if (infStock != null) infStock.innerHTML = `${stock[key as keyof IStock]}`;
+    }
+  }
+  devCardStock(player: IPlayerInfo) {
+    const development = player.hand.development
+    for (let key in development) {
+      const div = document.querySelector(`.${key}-develop__btn`);
+      const infStock = div?.querySelector('.player-stock__counter')
+      if(development[key as keyof IDevCards]) {
+        div?.classList.remove('empty')
+      } else {
+        div?.classList.add('empty')
+      }
+      if (infStock != null) infStock.innerHTML = `${development[key as keyof IDevCards]}`;
+    }
+  }
+  constructionConst(player: IPlayerInfo) {
+    const resources = player.hand.resources
+    const costDiv = document.querySelector('.construction-cost')
+    for (let key in resources) {
+      costDiv?.querySelectorAll(`.icon-${key}`).forEach((e) =>{
+        if(resources[key as keyof IResources]) {
+          e.querySelector('.icon-check')?.classList.remove('hidden')
+        } else {
+          e.querySelector('.icon-check')?.classList.add('hidden')
+        }
+      })
+    }
   }
 
   SummCards(obj: IResources | IDevCards) {

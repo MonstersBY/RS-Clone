@@ -60,13 +60,17 @@ export default class Controller {
       });
       socket.on("Change-playerInfo", (player) => {
         this.player = player;
+        this.view?.resources(this.player as IPlayerInfo);
+        this.view?.buildingStock(this.player as IPlayerInfo);
+        this.view?.devCardStock(this.player as IPlayerInfo);
+        this.view?.constructionConst(this.player as IPlayerInfo);
       });
 
       this.map = document.getElementById("map") as HTMLDivElement;
       document.body.insertAdjacentHTML("afterbegin", buttons);
 
       this.addBuildFirstSettlementListener(); //DELETE?
-      this.addBuildAndTradeListeners();
+      // this.addBuildAndTradeListeners();
 
       // error of type
       // this.addPlayCardsListener(this.player); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
@@ -77,12 +81,8 @@ export default class Controller {
   createNewTurn() {
     const btn = document.getElementById("create-new-turn");
     btn?.addEventListener("click", (e) => {
-      if (btn.classList.length == 2) {
-        socket.emit(
-          "Next-person",
-          localStorage.getItem("Room"),
-          localStorage.getItem("Name")
-        );
+      if (btn.classList.length == 3) {
+        socket.emit("Next-person",localStorage.getItem("Room"));
       }
     });
     socket.on("Client-turn", () => {
@@ -106,6 +106,7 @@ export default class Controller {
             socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
 
             this.addBuildAndTradeListeners();
+            nextBtn?.classList.add("active");
           }
         },
         { once: true }
@@ -151,8 +152,9 @@ export default class Controller {
               this.view?.showTradePopup(this.player as IPlayerInfo); // class modal toggle(maybe need only add class? or also clear curentState)
               // if(tradeWithPlayers)
               this.tradeWithPlayers(this.player as IPlayerInfo);
+              break
             case "trade-devcard__btn":
-              this.buyDevelopCard();
+              this.buyDevelopCard(this.player as IPlayerInfo);
               break;
           }
         }
@@ -234,7 +236,7 @@ export default class Controller {
           socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
           socket.emit('updateMap', localStorage.getItem('Room'))
           socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-          socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
+          socket.emit('Next-person', localStorage.getItem('Room'))
           if (this.map) this.map.onclick = null;
         })
       }
@@ -512,8 +514,23 @@ export default class Controller {
 
 
   // Development cards
-  buyDevelopCard() {
-    // this.state?.buyDevelopmentCard(this.player1 as IPlayerInfo);
+  buyDevelopCard(player: IPlayerInfo) {
+    const buildConst = {
+      ore: 1,
+      grain: 1,
+      wool: 1,
+    }
+    const hand = {
+      ore: player.hand.resources.ore,
+      grain: player.hand.resources.grain,
+      wool: player.hand.resources.wool,
+    }
+    if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain && buildConst.wool <= hand.wool) {
+      console.log('BUY DEV CARD')
+      socket.emit('buy-develop-card', player, localStorage.getItem('Room'))
+    } else {
+      console.log('not money')
+    }
   }
 
   addPlayCardsListener(player: IPlayerInfo) {

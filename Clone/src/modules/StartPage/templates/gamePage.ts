@@ -97,27 +97,27 @@ export const game = `
             </div>
           </div>
           <div id="develop-card-list" class="game-btns__wrapper flex-bs develop-cards__wrapper">
-            <div class="game-btn monopoly develop__btn">
+            <div class="game-btn monopoly-develop__btn">
               <div class="devcard__btn-icon dev-monopoly">
                 <div class="player-stock__counter flex-bs devcard__counter">1</div>
               </div>
             </div>
-            <div class="game-btn plenty develop__btn empty">
+            <div class="game-btn plenty-develop__btn empty">
               <div class="devcard__btn-icon dev-plenty">
                 <div class="player-stock__counter flex-bs devcard__counter">0</div>
               </div>
             </div>
-            <div class="game-btn road develop__btn">
+            <div class="game-btn road-develop__btn">
               <div class="devcard__btn-icon dev-road">
                 <div class="player-stock__counter flex-bs devcard__counter">1</div>
               </div>
             </div>
-            <div class="game-btn develop__btn">
+            <div class="game-btn victory-develop__btn">
               <div class="devcard__btn-icon dev-victory">
                 <div class="player-stock__counter flex-bs devcard__counter">3</div>
               </div>
             </div>
-            <div class="game-btn knight develop__btn">
+            <div class="game-btn knights-develop__btn">
               <div id="robber" class="devcard__btn-icon dev-knight">
                 <div class="player-stock__counter flex-bs devcard__counter">5</div>
               </div>
