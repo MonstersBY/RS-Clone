@@ -128,37 +128,69 @@ io.on("connection", (socket) => {
         const indexUser = allrooms[index].users.findIndex(findName => findName.username === name)
 
         socket.emit('players-hand', allGame.get(room).playersInfo[indexUser].hand.resources)
-        io.to(room).emit('list-players', allrooms[index].users, allGame.get(room).playersInfo)
+        socket.emit('players-stock', allGame.get(room).playersInfo[indexUser])
+        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[indexUser])
+        io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
 
     socket.on('isYouTurnPlayer', (room, name) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === name)
         const active = allGame.get(room).activePlayer === index ? true : false
-        console.log(allGame.get(room).playersInfo[index])
-        console.log('-----------------')
         if (allGame.get(room).turn > 0) {
             socket.emit('Turn-player', allGame.get(room).playersInfo[index], active)
         } else {
             socket.emit('firstSettlementMode', allGame.get(room).playersInfo[index], active)
         }
-
     })
 
     socket.on('setNewSettlement', (player, id, room) => {
         allGame.get(room).setNewSettlement(player, id)
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
+        allGame.get(room).playersInfo[index].settlementsStock--
+        if (allGame.get(room).turn == 0) {
+            allGame.get(room).addResoursesFirstSettlement(allGame.get(room).mapObject, allGame.get(room).playersInfo[index])
+        }
+        if (allGame.get(room).turn > 0) {
+            allGame.get(room).playersInfo[index].hand.resources.lumber -= 1
+            allGame.get(room).playersInfo[index].hand.resources.brick -= 1
+            allGame.get(room).playersInfo[index].hand.resources.wool -= 1
+            allGame.get(room).playersInfo[index].hand.resources.grain -= 1
+        }
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
+
     socket.on('setNewRoad', (player, id, room) =>{
         allGame.get(room).setNewRoad(player, id)
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
+        allGame.get(room).playersInfo[index].roadsStock--
+        if (allGame.get(room).turn > 0) {
+            allGame.get(room).playersInfo[index].hand.resources.lumber -= 1
+            allGame.get(room).playersInfo[index].hand.resources.brick -= 1
+        }
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+    })
+
+    socket.on('setNewCity', (player, id, room) =>{
+        allGame.get(room).setNewCity(player, id)
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
+        allGame.get(room).playersInfo[index] = player
+        allGame.get(room).playersInfo[index].settlementsStock++
+        allGame.get(room).playersInfo[index].citiesStock--
+
+        allGame.get(room).playersInfo[index].hand.resources.ore -= 3
+        allGame.get(room).playersInfo[index].hand.resources.grain -= 2
+
+        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
 
     socket.on('updateMap', (room) => {
         io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
+        console.log(room)
     })
 
     socket.on('Next-person', (room, name) => {
@@ -181,7 +213,6 @@ io.on("connection", (socket) => {
                 allGame.get(room).activePlayer = 0
             }
         }
-
         io.to(room).emit('Client-turn')
     })
 
@@ -191,9 +222,6 @@ io.on("connection", (socket) => {
             (roll[0] + roll[1]),
             allGame.get(room).mapObject,
             allGame.get(room).playersInfo);
-
-        console.log(allGame.get(room).diceRoll);
-        console.log(allGame.get(room).playersInfo[0].hand)
     });
 
     socket.on('disconnect', () => {

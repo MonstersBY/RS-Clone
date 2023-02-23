@@ -3,6 +3,15 @@ import { IHex } from "../types/types";
 export default class MapRenderer {
   constructor(
     private HEX_COUNT = 37,
+    private position: Array<number> = [
+            4,  6,  8, 10,
+          3,  5,  7,  9, 11,
+          2,  4,  6,  8, 10, 12,
+        1,  3,  5,  7,  9, 11, 13,
+          2,  4,  6,  8, 10, 12,
+          3,  5,  7,  9, 11,
+            4,  6,  8, 10,
+      ]
     ) {}
 
   getMapAsNodeTree(mapObject: Array<IHex>) {
@@ -48,7 +57,8 @@ export default class MapRenderer {
         <div class="hex hex_${hex.type} ${
           hex.type in types ? `version_${types[hex.type as keyof typeof types]}` : ""}${
           hex.harbor ? `harbor_${hex.harbor}` : ""}"
-          id="hex_${i}">
+          id="hex_${i}"
+          style="grid-column-start: ${this.position[i]};">
           ${hexToken}
           ${settlement_N}
           ${road_N}

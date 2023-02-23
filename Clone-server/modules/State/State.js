@@ -1,4 +1,5 @@
 import MapGenerator from "./MapGenerator.js"
+import roadCounter from "./RoadCounter.js";
 
 export default class State {
   constructor() {
@@ -22,20 +23,24 @@ export default class State {
     this.mapObject = JSON.parse(JSON.stringify(generator.generateMap(this.gameMap))); //разрываем связь
     this.playersInfo = JSON.parse(JSON.stringify(generator.generatePlayers(this.playersCount)));
     this.developmentDeck = JSON.parse(JSON.stringify(generator.generateDevelopmentDeck()));
-    //копирование объектов
     this.activePlayer = 0;
     this.foundingStage = true;
   }
 
   // Turn based events
+
+  // setDiceRoll(roll) {
+  //   this.diceRoll = roll;
+  // }
   /* setDiceRoll(roll) {
     this.diceRoll = roll;
     this.addResoursesThisTurn(roll[0]+roll[1]);
   }
  */
-  addResoursesThisTurn(dice, map, players) {
-    if (map && players) {
 
+
+  addResoursesThisTurn(dice, map, players) {
+    if (map  && players) {
       let currentHexes = []
       for (let i = 0; i < this.HEX_COUNT; i++) {
         if (map[i].token === dice && !map[i].robber) {
@@ -47,7 +52,7 @@ export default class State {
         for (let i = 0; i < player.hexes.length; i++) {
           for (let j = 0; j < currentHexes.length; j++) {
             if (player.hexes[i] === currentHexes[j]) {
-              switch (map[j].type) {
+              switch (map[currentHexes[j]].type) {
                 case "hills":
                   player.hand.resources.brick += 1;
                   break;
@@ -67,6 +72,40 @@ export default class State {
             }
           }
         }
+      }
+    }
+  }
+
+  addResoursesFirstSettlement(map, player) {
+    let hex
+
+    const arrMap = [this.mapObject[Number(player.settlements[1].split("_")[0])].settlement_N, this.mapObject[Number(player.settlements[1].split("_")[0])].settlement_S]
+    for (let i = 0; i < arrMap.length; i++) {
+      if (arrMap[i]){
+        if (arrMap[i].id == player.settlements[1]) {
+          hex = arrMap[i].nextHexes
+          break
+        }
+      }    
+    }
+    
+    for (let i = 0; i < hex.length; i++) {
+      switch (map[hex[i]].type) {
+        case "hills":
+          player.hand.resources.brick += 1;
+        break;
+        case "fields":
+          player.hand.resources.grain += 1;
+        break;
+        case "forest":
+          player.hand.resources.lumber += 1;
+        break;
+        case "mountains":
+          player.hand.resources.ore += 1;
+        break;
+        case "pasture":
+          player.hand.resources.wool += 1;
+        break;
       }
     }
   }
@@ -149,12 +188,9 @@ export default class State {
 
     // add to playerInfo
     player.settlements.push(id);
-    // console.log(player)
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
-    // player.hexes.sort();
     player.avalible.push(...nearNodes);
-    // console.log(player.avalible);
   }
 
   setNewCity(player, id) {
@@ -168,11 +204,6 @@ export default class State {
     player.cities.push(id);
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
-    // player.hexes.sort();
-
-    console.log(player.hexes, "hexes")
-    console.log(player.cities, "cities")
-    console.log(player.settlements, "settlements")
   }
 
   setNewRoad(player, id) {
@@ -197,7 +228,7 @@ export default class State {
     player.roads.push(id);
     player.avalible.push(...nearRoads, ...nearNodes);
 
-    this.calculateRoadChain(player, id, nearNodes);
+    // this.calculateRoadChain(player, id, nearNodes);
   }
 
   // Development
@@ -240,11 +271,11 @@ export default class State {
   playRoadCard(player) { }// !!!
 
   // Tecnical checks and events
-  isAnyResourse(res) {
+  #isAnyResourse(res) {
     return res.brick + res.grain + res.lumber + res.ore + res.wool;
   }
 
-  chooseRandomResourse(res) {
+  #chooseRandomResourse(res) {
     const randomNumber = new MapGenerator().randomNumber;
     const resources = ["grain", "wool", "ore", "lumber", "brick"];
     let chosen = 0;
@@ -260,8 +291,8 @@ export default class State {
   transferOneToAnother(player, victimColor) {
     for (const playerVictim of this.playersInfo) {
       if (playerVictim.color === victimColor) {
-        if (this.isAnyResourse(playerVictim.hand.resources)) {
-          const type = this.chooseRandomResourse(playerVictim.hand.resources);
+        if (this.#isAnyResourse(playerVictim.hand.resources)) {
+          const type = this.#chooseRandomResourse(playerVictim.hand.resources);
           playerVictim.hand.resources[type] -= 1;
           player.hand.resources[type] += 1;
         };
@@ -269,39 +300,37 @@ export default class State {
     }
   }
 
-  calculateRoadChain(player, id) {
-    if (player.roads.length > 4) {
-      // better start from top-left
-    }
+  calculateRoadChain(map, playerInfo, id) {
+    playerInfo.roadChain = roadCounter(map, playerInfo.color, id);
   }
 
-  calculateMaxRoadChain() {
-    for (const player of this.playersInfo) {
-      if (this.longestRoad < 5 && player.roadChain === 5) {
+  calculateMaxRoadChain(map, playersInfo) {
+    for (const player of playersInfo) {
+      if (map.longestRoad < 5 && player.roadChain === 5) {
         player.longestRoad = true;
-        this.longestRoad = 5;
+        map.longestRoad = 5;
       }
-      if (this.longestRoad >= 5 && player.roadChain > this.longestRoad) {
+      if (map.longestRoad >= 5 && player.roadChain > map.longestRoad) {
         for (const player of this.playersInfo) {
           player.longestRoad = false;
         }
-        this.longestRoad = player.roadChain;
+        map.longestRoad = player.roadChain;
         player.longestRoad = true;
       }
     }
   }
 
-  calculateMaxArmySize() {
-    for (const player of this.playersInfo) {
-      if (this.largestArmy < 3 && player.armySize === 3) {
+  calculateMaxArmySize(map, playersInfo) {
+    for (const player of playersInfo) {
+      if (map.largestArmy < 3 && player.armySize === 3) {
         player.largestArmy = true;
-        this.largestArmy = 3;
+        map.largestArmy = 3;
       }
-      if (this.largestArmy >= 3 && player.armySize > this.largestArmy) {
-        for (const player of this.playersInfo) {
+      if (map.largestArmy >= 3 && player.armySize > map.largestArmy) {
+        for (const player of playersInfo) {
           player.largestArmy = false;
         }
-        this.largestArmy = player.armySize;
+        map.largestArmy = player.armySize;
         player.largestArmy = true;
       }
     }
