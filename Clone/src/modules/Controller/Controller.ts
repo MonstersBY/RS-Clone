@@ -23,12 +23,8 @@ export default class Controller {
     this.dice.init();
     const buttons = `
     <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
-    <button id="first-set">first-set<button>
-    <button id="refresh">refresh<button>
-    <button id="random-number">random-number<button>
-    <button id="random-dice">random-dice<button>
+    <button id="first-set" style='display: none'>first-set<button>
     </div>
-
     `;
     // this.dice.init();
 
@@ -69,8 +65,6 @@ export default class Controller {
       this.map = document.getElementById("map") as HTMLDivElement;
       document.body.insertAdjacentHTML("afterbegin", buttons);
 
-      this.addBuildFirstSettlementListener();
-      // this.addRefreshListener();
       this.createNewTurn()
     }, 0);
   }
@@ -114,16 +108,6 @@ export default class Controller {
     }
   }
 
-  addBuildFirstSettlementListener() {
-    document
-      .getElementById("first-set")
-      ?.addEventListener("click", this.buildFirstSettlementMode.bind(this)); // , { once: true }
-  }
-
-  // addRefreshListener() {
-  //   document.getElementById("refresh")?.addEventListener("click", () => { this.state?.updateMap(); })
-  // }
-
   addBuildAndTradeListeners() {
     const btnsWrap = document.getElementById("build-trade-card-list");
 
@@ -148,7 +132,7 @@ export default class Controller {
             case "trade__btn":
 
               this.view?.showTradePopup();
-
+              break
               // this.trade();   // logic of trade
             case "trade-devcard__btn":
               this.buyDevelopCard();
