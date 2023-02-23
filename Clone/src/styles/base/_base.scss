@@ -118,6 +118,7 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 .error {
-  @include font(4rem, 130%, 700);
+  @include font(10rem, 150%, 700);
   justify-content: center;
+  margin: 25vh auto;
 }

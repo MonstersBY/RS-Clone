@@ -1,5 +1,8 @@
 export const game = `
       <div class="main__wrapper">
+        <div class="offer-message flex-bs">
+            <h3 class="offer-message__text">Your trade offer is sent to other players</h3>
+        </div>
         <div class="left__sidebar">
           <div id="game-menu__wrap" class="game-menu__wrap flex-bs">
             <a href="/" class="link menu__link">Home</a>
@@ -29,74 +32,6 @@ export const game = `
               </div>
             </div>
         <div class="modal-trade">
-          <div class="modal-trade__wrap">
-            <div class="trade-container__wrap flex-row">
-              <div class="trade-offer">
-                <h4 class="trade__subtitle">Give</h4>
-                <div class="resources trade__resources">
-                  <div id="trade__offer_lumber" class="resource__container resource trade__resource empty flex-bs">
-                    <div class="arrow_left"></div>
-                    <div class="resource-icon trade__resource-icon icon-lumber"></div>
-                    <div id="trade__offer-counter_lumber" class="resource-counter flex-bs">1</div>
-                  </div>
-                  <div id="trade__offer_brick" class="resource__container resource trade__resource flex-bs empty invisible">
-                    <div class="arrow_left"></div>
-                    <div class="resource-icon trade__resource-icon icon-brick"></div>
-                    <div id="trade__offer-counter_brick" class="resource-counter invisible flex-bs">0</div>
-                  </div>
-                  <div id=trade__offer_wool" class="resource__container resource trade__resource flex-bs empty invisible">
-                    <div class="arrow_left"></div>
-                    <div class="resource-icon trade__resource-icon icon-wool"></div>
-                    <div id="trade__offer-counter_wool" class="resource-counter invisible flex-bs">0</div>
-                  </div>
-                  <div id=trade__offer_grain" class="resource__container resource trade__resource empty flex-bs">
-                    <div class="arrow_left"></div>
-                    <div class="resource-icon trade__resource-icon icon-grain"></div>
-                    <div id="trade__offer-counter_grain" class="resource-counter flex-bs">2</div>
-                  </div>
-                  <div id=trade__offer_ore" class="resource__container resource trade__resource flex-bs empty invisible">
-                    <div class="arrow_left"></div>
-                    <div class="resource-icon trade__resource-icon icon-ore"></div>
-                    <div id="trade__offer-counter_ore" class="resource-counter invisible flex-bs">0</div>
-                  </div>
-                </div>
-              </div>
-              <div class="trade-wish">
-                <h4 class="trade__subtitle">Get</h4>
-                <div class="resources trade__resources">
-                  <div id="trade__wish_lumber" class="resource resource__container trade__resource empty flex-bs">
-                    <div class="resource-icon trade__resource-icon icon-lumber"></div>
-                    <div id="trade__wish-counter_lumber" class="resource-counter flex-bs">1</div>
-                    <div class="arrow_right"></div>
-                  </div>
-                  <div id="trade__wish_brick" class="resource resource__container trade__resource flex-bs empty">
-                    <div class="resource-icon trade__resource-icon icon-brick"></div>
-                    <div id="trade__wish-counter_brick" class="resource-counter invisible flex-bs">1</div>
-                    <div class="arrow_right"></div>
-                  </div>
-                  <div id="trade__wish_wool" class="resource resource__container trade__resource flex-bs empty">
-                    <div class="resource-icon trade__resource-icon icon-wool"></div>
-                    <div id="trade__wish-counter_wool" class="resource-counter invisible flex-bs">1</div>
-                    <div class="arrow_right"></div>
-                  </div>
-                  <div id="trade__wish_grain" class="resource resource__container trade__resource empty flex-bs">
-                    <div class="resource-icon trade__resource-icon icon-grain"></div>
-                    <div id="trade__wish-counter_grain" class="resource-counter flex-bs">1</div>
-                    <div class="arrow_right"></div>
-                  </div>
-                  <div id="trade__wish_ore" class="resource resource__container trade__resource flex-bs empty">
-                    <div class="resource-icon trade__resource-icon icon-ore"></div>
-                    <div id="trade__wish-counter_ore" class="resource-counter invisible flex-bs">1</div>
-                    <div class="arrow_right"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="trade__btns flex-row">
-              <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon">
-              <img src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
-            </div>
-          </div>
         </div>
         <div class="modal-trade__counteroffer">
           <div class="modal-trade__wrap">
@@ -106,8 +41,8 @@ export const game = `
             </div>
             <div class="trade-container-counteroffer__wrap flex-row">
               <div class="trade-offer">
-                <div class="resources">
-                  <div class="resource resource__container trade__resource empty flex-bs">
+                <div id="offer__container" class="resources">
+                  <div id="counteroffer-offer_lumber" class="lumber resource resource__container trade__resource empty flex-bs">
                     <div class="resource-icon trade__resource-icon icon-lumber"></div>
                     <div class="resource-counter flex-bs">1</div>
                   </div>
@@ -118,8 +53,8 @@ export const game = `
                 <div class="arrow_right"></div>
               </div>
               <div class="trade-wish">
-                <div class="resources">
-                  <div id="counteroffer_brick" class="resource__container resource trade__resource flex-bs">
+                <div id="wish__container" class="resources">
+                  <div id="counteroffer-wish_brick" class="brick resource__container resource trade__resource empty flex-bs">
                     <div class="resource-icon trade__resource-icon icon-brick"></div>
                     <div id="counteroffer-counter_brick" class="resource-counter flex-bs">1</div>
                   </div>
@@ -127,9 +62,9 @@ export const game = `
               </div>
             </div>
             <div class="trade__btns flex-row">
-              <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon">
+              <img id="offer__positive" src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon">
               <div class="btn counteroffer__btn counteroffer">Counteroffer</div>
-              <img src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
+              <img  id="offer__negative" src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
             </div>
           </div>
         </div>

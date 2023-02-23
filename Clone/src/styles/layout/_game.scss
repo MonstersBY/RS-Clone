@@ -1,4 +1,6 @@
 .main__wrapper {
+  @extend %transition;
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -18,4 +20,27 @@
   height: 5.5vh;
   width: 9vh;
   border-radius: 50%;
+}
+.offer-message {
+  @extend %transition;
+  position: absolute;
+  top: -100%;
+  left: 15%;
+  width: 20%;
+  height: 25%;
+  text-align: center;
+  background: $color-token;
+  border-radius: 8px;
+  justify-content: center;
+  visibility: hidden;
+  z-index: 25;
+  &__text {
+    @include font(2rem, 120%, 700);
+    color: $color-primary-dark;
+  }
+}
+
+.offer-message.moveDown {
+  top: 15vh;
+  visibility: visible;
 }

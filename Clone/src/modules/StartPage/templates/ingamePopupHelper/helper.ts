@@ -110,11 +110,15 @@ export const addHelper = () => {
   document.addEventListener("click", (e) => {
     if (e.target === helperBtn) {
       helperBody?.classList.toggle("hidden");
+      helperBody?.classList.toggle("moveDown");
       helperWrapper?.classList.toggle("hidden");
+      helperWrapper?.classList.toggle("moveDown");
     }
     if (e.target === helperWrapper) {
       helperBody?.classList.add("hidden");
+      helperBody?.classList.toggle("moveDown");
       helperWrapper?.classList.add("hidden");
+      helperWrapper?.classList.toggle("moveDown");
     }
   })
 }
