@@ -1,26 +1,25 @@
 import View from "../View/View";
 import Dice from "../diceRoll/diceRoll";
-import { getElementBySelector, IPlayerInfo } from "../types/types";
+import { getElementBySelector, IPlayerInfo, IResources, IOffer } from "../types/types";
 import socket from "../Socket";
 
 export default class Controller {
   constructor(
     public view?: View,
     public dice: Dice = new Dice(),
-    // public state?: State,
-    // public room?: Room,
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
     public canRoll?: boolean,
     // private timer: Timer = new Timer(),
     // private master: GameMaster = new GameMaster(),
-  ) 
+  )
   {}
 
 
   init() {
     this.dice.init();
+
     const buttons = `
     <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
     <button id="first-set" style='display: none'>first-set<button>
@@ -57,6 +56,7 @@ export default class Controller {
         if (this.activePlayer) {
           this.addListenerDices();
         }
+
       });
       socket.on("Change-playerInfo", (player) => {
         this.player = player;
@@ -65,6 +65,11 @@ export default class Controller {
       this.map = document.getElementById("map") as HTMLDivElement;
       document.body.insertAdjacentHTML("afterbegin", buttons);
 
+      this.addBuildFirstSettlementListener(); //DELETE?
+      this.addBuildAndTradeListeners();
+
+      // error of type
+      // this.addPlayCardsListener(this.player); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
       this.createNewTurn()
     }, 0);
   }
@@ -72,7 +77,7 @@ export default class Controller {
   createNewTurn() {
     const btn = document.getElementById("create-new-turn");
     btn?.addEventListener("click", (e) => {
-      if (btn.classList.length == 3) {
+      if (btn.classList.length == 2) {
         socket.emit(
           "Next-person",
           localStorage.getItem("Room"),
@@ -86,6 +91,7 @@ export default class Controller {
   }
 
   addListenerDices() {
+    // TODO Как типизировать callback?
     const nextBtn = document.getElementById("create-new-turn");
     if (this.canRoll) {
       document.getElementById("roll-dice")?.addEventListener(
@@ -96,10 +102,9 @@ export default class Controller {
             const roll = this.dice.randomDiceRoll();
             this.dice.audio.play();
             this.canRoll = false;
-            nextBtn?.classList.add("active");
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
             socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-            
+
             this.addBuildAndTradeListeners();
           }
         },
@@ -108,11 +113,24 @@ export default class Controller {
     }
   }
 
+  addBuildFirstSettlementListener() {
+    document
+      .getElementById("first-set")
+      ?.addEventListener("click", this.buildFirstSettlementMode.bind(this)); // , { once: true }
+  }
+
+  // addRefreshListener() {
+  //   document.getElementById("refresh")?.addEventListener("click", () => { this.state?.updateMap(); })
+  // }
+
+  // NEED add listener to construction cost - it independent from turn listener
+
+  //this listener add only in turn of active player
   addBuildAndTradeListeners() {
     const btnsWrap = document.getElementById("build-trade-card-list");
 
     btnsWrap?.addEventListener("click", (e: Event) => {
-      if (e.target instanceof HTMLElement) {
+      if (e.target instanceof HTMLElement && this.activePlayer) {
         const target = e.target.closest(".game-btn");
         if (target) {
           const name = target.className.split(" ")[1];
@@ -130,10 +148,9 @@ export default class Controller {
               this.view?.showConstructionCost();
               break;
             case "trade__btn":
-
-              this.view?.showTradePopup();
-              break
-              // this.trade();   // logic of trade
+              this.view?.showTradePopup(this.player as IPlayerInfo); // class modal toggle(maybe need only add class? or also clear curentState)
+              // if(tradeWithPlayers)
+              this.tradeWithPlayers(this.player as IPlayerInfo);
             case "trade-devcard__btn":
               this.buyDevelopCard();
               break;
@@ -173,44 +190,37 @@ export default class Controller {
     if (this.map) {
       this.map.onclick = this.choosePlaceSettlement.bind(this);
     }
-    // this.map?.addEventListener("click", this.choosePlaceSettlement.bind(this)); //.bind(this) , {once: true}
   }
 
   choosePlaceSettlement(e: Event) {
+    const chousen = e.target;
     if (
-      e.target instanceof HTMLDivElement &&
-      e.target.classList.contains("select")
+      chousen instanceof HTMLDivElement
+      && chousen.classList.contains("select")
+      && (chousen.classList.contains("hex__settlement_N")
+          || chousen.classList.contains("hex__settlement_S"))
     ) {
       if (
-        e.target.classList.contains("hex__settlement_N") ||
-        e.target.classList.contains("hex__settlement_S")
+        chousen.classList.contains("hex__settlement_N") ||
+        chousen.classList.contains("hex__settlement_S")
       ) {
-        const chousen = e.target;
         const places = [
           ...document.querySelectorAll(".hex__settlement_N"),
           ...document.querySelectorAll(".hex__settlement_S"),
         ];
-        places.forEach((e) => {
-          e.classList.remove("select");
-        });
-        socket.emit(
-          "setNewSettlement",
-          this.player,
-          chousen.id,
-          localStorage.getItem("Room")
-        );
-        // this.updateBuildCounter(".settlement__counter"); // unused function, need delete?
+
+        places.forEach((e) => { e.classList.remove("select") });
+
+        socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
         socket.emit('updateMap', localStorage.getItem('Room'))
         socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+
         // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
 
-
         if (this.map) {
-          this.map.onclick = null;
+          this.map.onclick = () => this.buildFirstRoadMode(chousen.dataset.next || "");
         }
-        setTimeout(() => {
-          this.buildFirstRoadMode(chousen.dataset.next || "");
-        }, 100);
+
       }
     }
   }
@@ -219,19 +229,13 @@ export default class Controller {
     next.split(",").forEach((e) => {
       const road = document.getElementById(e) as HTMLDivElement;
       if (!road.classList.contains("own")) {
-        road.classList.add("select__road");
+        road.classList.add("select");
         road.addEventListener("click", (e) => {
-          socket.emit(
-            "setNewRoad",
-            this.player,
-            road.id,
-            localStorage.getItem("Room")
-          );
-
-          // this.updateBuildCounter(".road__counter");
+          socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
           socket.emit('updateMap', localStorage.getItem('Room'))
           socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
           socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
+          if (this.map) this.map.onclick = null;
         })
       }
     })
@@ -257,7 +261,7 @@ export default class Controller {
         const road = document.getElementById(e);
         if (buildConst.lumber <= hand.lumber && buildConst.brick <= hand.brick) {
           if (road && !road.classList.contains("own" ) ) {
-            road.classList.add("select__road");
+            road.classList.add("select");
             road.addEventListener("click", (e) => {
               socket.emit(
                 "setNewRoad",
@@ -267,7 +271,6 @@ export default class Controller {
               );
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-              // this.updateBuildCounter(".road__counter"); // unused function
               road.classList.add("moveDown"); // need add class after render map (can add movedown class)
             });
           }
@@ -299,9 +302,9 @@ export default class Controller {
     if (player.settlementsStock) {
       settlements.forEach((e) => {
         const settlement = document.getElementById(e);
-        if (buildConst.lumber <= hand.lumber && 
-            buildConst.brick <= hand.brick && 
-            buildConst.wool <= hand.wool && 
+        if (buildConst.lumber <= hand.lumber &&
+            buildConst.brick <= hand.brick &&
+            buildConst.wool <= hand.wool &&
             buildConst.grain <= hand.grain) {
           if (settlement && !settlement?.classList.contains("own")) {
             settlement.classList.add("select");
@@ -315,7 +318,7 @@ export default class Controller {
               );
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-              // this.updateBuildCounter(".settlement__counter"); // unused function
+
               // settlement.classList.add("moveDown"); //need add class after render map
             });
           }
@@ -339,11 +342,11 @@ export default class Controller {
     if (player.settlementsStock) {
       settlements.forEach((e) => {
         const settlement = document.getElementById(e) as HTMLDivElement;
-        
+
         if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain) {
           settlement.style.transform = "scale(1.5)";
           settlement.addEventListener("click", (e) => {
-            // this.updateBuildCounter(".city__counter"); //unused function
+
             // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
             // this.state?.updateMap();
             if (e.target && e.target instanceof HTMLElement)
@@ -365,6 +368,148 @@ export default class Controller {
     } else {console.log('no city')}
   }
 
+  // TRADE LOGIC
+
+  tradeWithPlayers(player: IPlayerInfo) {
+    const offerContainer = document.getElementById("offer__container");
+    const wishContainer = document.getElementById("wish__container");
+    const positiveCheck = document.getElementById("offer__positive");
+    const negativeCheck = document.getElementById("offer__negative");
+
+    if (offerContainer)
+      offerContainer.addEventListener("click", (e) => {
+        this.offerHandler(e, player);
+      });
+    if (wishContainer)
+      wishContainer.addEventListener("click", (e) => {
+        this.wishHandler(e);
+      });
+
+    if (positiveCheck) positiveCheck.addEventListener("click", () => {
+      this.makeOffer();
+    });
+    if (negativeCheck) negativeCheck.addEventListener("click", () => {
+
+      this.view?.showTradePopup(this.player as IPlayerInfo);
+    });
+  }
+
+  offerHandler(e: Event, player: IPlayerInfo) {
+    if (e.target instanceof HTMLElement) {
+      const target = e.target.closest(".trade__resource");
+      if (target) {
+        const resource = target.className.split(" ")[0] as keyof IResources;
+        const id = target.id;
+        if (target.classList.contains("empty")) {
+          // когда старт, в любом случае класс удаляю, счетчик увеличиваю до 1
+          target.classList.remove("empty");
+          target.classList.add("offer");
+          this.increaseCounter(id); //must be 1 in result
+        } else {
+          const counterNumber = this.getCounterNumber(id);
+          if (counterNumber && counterNumber < player.hand.resources[resource]) {
+            this.increaseCounter(id);
+          } else {
+            return;
+          }
+        }
+      }
+    }
+  }
+  wishHandler(e: Event) {
+    if (e.target instanceof HTMLElement) {
+      const target = e.target.closest(".trade__resource");
+      if (target) {
+        const id = target.id;
+        if (target.classList.contains("empty")) {
+          // когда старт, в любом случае класс удаляю, счетчик увеличиваю до 1
+          target.classList.remove("empty");
+          target.classList.add("wish");
+          this.increaseCounter(id); //must be 1 in result
+        } else {
+          this.increaseCounter(id);
+        }
+      }
+    }
+  }
+
+  makeOffer() {
+    const offerContainer = document.getElementById("offer__container"); // maybe must get by class?
+    const wishContainer = document.getElementById("wish__container"); // to have opportunity to call this function
+    // when hadle counteroffer popup
+
+    if (offerContainer && wishContainer) {
+      // Здесь делаю объект
+      const currentOffer: IOffer = {
+        have: {
+          brick: 0,
+          grain: 0,
+          lumber: 0,
+          ore: 0,
+          wool: 0,
+        },
+        wish: {
+          brick: 0,
+          grain: 0,
+          lumber: 0,
+          ore: 0,
+          wool: 0,
+        },
+      };
+      const offerResources = offerContainer.querySelectorAll(".offer");
+      const wishResources = wishContainer.querySelectorAll(".wish");
+
+      this.addToCurrentOffer(offerResources, currentOffer.have);
+      this.addToCurrentOffer(wishResources, currentOffer.wish);
+    }
+    // need make offer another players => render counterOfferPopup (gamePage modal-trade__counteroffer)acording currentOfferState ???
+    this.showSentOfferMessage();
+    this.view?.showTradePopup(this.player as IPlayerInfo);
+  }
+
+  addToCurrentOffer(arr: NodeListOf<Element>, offerSide: IResources) {
+    arr.forEach((item) => {
+      const id = item.id;
+      const resource = item.className.split(" ")[0];
+      const counterNumber = this.getCounterNumber(id);
+      offerSide[resource as keyof typeof offerSide] = Number(counterNumber);
+    });
+  }
+
+  showSentOfferMessage() {
+    const offerMes = document.querySelector(".offer-message"); // show message about sending of offer
+    if (offerMes) {
+      offerMes.classList.add("moveDown");
+      setTimeout(() => {
+        offerMes.classList.remove("moveDown");
+        offerMes.classList.add("slideInUp");
+      }, 3000);
+    }
+  }
+
+  getCounterNumber(id: string) {
+    const counterParent = document.getElementById(id);
+    if (counterParent) {
+      const counter = counterParent.querySelector(".resource-counter");
+      if (counter) {
+        const counterTextContent = Number(counter.textContent);
+        return counterTextContent;
+      }
+    }
+  }
+
+  increaseCounter(id: string) {
+    const counterParent = document.getElementById(id);
+    if (counterParent) {
+      const counter = counterParent.querySelector(".resource-counter");
+      counter?.classList.remove("invisible");
+      let number = this.getCounterNumber(id) as number;
+      if (counter) {
+        counter.textContent = `${++number}`;
+      }
+    }
+  }
+
 
   // Development cards
   buyDevelopCard() {
@@ -372,7 +517,9 @@ export default class Controller {
   }
 
   addPlayCardsListener(player: IPlayerInfo) {
-    document.getElementById("develop-card-list")?.addEventListener("click", (e) => {
+    document
+      .getElementById("develop-card-list")
+      ?.addEventListener("click", (e) => {
         if (e.target instanceof HTMLElement) {
           const target = e.target.closest(".game-btn");
           if (target) {
@@ -397,7 +544,7 @@ export default class Controller {
                 // this.state?.playRoadCard(player);
                 this.buildRoad(player);
                 window.addEventListener(
-                  "road-builded",  // this event doesn't generate
+                  "road-builded", // this event doesn't generate
                   () => {
                     this.buildRoad(player);
                   },

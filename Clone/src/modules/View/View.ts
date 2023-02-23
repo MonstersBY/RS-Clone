@@ -28,26 +28,6 @@ export default class View {
 
   }
 
-  // Possable useless function
-  //   renderGamePage() {
-  //     const container = document.getElementById("main");
-  //     if (container) container.innerHTML = "";
-  //     container?.insertAdjacentHTML("afterbegin", game);
-
-  //   //   if (container) {
-  //   //     container.addEventListener("click", (e: Event) => {
-  //   //       const constructionBlock = document.querySelector(".construction-cost");
-  //   //       console.log(e.target);
-  //   //       if (
-  //   //         e.target instanceof HTMLDivElement &&
-  //   //         e.target.classList.contains("cost__btn")
-  //   //       ) {
-  //   //         constructionBlock?.classList.toggle("cost");
-  //   //       }
-  //   //     });
-  //   // }
-  // }
-
   renderFullMap() {
     socket.on('renderFullMapView', mapObj => {
       const mapContainer = document.getElementById("map");
@@ -56,8 +36,9 @@ export default class View {
         const mapTree = this.renderer.getMapAsNodeTree(mapObj as Array<IHex>) as string;
         mapContainer?.insertAdjacentHTML("beforeend", mapTree);
 
-        let event = new Event('mapLoad');
-        window.dispatchEvent(event);
+        let mapLoadedEvent = new CustomEvent('mapLoaded');
+        window.dispatchEvent(mapLoadedEvent);
+        console.log("mapLoaded")
       }
     })
   }
@@ -118,9 +99,112 @@ export default class View {
     modalMonopoly?.classList.toggle("modal");
   }
 
-  showTradePopup() {
+  showTradePopup(player: IPlayerInfo) {
+    const modalTradeWrap = `
+          <div class="modal-trade__wrap">
+            <div class="trade-container__wrap flex-row">
+              <div class="trade-offer">
+                <h4 class="trade__subtitle">Give</h4>
+                <div id="offer__container" class="resources trade__resources">
+                 <div id="trade__offer_lumber" class="lumber resource__container resource trade__resource empty flex-bs">
+                 ${
+                   player.hand.resources.lumber
+                     ? `
+                    <div class="arrow_left"></div>
+                    <div class="resource-icon trade__resource-icon icon-lumber"></div>
+                    <div id="trade__offer-counter_lumber" class="resource-counter invisible flex-bs">0</div>
+                  `
+                     : ""
+                 }
+                 </div>
+                 <div id="trade__offer_brick" class="brick resource__container resource trade__resource flex-bs empty">
+                  ${
+                    player.hand.resources.brick
+                      ? `
+                      <div class="arrow_left"></div>
+                    <div class="resource-icon trade__resource-icon icon-brick"></div>
+                    <div id="trade__offer-counter_brick" class="resource-counter invisible flex-bs">0</div>
+                    `
+                      : ""
+                  }
+                    </div>
+                  <div id="trade__offer_wool" class="wool resource__container resource trade__resource flex-bs empty">
+                    ${
+                      player.hand.resources.wool
+                        ? `
+                    <div class="arrow_left"></div>
+                    <div class="resource-icon trade__resource-icon icon-wool"></div>
+                    <div id="trade__offer-counter_wool" class="resource-counter invisible flex-bs">0</div>
+                      `
+                        : ""
+                    }
+                    </div>
+                  <div id="trade__offer_grain" class="grain resource__container resource trade__resource empty flex-bs">
+                    ${
+                      player.hand.resources.grain
+                        ? `
+                    <div class="arrow_left"></div>
+                    <div class="resource-icon trade__resource-icon icon-grain"></div>
+                    <div id="trade__offer-counter_grain" class="resource-counter invisible flex-bs">0</div>
+                    `
+                        : ""
+                    }
+                    </div>
+                 <div id="trade__offer_ore" class="ore resource__container resource trade__resource flex-bs empty">
+                     ${
+                       player.hand.resources.ore
+                         ? `
+                    <div class="arrow_left"></div>
+                    <div class="resource-icon trade__resource-icon icon-ore"></div>
+                    <div id="trade__offer-counter_ore" class="resource-counter invisible flex-bs">0</div>
+                      `
+                         : ""
+                     }
+                    </div>
+                </div>
+              </div>
+              <div class="trade-wish">
+                <h4 class="trade__subtitle">Get</h4>
+                <div id="wish__container" class="resources trade__resources">
+                  <div id="trade__wish_lumber" class="lumber resource resource__container trade__resource empty flex-bs">
+                    <div class="resource-icon trade__resource-icon icon-lumber"></div>
+                    <div id="trade__wish-counter_lumber" class="resource-counter invisible flex-bs">0</div>
+                    <div class="arrow_right"></div>
+                  </div>
+                  <div id="trade__wish_brick" class="brick resource resource__container trade__resource flex-bs empty">
+                    <div class="resource-icon trade__resource-icon icon-brick"></div>
+                    <div id="trade__wish-counter_brick" class="resource-counter invisible flex-bs">0</div>
+                    <div class="arrow_right"></div>
+                  </div>
+                  <div id="trade__wish_wool" class="wool resource resource__container trade__resource flex-bs empty">
+                    <div class="resource-icon trade__resource-icon icon-wool"></div>
+                    <div id="trade__wish-counter_wool" class="resource-counter invisible flex-bs">0</div>
+                    <div class="arrow_right"></div>
+                  </div>
+                  <div id="trade__wish_grain" class="grain resource resource__container trade__resource empty flex-bs">
+                    <div class="resource-icon trade__resource-icon icon-grain"></div>
+                    <div id="trade__wish-counter_grain" class="resource-counter invisible flex-bs">0</div>
+                    <div class="arrow_right"></div>
+                  </div>
+                  <div id="trade__wish_ore" class="ore resource resource__container trade__resource flex-bs empty">
+                    <div class="resource-icon trade__resource-icon icon-ore"></div>
+                    <div id="trade__wish-counter_ore" class="resource-counter invisible flex-bs">0</div>
+                    <div class="arrow_right"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="trade__btns flex-row">
+              <img id="offer__positive" src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon">
+              <img id="offer__negative" src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
+            </div>
+          </div>
+    `;
+
     const modalTrade = document.querySelector(".modal-trade");
+    if(modalTrade) modalTrade.innerHTML = "";
     modalTrade?.classList.toggle("modal");
+    modalTrade?.insertAdjacentHTML("afterbegin", modalTradeWrap);
   }
 
   showConstructionCost() {

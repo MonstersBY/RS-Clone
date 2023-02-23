@@ -191,6 +191,7 @@ io.on("connection", (socket) => {
 
     socket.on('updateMap', (room) => {
         io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
+        console.log(room)
     })
 
     socket.on('Next-person', (room, name) => {
