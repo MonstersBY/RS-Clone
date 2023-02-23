@@ -97,7 +97,6 @@ export const helperNode = `
 export const addHelper = () => {
   if (window.location.pathname === "/game") {
     const gameMenuWrap = document.getElementById("game-menu__wrap");
-    console.log(gameMenuWrap);
     gameMenuWrap?.insertAdjacentHTML("beforeend", helperNode);
   } else {
     const logoWrap = document.querySelector(".logo__wrap");
