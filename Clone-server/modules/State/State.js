@@ -2,7 +2,7 @@ import MapGenerator from "./MapGenerator.js"
 import roadCounter from "./RoadCounter.js";
 
 export default class State {
-  constructor () {
+  constructor() {
     this.playersCount = 4;
     this.gameMode = "classic";
     this.gameMap = "newbie";
@@ -55,19 +55,19 @@ export default class State {
               switch (map[currentHexes[j]].type) {
                 case "hills":
                   player.hand.resources.brick += 1;
-                break;
+                  break;
                 case "fields":
                   player.hand.resources.grain += 1;
-                break;
+                  break;
                 case "forest":
                   player.hand.resources.lumber += 1;
-                break;
+                  break;
                 case "mountains":
                   player.hand.resources.ore += 1;
-                break;
+                  break;
                 case "pasture":
                   player.hand.resources.wool += 1;
-                break;
+                  break;
               }
             }
           }
@@ -157,7 +157,7 @@ export default class State {
     player.hand.resources[get] += 1;
   }
 
-  makeExchangeProposal(player) {}// !!!
+  makeExchangeProposal(player) { }// !!!
 
   // Building
   setNewSettlement(player, id) {
@@ -236,39 +236,39 @@ export default class State {
     const resources = player.hand.resources;
     const development = player.hand.development;
     if (resources.grain > 0 &&
-        resources.ore > 0 &&
-        resources.wool > 0) {
-          resources.grain -= 1;
-          resources.ore -= 1;
-          resources.wool -= 1;
-          const topCard = this.developmentDeck.pop();
-          switch (topCard) {
-            case "road":
-              development.road += 1;
-            break;
-            case "plenty":
-              development.plenty += 1;
-            break;
-            case "monopoly":
-              development.monopoly += 1;
-            break;
-            case "knights":
-              development.knights += 1;
-            break;
-            case "victory":
-              development.victory += 1;
-            break;
-          }
+      resources.ore > 0 &&
+      resources.wool > 0) {
+      resources.grain -= 1;
+      resources.ore -= 1;
+      resources.wool -= 1;
+      const topCard = this.developmentDeck.pop();
+      switch (topCard) {
+        case "road":
+          development.road += 1;
+          break;
+        case "plenty":
+          development.plenty += 1;
+          break;
+        case "monopoly":
+          development.monopoly += 1;
+          break;
+        case "knights":
+          development.knights += 1;
+          break;
+        case "victory":
+          development.victory += 1;
+          break;
+      }
     }
   }
 
-  playKnigthCard(player) {}// !!!
+  playKnigthCard(player) { }// !!!
 
-  playMonopolyCard(player) {}// !!!
+  playMonopolyCard(player) { }// !!!
 
-  playPlentyCard(player) {}// !!!
+  playPlentyCard(player) { }// !!!
 
-  playRoadCard(player) {}// !!!
+  playRoadCard(player) { }// !!!
 
   // Tecnical checks and events
   #isAnyResourse(res) {
@@ -335,6 +335,4 @@ export default class State {
       }
     }
   }
-
 }
-

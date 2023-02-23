@@ -1,0 +1,106 @@
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.5);
+  &-dialog {
+    max-width: 45%;
+    margin: 30vh auto;
+  }
+  &-content {
+    position: relative;
+    width: 100%;
+    background: $color-token;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    max-height: 80vh;
+    overflow-y: auto;
+    .close {
+      @include font(2rem, 120%, 700);
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      color: $color-primary-dark;
+      opacity: 0.5;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+    }
+  }
+  &-header,
+  &-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(84, 87, 86, 0.3);
+    @include max-media-mobile {
+      padding: 0.5rem;
+    }
+  }
+  &-title {
+    @include font(3rem, 130%, 700);
+    color: $color-primary-dark;
+    text-align: center;
+    text-transform: uppercase;
+    @include max-media-tablet {
+      @include font(2.5rem, 120%, 700);
+    }
+  }
+  &-body {
+    @include font(2rem, 120%, 700);
+    text-align: center;
+    color: $color-btn-primary;
+    h2 {
+      @include font(2.5rem, 120%, 500);
+      text-transform: capitalize;
+      margin-bottom: 1rem;
+    }
+  }
+  &-footer {
+    @include font(3rem, 130%, 700);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    color: $color-primary-dark
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translate3d(0, -100%, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.slideInDown{
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-name: slideInDown;
+}
+.slideInUp {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-name: slideInUp;
+}
