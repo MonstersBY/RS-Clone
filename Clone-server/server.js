@@ -114,6 +114,10 @@ io.on("connection", (socket) => {
     })
 
     // game
+    socket.on('game-chatMessage', (msg, room, user) => {
+        io.to(room).emit('game-message', user, msg)
+    })
+
     socket.on('join-game-room', (room) => {
         const index = allrooms.findIndex(findRoom => findRoom.room === room)
         if (index !== -1) {
@@ -134,6 +138,7 @@ io.on("connection", (socket) => {
     socket.on('isYouTurnPlayer', (room, name) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === name)
         const active = allGame.get(room).activePlayer === index ? true : false
+        if (active) io.to(room).emit('game-message', 'Bot', `${allGame.get(room).playersInfo[index].name} turn`)
         if (allGame.get(room).turn > 0) {
             socket.emit('Turn-player', allGame.get(room).playersInfo[index], active)
         } else {

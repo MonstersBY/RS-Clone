@@ -90,13 +90,22 @@ export default class Room {
   ChatMessages() {
     const room = localStorage.getItem('Room')
     const user = localStorage.getItem('Name')
-    const chatForm = document.querySelector('.form-send__btn')
-    chatForm?.addEventListener('click', e => {
-      const msg = <HTMLInputElement>document.querySelector('.chat__input')
+    const chatBtn = document.querySelector('.form-send__btn')
+    const msg = <HTMLInputElement>document.querySelector('.chat__input')
+    chatBtn?.addEventListener('click', e => {
       if (msg?.value === '') return
       socket.emit('chatMessage', msg?.value, room, user)
       msg.value = ''
       msg.focus()
+    })
+    msg?.addEventListener('keypress', (e) => {
+      if(e.key === 'Enter'){
+        const msg = <HTMLInputElement>document.querySelector('.chat__input')
+        if (msg?.value === '') return
+        socket.emit('chatMessage', msg?.value, room, user)
+        msg.value = ''
+        msg.focus()
+      }
     })
   }
 

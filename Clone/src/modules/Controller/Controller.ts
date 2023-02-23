@@ -19,6 +19,8 @@ export default class Controller {
 
   init() {
     this.dice.init();
+    this.chatMessages()
+    this.createMessage()
 
     const buttons = `
     <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
@@ -76,6 +78,41 @@ export default class Controller {
       // this.addPlayCardsListener(this.player); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
       this.createNewTurn()
     }, 0);
+  }
+
+  chatMessages() {
+    const room = localStorage.getItem('Room')
+    const chatBtn = document.querySelector('.form-send__btn')
+    const msg = <HTMLInputElement>document.querySelector('.chat__input')
+    chatBtn?.addEventListener('click', e => {
+      if (msg?.value === '') return
+      socket.emit('game-chatMessage', msg?.value, room, this.player?.name)
+      msg.value = ''
+      msg.focus()
+    })
+    msg?.addEventListener('keypress', (e) => {
+      if(e.key === 'Enter'){
+        const msg = <HTMLInputElement>document.querySelector('.chat__input')
+        if (msg?.value === '') return
+        socket.emit('chatMessage', msg?.value, room, this.player?.name)
+        msg.value = ''
+        msg.focus()
+      }
+    })
+  }
+  createMessage() {
+    socket.on('game-message', (user, message) => {
+      const chatMessages = document.querySelector('.chat__messages')
+      this.outputMessage(user, message);
+    })
+  }
+  outputMessage(user: string, message: string) {
+    const div = document.createElement('div')
+    div.classList.add('message__post')
+    div.innerHTML = `
+    <img src="assets/images/icons/icon_player.svg" alt="icon" class="nick">
+    <b>${user}:</b> ${message}`;
+    document.querySelector('.chat__messages')?.appendChild(div)
   }
 
   createNewTurn() {

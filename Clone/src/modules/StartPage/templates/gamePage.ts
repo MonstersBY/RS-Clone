@@ -231,13 +231,13 @@ export const game = `
                 <b>some:</b> Hi
               </div>
             </div>
-            <form action="#" class="chat__form">
+            <div class="chat__form">
               <input type="text" autocomplete="off" placeholder="Say hello" maxlength='200' aria-label="Send message input"
                 class="chat__input">
-              <button class="form-send__btn">
+              <button class="form-send__btn" type="submit">
                 <img src="assets/images//icons/chat/icon__send.svg" alt="send icon" class="send__icon">
               </button>
-            </form>
+            </div>
           </div>
           <div class = "all-player-board">
           </div>
