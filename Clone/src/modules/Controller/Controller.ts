@@ -11,6 +11,7 @@ export default class Controller {
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
     public canRoll?: boolean,
+    public robbering?: boolean,
     // private timer: Timer = new Timer(),
     // private master: GameMaster = new GameMaster(),
   )
@@ -35,6 +36,7 @@ export default class Controller {
         localStorage.getItem("Room"),
         localStorage.getItem("Name")
       );
+      this.robbering = false
 
 
       socket.on("firstSettlementMode", (player, active) => {
@@ -78,6 +80,7 @@ export default class Controller {
       // this.addPlayCardsListener(this.player); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
       this.createNewTurn()
     }, 0);
+    this.countCardRobber()
   }
 
   chatMessages() {
@@ -118,7 +121,7 @@ export default class Controller {
   createNewTurn() {
     const btn = document.getElementById("create-new-turn");
     btn?.addEventListener("click", (e) => {
-      if (btn.classList.length == 3) {
+      if (btn.classList.contains('active')) {
         socket.emit("Next-person",localStorage.getItem("Room"));
       }
     });
@@ -137,18 +140,105 @@ export default class Controller {
           const target = e.target as HTMLElement;
           if (target && target.closest(".dice__container") && this.dice) {
             const roll = this.dice.randomDiceRoll();
+            // const roll = [5,2];
+
             this.dice.audio.play();
             this.canRoll = false;
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
             socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
 
-            this.addBuildAndTradeListeners();
-            nextBtn?.classList.add("active");
+            if((roll[0] + roll[1]) === 7){
+              console.log('robber')
+              this.setRobber(this.player as IPlayerInfo)
+            } else {
+              this.addBuildAndTradeListeners();
+              nextBtn?.classList.add("active");
+            }
           }
         },
         { once: true }
       );
     }
+  }
+  countCardRobber() {
+    socket.on('count-card-robber', (players) => {
+      for (let i = 0; i < players.length; i++) {
+        let sum = 0;
+        for (let cards of Object.values(players[i].hand.resources as IResources)) {
+          sum += cards;
+        }
+        if (sum > 7 && players[i].name == this.player?.name) {
+          this.deleteCard(players[i], Math.ceil(sum/2))
+        } else if (this.activePlayer) {
+          const nextBtn = document.getElementById("create-new-turn");
+          this.addBuildAndTradeListeners();
+          nextBtn?.classList.add("active");
+        }
+      }
+    })
+  }
+  deleteCard(player: IPlayerInfo, sum: number) {
+    const delInfo = document.querySelector('.player-hand__title')?.querySelector('span')
+    if (delInfo != null) delInfo.innerHTML = `delete ${sum}`;
+    const handRes = document.querySelector(".player-hand__resources");
+
+    handRes?.addEventListener("click", (e: Event) => {
+      if (e.target instanceof HTMLElement && sum != 0) {
+        const target = e.target.closest(".resource-icon");
+        if (target) {
+          const name = target.className.split(" ")[1];
+          switch (name) {
+            case "icon-lumber":
+              if(player.hand.resources.lumber) {
+                player.hand.resources.lumber--
+                sum--
+                this.view?.resources(player as IPlayerInfo);
+              }
+              break;
+            case "icon-brick":
+              if(player.hand.resources.brick) {
+                player.hand.resources.brick--
+                sum--
+                this.view?.resources(player as IPlayerInfo);
+              }
+              break;
+            case "icon-wool":
+              if(player.hand.resources.wool) {
+                player.hand.resources.wool--
+                sum--
+                this.view?.resources(player as IPlayerInfo);
+              }
+              break;
+            case "icon-grain":
+              if(player.hand.resources.grain) {
+                player.hand.resources.grain--
+                sum--
+                this.view?.resources(player as IPlayerInfo);
+              }
+              break;
+            case "icon-ore":
+              if(player.hand.resources.ore) {
+                player.hand.resources.ore--
+                sum--
+                this.view?.resources(player as IPlayerInfo);
+              }
+              break;
+          }
+          if (sum) {
+            if (delInfo != null) delInfo.innerHTML = `delete ${sum}`;
+          } else {
+            socket.emit('del-card-robber', player, localStorage.getItem("Room"))
+            if (delInfo != null) delInfo.innerHTML = ``;
+
+            if( this.activePlayer) {
+              const nextBtn = document.getElementById("create-new-turn");
+              this.addBuildAndTradeListeners();
+              nextBtn?.classList.add("active");
+            }
+          }
+        }
+      }
+    });
   }
 
   addBuildFirstSettlementListener() {
@@ -310,7 +400,7 @@ export default class Controller {
               );
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-              road.classList.add("moveDown"); // need add class after render map (can add movedown class)
+              // road.classList.add("moveDown"); // need add class after render map (can add movedown class)
             });
           }
         } else {
@@ -619,16 +709,35 @@ export default class Controller {
   }
 
   setRobber(player: IPlayerInfo) {
+    const hexs = document.querySelectorAll('.hex')
+    hexs.forEach((e) =>{
+      if (!e.querySelector('#robberIcon') && !e.classList.contains('hex_sea') && !e.classList.contains('hex_harbor')) {
+        e.classList.add('active_hex')
+        e.addEventListener('click', (e) =>{
+          if (e.target && e.target instanceof HTMLElement)
+          socket.emit(
+            "setRobber",
+            this.player,
+            (e.target as HTMLDivElement)?.id,
+            localStorage.getItem("Room")
+          );
+          socket.emit('updateMap', localStorage.getItem('Room'))
+          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+
+        })
+      }
+    })
     //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
-    this.map?.addEventListener("click", (e: MouseEvent) => {
-      if (e.target instanceof HTMLDivElement) {
-        const target = e.target.closest(".hex");
-        if (target && target.classList.contains("hex")) {
+    // this.map?.addEventListener("click", (e: MouseEvent) => {
+    //   if (e.target instanceof HTMLDivElement) {
+    //     const target = e.target.closest(".hex");
+    //     if (target && target.classList.contains("hex")) {
+
           // const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, String(target.id)); //this.player1 as IPlayerInfo,
           // this.state?.updateMap();
 
-          const robber = document.querySelector(".robber");
-          if (robber) robber.classList.add("moveDown"); //need add class after render map
+          // const robber = document.querySelector(".robber");
+          // if (robber) robber.classList.add("moveDown"); //need add class after render map
 
           /*           settlementsToRob?.forEach((e) => {
             const settlement = document.getElementById(e) as HTMLDivElement;
@@ -650,9 +759,9 @@ export default class Controller {
               );
             }
           }); */
-        }
-      }
-    });
+      //   }
+      // }
+    // });
   }
 
   choiceHandler() {

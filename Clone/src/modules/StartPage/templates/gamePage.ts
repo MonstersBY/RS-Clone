@@ -8,7 +8,7 @@ export const game = `
             <a href="/" class="link menu__link">Home</a>
           </div>
           <div id='hand' class="player-hand">
-            <div class="player-hand__title">Hand</div>
+            <div class="player-hand__title">Hand <span></span></div>
             <div class="player-hand__resources">
               <div id="player-hand_lumber" class="resource player-hand__resource flex-bs">
                 <div class="resource-icon icon-lumber"></div>

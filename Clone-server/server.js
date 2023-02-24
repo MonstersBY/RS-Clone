@@ -147,7 +147,6 @@ io.on("connection", (socket) => {
     })
 
     socket.on('setNewSettlement', (player, id, room) => {
-        // console.log(allGame.get(room).developmentDeck)
         allGame.get(room).setNewSettlement(player, id)
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
@@ -187,6 +186,22 @@ io.on("connection", (socket) => {
 
         allGame.get(room).playersInfo[index].hand.resources.ore -= 3
         allGame.get(room).playersInfo[index].hand.resources.grain -= 2
+
+        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+    })
+
+    socket.on('setRobber', (player, id, room) =>{
+        allGame.get(room).setRobber(player, id)
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
+        
+        io.to(room).emit('count-card-robber', allGame.get(room).playersInfo)
+        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+    })
+    socket.on('del-card-robber', (player, room) =>{
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
+        allGame.get(room).playersInfo[index] = player
 
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
         io.to(room).emit('list-players', allGame.get(room).playersInfo)

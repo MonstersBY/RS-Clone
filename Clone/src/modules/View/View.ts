@@ -232,6 +232,7 @@ export default class View {
         for (let i = 0; i < usersInfo.length; i++) {
           const allRes = this.SummCards(usersInfo[i].hand.resources)
           const allDev = this.SummCards(usersInfo[i].hand.development)
+          // const victoryPoin = 
           const div = document.createElement('div')
           div.classList.add('player-board')
           div.innerHTML = `
