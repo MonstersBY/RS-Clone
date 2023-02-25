@@ -10,25 +10,25 @@ export const game = `
           <div id='hand' class="player-hand">
             <div class="player-hand__title">Hand <span></span></div>
             <div class="player-hand__resources">
-              <div id="player-hand_lumber" class="resource player-hand__resource flex-bs">
+              <div id="player-hand_lumber" class="resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-lumber"></div>
-                <div id="hand-counter_lumber" class="resource-counter flex-bs">0</div>
+                <div id="hand-counter_lumber" class="resource-counter flex-bs invisible">0</div>
               </div>
-              <div id="player-hand_brick" class="resource player-hand__resource flex-bs">
+              <div id="player-hand_brick" class="resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-brick"></div>
-                <div id="hand-counter_brick" class="resource-counter flex-bs">0</div>
+                <div id="hand-counter_brick" class="resource-counter flex-bs invisible">0</div>
               </div>
-              <div id="player-hand_wool" class="resource player-hand__resource flex-bs">
+              <div id="player-hand_wool" class="resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-wool"></div>
-                <div id="hand-counter_wool" class="resource-counter flex-bs">0</div>
+                <div id="hand-counter_wool" class="resource-counter flex-bs invisible">0</div>
               </div>
-              <div id="player-hand_grain" class="resource player-hand__resource flex-bs">
+              <div id="player-hand_grain" class="resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-grain"></div>
-                <div id="hand-counter_grain" class="resource-counter flex-bs">0</div>
+                <div id="hand-counter_grain" class="resource-counter flex-bs invisible">0</div>
               </div>
-              <div id="player-hand_ore" class="resource player-hand__resource flex-bs">
+              <div id="player-hand_ore" class="resource player-hand__resource flex-bs empty">
                 <div class="resource-icon icon-ore"></div>
-                <div id="hand-counter_ore" class="resource-counter flex-bs">0</div>
+                <div id="hand-counter_ore" class="resource-counter flex-bs invisible">0</div>
               </div>
             </div>
         <div class="modal-trade">
@@ -97,9 +97,9 @@ export const game = `
             </div>
           </div>
           <div id="develop-card-list" class="game-btns__wrapper flex-bs develop-cards__wrapper">
-            <div class="game-btn monopoly-develop__btn">
+            <div class="game-btn monopoly-develop__btn  empty">
               <div class="devcard__btn-icon dev-monopoly">
-                <div class="player-stock__counter flex-bs devcard__counter">1</div>
+                <div class="player-stock__counter flex-bs devcard__counter">0</div>
               </div>
             </div>
             <div class="game-btn plenty-develop__btn empty">
@@ -107,19 +107,19 @@ export const game = `
                 <div class="player-stock__counter flex-bs devcard__counter">0</div>
               </div>
             </div>
-            <div class="game-btn road-develop__btn">
+            <div class="game-btn road-develop__btn  empty">
               <div class="devcard__btn-icon dev-road">
-                <div class="player-stock__counter flex-bs devcard__counter">1</div>
+                <div class="player-stock__counter flex-bs devcard__counter">0</div>
               </div>
             </div>
-            <div class="game-btn victory-develop__btn">
+            <div class="game-btn victory-develop__btn  empty">
               <div class="devcard__btn-icon dev-victory">
-                <div class="player-stock__counter flex-bs devcard__counter">3</div>
+                <div class="player-stock__counter flex-bs devcard__counter">0</div>
               </div>
             </div>
-            <div class="game-btn knights-develop__btn">
+            <div class="game-btn knights-develop__btn  empty">
               <div id="robber" class="devcard__btn-icon dev-knight">
-                <div class="player-stock__counter flex-bs devcard__counter">5</div>
+                <div class="player-stock__counter flex-bs devcard__counter">0</div>
               </div>
             </div>
           </div>

@@ -22,14 +22,13 @@ export default class Controller {
     this.dice.init();
     this.chatMessages()
     this.createMessage()
-
     const buttons = `
     <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
     <button id="first-set" style='display: none'>first-set<button>
     </div>
     `;
     // this.dice.init();
-
+    socket.emit('give-room-list-players', localStorage.getItem('Room'))
     setTimeout(() => {
       socket.emit(
         "isYouTurnPlayer",
@@ -62,25 +61,26 @@ export default class Controller {
         }
 
       });
-      socket.on("Change-playerInfo", (player) => {
-        this.player = player;
-        this.view?.resources(this.player as IPlayerInfo);
-        this.view?.buildingStock(this.player as IPlayerInfo);
-        this.view?.devCardStock(this.player as IPlayerInfo);
-        this.view?.constructionConst(this.player as IPlayerInfo);
+      socket.on("Change-playerInfo", (players) => {
+        const indexUser = players.findIndex((findUser: { name: string | undefined; }) => findUser.name === this.player?.name)
+        this.player = players[indexUser];
+        if (this.player){
+          this.view?.resources(this.player as IPlayerInfo);
+          this.view?.buildingStock(this.player as IPlayerInfo);
+          this.view?.devCardStock(this.player as IPlayerInfo);
+          this.view?.constructionConst(this.player as IPlayerInfo);
+        }
+        this.view?.createPlayers(players as [IPlayerInfo])
       });
 
       this.map = document.getElementById("map") as HTMLDivElement;
       document.body.insertAdjacentHTML("afterbegin", buttons);
 
-      this.addBuildFirstSettlementListener(); //DELETE?
-      // this.addBuildAndTradeListeners();
-
       // error of type
       // this.addPlayCardsListener(this.player); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
       this.createNewTurn()
     }, 0);
-    this.countCardRobber()
+    // this.countCardRobber()
   }
 
   chatMessages() {
@@ -94,7 +94,7 @@ export default class Controller {
       msg.focus()
     })
     msg?.addEventListener('keypress', (e) => {
-      if(e.key === 'Enter'){
+      if(e.key === 'Enter') {
         const msg = <HTMLInputElement>document.querySelector('.chat__input')
         if (msg?.value === '') return
         socket.emit('chatMessage', msg?.value, room, this.player?.name)
@@ -132,27 +132,26 @@ export default class Controller {
 
   addListenerDices() {
     // TODO Как типизировать callback?
-    const nextBtn = document.getElementById("create-new-turn");
     if (this.canRoll) {
       document.getElementById("roll-dice")?.addEventListener(
         "click",
         (e: Event) => {
           const target = e.target as HTMLElement;
           if (target && target.closest(".dice__container") && this.dice) {
-            const roll = this.dice.randomDiceRoll();
-            // const roll = [5,2];
+            // const roll = this.dice.randomDiceRoll();
+            const roll = [5,2];
 
             this.dice.audio.play();
             this.canRoll = false;
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
-            socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+            socket.emit('give-room-list-players', localStorage.getItem("Room"))
 
             if((roll[0] + roll[1]) === 7){
               console.log('robber')
-              this.setRobber(this.player as IPlayerInfo)
+              socket.emit('robberCheckCards', localStorage.getItem("Room"))
+              this.setRobber(this.player as IPlayerInfo, false)
             } else {
-              this.addBuildAndTradeListeners();
-              nextBtn?.classList.add("active");
+              this.activePlayerPlay()
             }
           }
         },
@@ -160,98 +159,12 @@ export default class Controller {
       );
     }
   }
-  countCardRobber() {
-    socket.on('count-card-robber', (players) => {
-      for (let i = 0; i < players.length; i++) {
-        let sum = 0;
-        for (let cards of Object.values(players[i].hand.resources as IResources)) {
-          sum += cards;
-        }
-        if (sum > 7 && players[i].name == this.player?.name) {
-          this.deleteCard(players[i], Math.ceil(sum/2))
-        } else if (this.activePlayer) {
-          const nextBtn = document.getElementById("create-new-turn");
-          this.addBuildAndTradeListeners();
-          nextBtn?.classList.add("active");
-        }
-      }
-    })
+  activePlayerPlay() {
+    const nextBtn = document.getElementById("create-new-turn");
+    this.addBuildAndTradeListeners();
+    this.addPlayCardsListener(this.player as IPlayerInfo);
+    nextBtn?.classList.add("active");
   }
-  deleteCard(player: IPlayerInfo, sum: number) {
-    const delInfo = document.querySelector('.player-hand__title')?.querySelector('span')
-    if (delInfo != null) delInfo.innerHTML = `delete ${sum}`;
-    const handRes = document.querySelector(".player-hand__resources");
-
-    handRes?.addEventListener("click", (e: Event) => {
-      if (e.target instanceof HTMLElement && sum != 0) {
-        const target = e.target.closest(".resource-icon");
-        if (target) {
-          const name = target.className.split(" ")[1];
-          switch (name) {
-            case "icon-lumber":
-              if(player.hand.resources.lumber) {
-                player.hand.resources.lumber--
-                sum--
-                this.view?.resources(player as IPlayerInfo);
-              }
-              break;
-            case "icon-brick":
-              if(player.hand.resources.brick) {
-                player.hand.resources.brick--
-                sum--
-                this.view?.resources(player as IPlayerInfo);
-              }
-              break;
-            case "icon-wool":
-              if(player.hand.resources.wool) {
-                player.hand.resources.wool--
-                sum--
-                this.view?.resources(player as IPlayerInfo);
-              }
-              break;
-            case "icon-grain":
-              if(player.hand.resources.grain) {
-                player.hand.resources.grain--
-                sum--
-                this.view?.resources(player as IPlayerInfo);
-              }
-              break;
-            case "icon-ore":
-              if(player.hand.resources.ore) {
-                player.hand.resources.ore--
-                sum--
-                this.view?.resources(player as IPlayerInfo);
-              }
-              break;
-          }
-          if (sum) {
-            if (delInfo != null) delInfo.innerHTML = `delete ${sum}`;
-          } else {
-            socket.emit('del-card-robber', player, localStorage.getItem("Room"))
-            if (delInfo != null) delInfo.innerHTML = ``;
-
-            if( this.activePlayer) {
-              const nextBtn = document.getElementById("create-new-turn");
-              this.addBuildAndTradeListeners();
-              nextBtn?.classList.add("active");
-            }
-          }
-        }
-      }
-    });
-  }
-
-  addBuildFirstSettlementListener() {
-    document
-      .getElementById("first-set")
-      ?.addEventListener("click", this.buildFirstSettlementMode.bind(this)); // , { once: true }
-  }
-
-  // addRefreshListener() {
-  //   document.getElementById("refresh")?.addEventListener("click", () => { this.state?.updateMap(); })
-  // }
-
-  // NEED add listener to construction cost - it independent from turn listener
 
   //this listener add only in turn of active player
   addBuildAndTradeListeners() {
@@ -289,23 +202,6 @@ export default class Controller {
     });
   }
 
-  /* addRobberListener() {
-    document.getElementById("robber")?.addEventListener("click", () => { this.setRobber(this.player1 as IPlayerInfo); })
-  } */
-
-  // addAvaliableListener(player: IPlayerInfo) {
-  //   const mapContainer = document.querySelector("#map");
-  //   mapContainer?.addEventListener("click", e => {
-  //     if (e.target instanceof HTMLDivElement) {
-  //       if (e.target.classList.contains("hex_node")) {
-  //         if (e.target.classList.contains("active")) {
-  //           player.avalible.push(...e.target.dataset.next?.split(",") as Array<string>);
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
-
   buildFirstSettlementMode() {
     const places = [
       ...document.querySelectorAll(".hex__settlement_N"),
@@ -342,7 +238,7 @@ export default class Controller {
 
         socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
         socket.emit('updateMap', localStorage.getItem('Room'))
-        socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+        socket.emit('give-room-list-players', localStorage.getItem("Room"))
 
         // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
 
@@ -362,7 +258,7 @@ export default class Controller {
         road.addEventListener("click", (e) => {
           socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
           socket.emit('updateMap', localStorage.getItem('Room'))
-          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+          socket.emit('give-room-list-players', localStorage.getItem("Room"))
           socket.emit('Next-person', localStorage.getItem('Room'))
           if (this.map) this.map.onclick = null;
         })
@@ -399,7 +295,7 @@ export default class Controller {
                 localStorage.getItem("Room")
               );
               socket.emit('updateMap', localStorage.getItem('Room'))
-              socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+              socket.emit('give-room-list-players', localStorage.getItem("Room"))
               // road.classList.add("moveDown"); // need add class after render map (can add movedown class)
             });
           }
@@ -446,7 +342,7 @@ export default class Controller {
                 localStorage.getItem("Room")
               );
               socket.emit('updateMap', localStorage.getItem('Room'))
-              socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+              socket.emit('give-room-list-players', localStorage.getItem("Room"))
 
               // settlement.classList.add("moveDown"); //need add class after render map
             });
@@ -486,7 +382,7 @@ export default class Controller {
                 localStorage.getItem("Room")
               );
               socket.emit('updateMap', localStorage.getItem('Room'))
-              socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+              socket.emit('give-room-list-players', localStorage.getItem("Room"))
               // e.target.classList.add("city", "moveDown"); //need add animation,
               // maybe city need add in another place
           });
@@ -669,22 +565,21 @@ export default class Controller {
           if (target) {
             const name = e.target.className.split(" ")[1];
             switch (name) {
-              case "knight":
-                console.log(name, "knight");
-                // this.state?.playKnigthCard(player);
+              case "dev-knight":
+                console.log("knight");
+                this.setRobber(player, true);
                 this.playKnightCard(player);
-                this.setRobber(player);
                 break;
-              case "monopoly":
+              case "dev-monopoly":
                 this.view?.showMonopolyPopup();
                 // this.state?.playMonopolyCard(player);
                 // this.state?.useMonopolyEffect(player, this.choiceHandler());
                 break;
-              case "plenty":
+              case "dev-plenty":
                 this.view?.showPlentyPopup();
                 // this.state?.playPlentyCard(player);
                 break;
-              case "road":
+              case "dev-road":
                 // this.state?.playRoadCard(player);
                 this.buildRoad(player);
                 window.addEventListener(
@@ -702,13 +597,10 @@ export default class Controller {
   }
 
   playKnightCard(player: IPlayerInfo) {
-    player.hand.development.knights -= 1;
-    player.armySize += 1;
-    // this.state?.calculateArmySize();
-    // this.setRobber(player);
+    // socket.emit('give-room-list-players', localStorage.getItem('Room'), player.name)
   }
 
-  setRobber(player: IPlayerInfo) {
+  setRobber(player: IPlayerInfo, knight: boolean) {
     const hexs = document.querySelectorAll('.hex')
     hexs.forEach((e) =>{
       if (!e.querySelector('#robberIcon') && !e.classList.contains('hex_sea') && !e.classList.contains('hex_harbor')) {
@@ -719,15 +611,17 @@ export default class Controller {
             "setRobber",
             this.player,
             (e.target as HTMLDivElement)?.id,
-            localStorage.getItem("Room")
+            localStorage.getItem("Room"),
+            knight
           );
           socket.emit('updateMap', localStorage.getItem('Room'))
-          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-
+          socket.emit('give-room-list-players', localStorage.getItem("Room"))
+          this.takeFromRobber()
+          this.activePlayerPlay()
         })
       }
     })
-    //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
+        //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
     // this.map?.addEventListener("click", (e: MouseEvent) => {
     //   if (e.target instanceof HTMLDivElement) {
     //     const target = e.target.closest(".hex");
@@ -762,6 +656,20 @@ export default class Controller {
       //   }
       // }
     // });
+  }
+  takeFromRobber() {
+    socket.on('take-one-res', sett => {
+      const colors: string[] = []
+      sett.forEach((e: string) =>{
+        const div = document.getElementById(e) as HTMLDivElement
+        if (div?.classList.contains('own') && !div?.classList.contains(`own_${this.player?.color}`)) {
+          if (div?.classList[3].split("_")[1] != 'nobody') {
+            colors.push(div?.classList[3].split("_")[1])
+          }
+        }
+      })
+      socket.emit('transfer-one-to-another', this.player,localStorage.getItem("Room"), colors[Math.floor(Math.random() * colors.length)])
+    })
   }
 
   choiceHandler() {

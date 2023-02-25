@@ -126,13 +126,8 @@ io.on("connection", (socket) => {
         }
     })
 
-    socket.on('give-room-list-players', (room, name) => {
-
-        const index = allrooms.findIndex(findRoom => findRoom.room === room)
-        const indexUser = allrooms[index].users.findIndex(findName => findName.username === name)
-
-        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[indexUser])
-        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+    socket.on('give-room-list-players', (room) => {
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
 
     socket.on('isYouTurnPlayer', (room, name) =>{
@@ -160,8 +155,7 @@ io.on("connection", (socket) => {
             allGame.get(room).playersInfo[index].hand.resources.wool -= 1
             allGame.get(room).playersInfo[index].hand.resources.grain -= 1
         }
-        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
-        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
 
     socket.on('setNewRoad', (player, id, room) =>{
@@ -173,8 +167,7 @@ io.on("connection", (socket) => {
             allGame.get(room).playersInfo[index].hand.resources.lumber -= 1
             allGame.get(room).playersInfo[index].hand.resources.brick -= 1
         }
-        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
-        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
 
     socket.on('setNewCity', (player, id, room) =>{
@@ -187,24 +180,34 @@ io.on("connection", (socket) => {
         allGame.get(room).playersInfo[index].hand.resources.ore -= 3
         allGame.get(room).playersInfo[index].hand.resources.grain -= 2
 
-        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
-        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
 
-    socket.on('setRobber', (player, id, room) =>{
-        allGame.get(room).setRobber(player, id)
+    socket.on('setRobber', (player, id, room, knights) =>{
+        const sett = allGame.get(room).setRobber(player, id)
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
-        
-        io.to(room).emit('count-card-robber', allGame.get(room).playersInfo)
-        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
-        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+        if(knights) {
+            allGame.get(room).playersInfo[index].hand.development.knights -=1
+            allGame.get(room).playersInfo[index].armySize +=1
+        }
+        socket.emit('take-one-res', sett)
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
+    })
+    socket.on('robberCheckCards',(room) =>{
+        allGame.get(room).countCardRobber(allGame.get(room).playersInfo)
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
+    })
+    socket.on('transfer-one-to-another', (player, room, color) =>{
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
+        allGame.get(room).transferOneToAnother(player, color)
+        allGame.get(room).playersInfo[index] = player
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
     socket.on('del-card-robber', (player, room) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
 
-        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
-        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
 
     socket.on('updateMap', (room) => {
@@ -216,8 +219,7 @@ io.on("connection", (socket) => {
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
 
-        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
-        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
 
     socket.on('Next-person', (room) => {

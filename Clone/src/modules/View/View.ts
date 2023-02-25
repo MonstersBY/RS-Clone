@@ -21,14 +21,8 @@ export default class View {
 
     init() {
       setTimeout(() => {
-      // this.renderStaticUI(playerInfo, player) //need player and playerINfo[]
       this.renderFullMap();
       socket.emit('updateMap', localStorage.getItem('Room'))
-      this.createPlayers()
-      // this.resources()
-      // this.buildingStock()
-
-      // add renderfullUI(player: number)
       }, 0);
 
   }
@@ -217,11 +211,7 @@ export default class View {
     constructionBlock?.classList.toggle("modal");
   }
 
-
-  createPlayers() {
-    socket.emit('give-room-list-players', localStorage.getItem('Room'), localStorage.getItem('Name'))
-    socket.on('list-players', (usersInfo) => {
-
+  createPlayers(usersInfo: [IPlayerInfo]) {
         const list = document.querySelector('.all-player-board')
 
         const color = ['red', 'blue', 'green', 'orange']
@@ -269,7 +259,6 @@ export default class View {
 
           list?.appendChild(div)
           }
-    })
   }
 
   resources(player: IPlayerInfo) {

@@ -281,11 +281,61 @@ export default class State {
     let chosen = 0;
     let i;
     do {
-      i = randomNumber(0, 4);
+      i = Math.floor(Math.random() * 5);
       chosen = res[resources[i]];
     }
     while (!chosen)
     return resources[i];
+  }
+
+  countCardRobber(players) {
+    for (let i = 0; i < players.length; i++) {
+      let sum = 0;
+      for (let cards of Object.values(players[i].hand.resources)) {
+        sum += cards;
+      }
+      if (sum > 7) {
+        this.deleteCard(players[i], Math.ceil(sum/2))
+      }
+    }
+  }
+  deleteCard(player, sum) {
+    const resources = ["grain", "wool", "ore", "lumber", "brick"];
+    for (let i = 0; i < sum;) {
+      const j = Math.floor(Math.random() * 5)
+      switch (resources[j]) {
+        case 'grain':
+          if(player.hand.resources.grain) {
+            player.hand.resources.grain--
+            i++
+          }
+          break;
+        case 'wool':
+          if(player.hand.resources.wool) {
+            player.hand.resources.wool--
+            i++
+          }
+          break;
+        case 'ore':
+          if(player.hand.resources.ore) {
+            player.hand.resources.ore--
+            i++
+          }
+          break;
+        case 'lumber':
+          if(player.hand.resources.lumber) {
+            player.hand.resources.lumber--
+            i++
+          }
+          break;
+        case 'brick':
+          if(player.hand.resources.brick) {
+            player.hand.resources.brick--
+            i++
+          }
+          break;
+      }
+    }
   }
 
   transferOneToAnother(player, victimColor) {
