@@ -262,13 +262,21 @@ io.on("connection", (socket) => {
             allGame.get(room).playersInfo);
     });
 
+    socket.on('playMonopolyCard', (room, player, resource) =>{
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
+        allGame.get(room).monopolyCard(allGame.get(room).playersInfo, player, resource)
+        allGame.get(room).playersInfo[index] = player
+
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
+    })
+
 
     socket.on('playDevelopRoads', (room, player) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index].hand.development.road--
 
-        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
-        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
 
     socket.on('disconnect', () => {

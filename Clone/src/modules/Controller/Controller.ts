@@ -569,19 +569,16 @@ export default class Controller {
             switch (name) {
               case "dev-knight":
                 this.setRobber(player, true);
-                this.playKnightCard(player);
                 break;
               case "dev-monopoly":
                 this.view?.showMonopolyPopup();
-                // this.state?.playMonopolyCard(player);
-                // this.state?.useMonopolyEffect(player, this.choiceHandler());
+                this.playMonopolyCard(player)
                 break;
               case "dev-plenty":
                 this.view?.showPlentyPopup();
                 // this.state?.playPlentyCard(player);
                 break;
               case "dev-road":
-                // case "dev-road":
                 if (this.player?.hand.development.road) {
                   this.buildRoad(player, true);
                   window.addEventListener(
@@ -600,8 +597,20 @@ export default class Controller {
       });
   }
 
-  playKnightCard(player: IPlayerInfo) {
-    // socket.emit('give-room-list-players', localStorage.getItem('Room'), player.name)
+  playMonopolyCard(player: IPlayerInfo){
+    const div = document.querySelector('.monopoly-choose')
+    div?.addEventListener('click', (e) =>{
+      if((e.target as HTMLDivElement)?.classList.contains('ready_take')) {
+        const res = div.querySelectorAll('.choose-checkbox')
+        res.forEach((e) =>{
+          if ((e as HTMLInputElement).checked) {
+            const res = e.classList[1].split("_")[1]
+            socket.emit('playMonopolyCard', localStorage.getItem('Room'), player, res)
+            this.view?.showMonopolyPopup();
+          }
+        })
+      }
+    })
   }
 
   setRobber(player: IPlayerInfo, knight: boolean) {
