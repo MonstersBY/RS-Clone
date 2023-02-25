@@ -55,8 +55,8 @@ export default class Controller {
         console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
 
         const nextBtn = document.getElementById("create-new-turn");
+        nextBtn?.classList.remove("active");
         if (this.activePlayer) {
-          nextBtn?.classList.remove("active");
           this.addListenerDices();
         }
 
@@ -78,7 +78,7 @@ export default class Controller {
   createNewTurn() {
     const btn = document.getElementById("create-new-turn");
     btn?.addEventListener("click", (e) => {
-      if (btn.classList.length == 2) {
+      if (btn.classList.contains("active")) {
         socket.emit(
           "Next-person",
           localStorage.getItem("Room"),
@@ -106,7 +106,7 @@ export default class Controller {
             this.canRoll = false;
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
             socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-            
+            nextBtn?.classList.add("active");
             this.addBuildAndTradeListeners();
           }
         },
@@ -147,10 +147,8 @@ export default class Controller {
               this.view?.showConstructionCost();
               break;
             case "trade__btn":
-
               this.view?.showTradePopup();
-
-              // this.trade();   // logic of trade
+              break;
             case "trade-devcard__btn":
               this.buyDevelopCard();
               break;
@@ -159,23 +157,6 @@ export default class Controller {
       }
     });
   }
-
-  /* addRobberListener() {
-    document.getElementById("robber")?.addEventListener("click", () => { this.setRobber(this.player1 as IPlayerInfo); })
-  } */
-
-  // addAvaliableListener(player: IPlayerInfo) {
-  //   const mapContainer = document.querySelector("#map");
-  //   mapContainer?.addEventListener("click", e => {
-  //     if (e.target instanceof HTMLDivElement) {
-  //       if (e.target.classList.contains("hex_node")) {
-  //         if (e.target.classList.contains("active")) {
-  //           player.avalible.push(...e.target.dataset.next?.split(",") as Array<string>);
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
 
   buildFirstSettlementMode() {
     const places = [
@@ -215,12 +196,14 @@ export default class Controller {
         socket.emit('updateMap', localStorage.getItem('Room'))
         socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
 
-        // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
+        window.addEventListener("settlementSet", () => {
+          window.addEventListener("mapLoaded", () => {
+            this.buildFirstRoadMode(chousen.dataset.next || "")
+          }, {once: true})
+        }, {once: true})
 
-        if (this.map) {
-          this.map.onclick = () => this.buildFirstRoadMode(chousen.dataset.next || "");
-        }
-
+        let settlementSetEvent = new CustomEvent('settlementSet');
+        window.dispatchEvent(settlementSetEvent);
       }
     }
   }
@@ -243,11 +226,13 @@ export default class Controller {
 
   // Building
   buildRoad(player: IPlayerInfo) {
+    console.log("road: im in!")
     const roads = [
       ...new Set(
         this.player?.avalible.filter((e) => e.split("_")[1] === "road")
       ),
     ];
+    console.log(roads);
     const buildConst = {
       lumber: 1,
       brick: 1,
@@ -260,9 +245,10 @@ export default class Controller {
       roads.forEach((e) => {
         const road = document.getElementById(e);
         if (buildConst.lumber <= hand.lumber && buildConst.brick <= hand.brick) {
-          if (road && !road.classList.contains("own" ) ) {
-            road.classList.add("select__road");
+          if (road && !road.classList.contains("own")) {
+            road.classList.add("select");
             road.addEventListener("click", (e) => {
+              console.log("im in road.eventListener!")
               socket.emit(
                 "setNewRoad",
                 this.player,
@@ -270,10 +256,9 @@ export default class Controller {
                 localStorage.getItem("Room")
               );
               socket.emit('updateMap', localStorage.getItem('Room'))
+              socket.emit('roadCounter', localStorage.getItem('Room'), this.player, road.id);
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-              // this.updateBuildCounter(".road__counter"); // unused function
-              road.classList.add("moveDown"); // need add class after render map (can add movedown class)
-            });
+            }); //, {once: true}
           }
         } else {
           console.log('not money')
@@ -401,7 +386,7 @@ export default class Controller {
                 // this.state?.playRoadCard(player);
                 this.buildRoad(player);
                 window.addEventListener(
-                  "road-builded",  // this event doesn't generate
+                  "road-builded",
                   () => {
                     this.buildRoad(player);
                   },

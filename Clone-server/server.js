@@ -1,5 +1,6 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
+import roadCounter from "./modules/State/RoadCounter.js";
 import State from './modules/State/State.js';
 
 const httpServer = createServer();
@@ -190,7 +191,6 @@ io.on("connection", (socket) => {
 
     socket.on('updateMap', (room) => {
         io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
-        console.log(room)
     })
 
     socket.on('Next-person', (room, name) => {
@@ -222,6 +222,15 @@ io.on("connection", (socket) => {
             (roll[0] + roll[1]),
             allGame.get(room).mapObject,
             allGame.get(room).playersInfo);
+    });
+
+    socket.on('roadCounter', (room, player, roadId) => {
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
+        allGame.get(room).playersInfo[index].roadChain = roadCounter(
+            allGame.get(room).mapObject,
+            player.color, 
+            roadId
+        );
     });
 
     socket.on('disconnect', () => {
