@@ -7,11 +7,11 @@ export const getEmptyPlayer = () => {
 
     hand: {
       resources: {
-        brick: 10,
-        grain: 10,
-        lumber: 10,
-        ore: 10,
-        wool: 10,
+        brick: 0,
+        grain: 0,
+        lumber: 0,
+        ore: 0,
+        wool: 0,
       },
       development: {
         victory: 0,

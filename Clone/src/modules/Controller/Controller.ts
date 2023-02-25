@@ -150,7 +150,7 @@ export default class Controller {
               break;
             case "trade__btn":
 
-              this.view?.showTradePopup();
+              this.view?.showTradePopup(this.player as IPlayerInfo);
 
               // this.trade();   // logic of trade
               break;
@@ -380,7 +380,7 @@ export default class Controller {
     });
     if (negativeCheck) negativeCheck.addEventListener("click", () => {
 
-      this.view?.showTradePopup();
+      this.view?.showTradePopup(this.player as IPlayerInfo);
     });
   }
 
@@ -454,7 +454,7 @@ export default class Controller {
     }
     // need make offer another players => render counterOfferPopup (gamePage modal-trade__counteroffer)acording currentOfferState ???
     this.showSentOfferMessage();
-    this.view?.showTradePopup();
+    this.view?.showTradePopup(this.player as IPlayerInfo);
   }
 
   addToCurrentOffer(arr: NodeListOf<Element>, offerSide: IResources) {
