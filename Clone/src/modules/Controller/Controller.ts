@@ -27,7 +27,6 @@ export default class Controller {
     <button id="first-set" style='display: none'>first-set<button>
     </div>
     `;
-    // this.dice.init();
     socket.emit('give-room-list-players', localStorage.getItem('Room'))
     setTimeout(() => {
       socket.emit(
@@ -64,6 +63,7 @@ export default class Controller {
       socket.on("Change-playerInfo", (players) => {
         const indexUser = players.findIndex((findUser: { name: string | undefined; }) => findUser.name === this.player?.name)
         this.player = players[indexUser];
+        console.log(this.player)
         if (this.player){
           this.view?.resources(this.player as IPlayerInfo);
           this.view?.buildingStock(this.player as IPlayerInfo);
@@ -138,8 +138,8 @@ export default class Controller {
         (e: Event) => {
           const target = e.target as HTMLElement;
           if (target && target.closest(".dice__container") && this.dice) {
-            // const roll = this.dice.randomDiceRoll();
-            const roll = [5,2];
+            const roll = this.dice.randomDiceRoll();
+            // const roll = [5,2];
 
             this.dice.audio.play();
             this.canRoll = false;
@@ -614,48 +614,12 @@ export default class Controller {
             localStorage.getItem("Room"),
             knight
           );
-          socket.emit('updateMap', localStorage.getItem('Room'))
           socket.emit('give-room-list-players', localStorage.getItem("Room"))
           this.takeFromRobber()
           this.activePlayerPlay()
         })
       }
     })
-        //На левой клетке в среднем ряду сыпет ошибки Uncaught TypeError: Cannot read properties of null (reading 'classList')
-    // this.map?.addEventListener("click", (e: MouseEvent) => {
-    //   if (e.target instanceof HTMLDivElement) {
-    //     const target = e.target.closest(".hex");
-    //     if (target && target.classList.contains("hex")) {
-
-          // const settlementsToRob = this.state?.setRobber(this.player1 as IPlayerInfo, String(target.id)); //this.player1 as IPlayerInfo,
-          // this.state?.updateMap();
-
-          // const robber = document.querySelector(".robber");
-          // if (robber) robber.classList.add("moveDown"); //need add class after render map
-
-          /*           settlementsToRob?.forEach((e) => {
-            const settlement = document.getElementById(e) as HTMLDivElement;
-            if (
-              settlement.classList.contains("own") &&
-              !settlement.classList.contains("own_nobody") &&
-              !settlement.classList.contains(`own_${player.color}`)
-            ) {
-              settlement.classList.add("select");
-              settlement.addEventListener(
-                "click",
-                (e) => {
-                  this.state?.transferOneToAnother(
-                    player,
-                    settlement.classList[3]
-                  );
-                },
-                { once: true }
-              );
-            }
-          }); */
-      //   }
-      // }
-    // });
   }
   takeFromRobber() {
     socket.on('take-one-res', sett => {

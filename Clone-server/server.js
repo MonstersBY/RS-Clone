@@ -192,6 +192,7 @@ io.on("connection", (socket) => {
         }
         socket.emit('take-one-res', sett)
         io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
+        io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
     })
     socket.on('robberCheckCards',(room) =>{
         allGame.get(room).countCardRobber(allGame.get(room).playersInfo)
