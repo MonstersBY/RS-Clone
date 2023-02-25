@@ -37,7 +37,6 @@ export default class View {
 
         let mapLoadedEvent = new CustomEvent('mapLoaded');
         window.dispatchEvent(mapLoadedEvent);
-        console.log("mapLoaded")
       }
     })
   }
