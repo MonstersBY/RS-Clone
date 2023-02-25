@@ -63,7 +63,6 @@ export default class Controller {
       socket.on("Change-playerInfo", (players) => {
         const indexUser = players.findIndex((findUser: { name: string | undefined; }) => findUser.name === this.player?.name)
         this.player = players[indexUser];
-        console.log(this.player)
         if (this.player){
           this.view?.resources(this.player as IPlayerInfo);
           this.view?.buildingStock(this.player as IPlayerInfo);
@@ -121,17 +120,8 @@ export default class Controller {
   createNewTurn() {
     const btn = document.getElementById("create-new-turn");
     btn?.addEventListener("click", (e) => {
-<<<<<<< HEAD
       if (btn.classList.contains('active')) {
         socket.emit("Next-person",localStorage.getItem("Room"));
-=======
-      if (btn.classList.contains("active")) {
-        socket.emit(
-          "Next-person",
-          localStorage.getItem("Room"),
-          localStorage.getItem("Name")
-        );
->>>>>>> 26380a72ee4d97b228164923e049ed673c7d41e9
       }
     });
     socket.on("Client-turn", () => {
@@ -153,21 +143,14 @@ export default class Controller {
             this.dice.audio.play();
             this.canRoll = false;
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
-<<<<<<< HEAD
             socket.emit('give-room-list-players', localStorage.getItem("Room"))
 
             if((roll[0] + roll[1]) === 7){
-              console.log('robber')
               socket.emit('robberCheckCards', localStorage.getItem("Room"))
               this.setRobber(this.player as IPlayerInfo, false)
             } else {
               this.activePlayerPlay()
             }
-=======
-            socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-            nextBtn?.classList.add("active");
-            this.addBuildAndTradeListeners();
->>>>>>> 26380a72ee4d97b228164923e049ed673c7d41e9
           }
         },
         { once: true }
@@ -181,14 +164,7 @@ export default class Controller {
     nextBtn?.classList.add("active");
   }
 
-<<<<<<< HEAD
   //this listener add only in turn of active player
-=======
-  // addRefreshListener() {
-  //   document.getElementById("refresh")?.addEventListener("click", () => { this.state?.updateMap(); })
-  // }
-
->>>>>>> 26380a72ee4d97b228164923e049ed673c7d41e9
   addBuildAndTradeListeners() {
     const btnsWrap = document.getElementById("build-trade-card-list");
 
@@ -211,18 +187,11 @@ export default class Controller {
               this.view?.showConstructionCost();
               break;
             case "trade__btn":
-<<<<<<< HEAD
               this.view?.showTradePopup(this.player as IPlayerInfo); // class modal toggle(maybe need only add class? or also clear curentState)
               // if(tradeWithPlayers)
+              // this.trade();   // logic of trade
               this.tradeWithPlayers(this.player as IPlayerInfo);
               break
-=======
-
-              this.view?.showTradePopup(this.player as IPlayerInfo);
-
-              // this.trade();   // logic of trade
-              break;
->>>>>>> 26380a72ee4d97b228164923e049ed673c7d41e9
             case "trade-devcard__btn":
               this.buyDevelopCard(this.player as IPlayerInfo);
               break;
@@ -330,12 +299,7 @@ export default class Controller {
               let roadBuildedEvent = new CustomEvent("road-builded");
               window.dispatchEvent(roadBuildedEvent);
               socket.emit('updateMap', localStorage.getItem('Room'))
-<<<<<<< HEAD
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
-              // road.classList.add("moveDown"); // need add class after render map (can add movedown class)
-=======
-              socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
->>>>>>> 26380a72ee4d97b228164923e049ed673c7d41e9
             });
           }
         } else {
@@ -588,7 +552,6 @@ export default class Controller {
       wool: player.hand.resources.wool,
     }
     if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain && buildConst.wool <= hand.wool) {
-      console.log('BUY DEV CARD')
       socket.emit('buy-develop-card', player, localStorage.getItem('Room'))
     } else {
       console.log('not money')
@@ -605,7 +568,6 @@ export default class Controller {
             const name = e.target.className.split(" ")[1];
             switch (name) {
               case "dev-knight":
-                console.log("knight");
                 this.setRobber(player, true);
                 this.playKnightCard(player);
                 break;
@@ -618,19 +580,8 @@ export default class Controller {
                 this.view?.showPlentyPopup();
                 // this.state?.playPlentyCard(player);
                 break;
-<<<<<<< HEAD
               case "dev-road":
-                // this.state?.playRoadCard(player);
-                this.buildRoad(player);
-                window.addEventListener(
-                  "road-builded", // this event doesn't generate
-                  () => {
-                    this.buildRoad(player);
-                  },
-                  { once: true }
-                );
-=======
-              case "road":
+                // case "dev-road":
                 if (this.player?.hand.development.road) {
                   this.buildRoad(player, true);
                   window.addEventListener(
@@ -642,7 +593,6 @@ export default class Controller {
                   );
                   socket.emit("playDevelopRoads", localStorage.get("Room"), this.player)
                 }
->>>>>>> 26380a72ee4d97b228164923e049ed673c7d41e9
                 break;
             }
           }

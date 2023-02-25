@@ -89,9 +89,9 @@ export default function roadCounter(map, playerColor, roadId) {
     break;
   }
 
-  console.log("_________________________________________")
-  console.log("Первыя сторона", sideOne)
-  console.log("вторая сторона", sideTwo)
+  // console.log("_________________________________________")
+  // console.log("Первыя сторона", sideOne)
+  // console.log("вторая сторона", sideTwo)
 
   const tailOneNearRoads =
     closestRoads(map, sideOne[0]).filter((e) => e !== roadId && (sideOne[1] ? e !== sideOne[1] : true))
@@ -114,7 +114,7 @@ export default function roadCounter(map, playerColor, roadId) {
       tailnextOneNearRoads,
       recursiveCounter(map, playerColor, sideOne[1], [], [roadId, ...nearRoads])
     ]
-    console.log("первый со первой: ", tailOne[1].length, "второй со первой: ", nextOne[1].length)
+    // console.log("первый со первой: ", tailOne[1].length, "второй со первой: ", nextOne[1].length)
     if (tailOne[1].length < nextOne[1].length) {
       tailOne = [...nextOne];
     }
@@ -127,19 +127,19 @@ export default function roadCounter(map, playerColor, roadId) {
       tailnextTwoNearRoads,
       recursiveCounter(map, playerColor, sideTwo[1], [], [roadId, ...nearRoads])
     ]
-    console.log("первый со второй: ", tailTwo[1].length, "второй со второй: ", nextTwo[1].length)
+    // console.log("первый со второй: ", tailTwo[1].length, "второй со второй: ", nextTwo[1].length)
     if (tailTwo[1].length < nextTwo[1].length) {
       tailTwo = [...nextTwo];
     }
   }
 
-  console.log("_________________________________________")
-  console.log("Длинна хвоста 1: ", tailOne.length)
-  console.log("Длинна хвоста 2: ", tailTwo.length)
+  // console.log("_________________________________________")
+  // console.log("Длинна хвоста 1: ", tailOne.length)
+  // console.log("Длинна хвоста 2: ", tailTwo.length)
 
   const allRoadChainWithoutDubles = new Set([...tailOne[1], ...tailTwo[1], roadId])
-  console.log("_________________________________________")
-  console.log(allRoadChainWithoutDubles)
+  // console.log("_________________________________________")
+  // console.log(allRoadChainWithoutDubles)
   return Array.from(allRoadChainWithoutDubles).length || roadChainLength;
 }
 
@@ -218,7 +218,7 @@ function recursiveCounter(map, playerColor, id, initialChain = [], prevRoads = [
     // console.log("NEW: ", road);
     const path = recursiveCounter(map, playerColor, road, chain, prevRoads);
     // Если длинна ветки больше 0 и других
-    console.log("моя текущая длинна: ", path.length);
+    // console.log("моя текущая длинна: ", path.length);
     if (path.length >= longest.length) {
       longest.push(...path);
     }
@@ -227,6 +227,6 @@ function recursiveCounter(map, playerColor, id, initialChain = [], prevRoads = [
 
   // Удаляю совпадения
   chain = [...new Set(chain)];
-  console.log(id, "возвращаю chain:", chain)
+  // console.log(id, "возвращаю chain:", chain)
   return chain; // возвращаем список из дорог текущей ветки
 }
