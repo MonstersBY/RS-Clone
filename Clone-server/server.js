@@ -173,6 +173,13 @@ io.on("connection", (socket) => {
                 allGame.get(room).playersInfo[index].hand.resources.brick -= 1
             }
         }
+
+        allGame.get(room).playersInfo[index].roadChain = roadCounter(
+            allGame.get(room).mapObject,
+            player.color, 
+            id
+        );
+
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
         io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
@@ -226,14 +233,6 @@ io.on("connection", (socket) => {
             allGame.get(room).playersInfo);
     });
 
-    socket.on('roadCounter', (room, player, roadId) => {
-        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
-        allGame.get(room).playersInfo[index].roadChain = roadCounter(
-            allGame.get(room).mapObject,
-            player.color, 
-            roadId
-        );
-    });
 
     socket.on('playDevelopRoads', (room, player) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)

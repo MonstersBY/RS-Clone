@@ -261,7 +261,6 @@ export default class Controller {
               let roadBuildedEvent = new CustomEvent("road-builded");
               window.dispatchEvent(roadBuildedEvent);
               socket.emit('updateMap', localStorage.getItem('Room'))
-              socket.emit('roadCounter', localStorage.getItem('Room'), this.player, road.id);
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
             });
           }
