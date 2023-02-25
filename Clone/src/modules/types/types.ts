@@ -70,6 +70,12 @@ interface IDevCards {
   monopoly: number,
 }
 
+interface IOffer {
+  have: IResources,
+  wish: IResources,
+};
+
+
 function getElementBySelector<T extends HTMLElement>(
   selector: string,
   parent: HTMLElement | HTMLInputElement | DocumentFragment | Document = document
@@ -80,4 +86,4 @@ function getElementBySelector<T extends HTMLElement>(
   return element;
 }
 
-export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand, IResources, IDevCards}
+export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand, IResources, IDevCards, IOffer}

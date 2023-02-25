@@ -1,6 +1,6 @@
 import View from "../View/View";
 import Dice from "../diceRoll/diceRoll";
-import { getElementBySelector, IPlayerInfo } from "../types/types";
+import { getElementBySelector, IPlayerInfo, IResources, IOffer } from "../types/types";
 import socket from "../Socket";
 
 export default class Controller {
@@ -13,12 +13,13 @@ export default class Controller {
     public canRoll?: boolean,
     // private timer: Timer = new Timer(),
     // private master: GameMaster = new GameMaster(),
-  ) 
+  )
   {}
 
 
   init() {
     this.dice.init();
+
     const buttons = `
     <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
     <button id="first-set">first-set<button>
@@ -69,9 +70,11 @@ export default class Controller {
       document.body.insertAdjacentHTML("afterbegin", buttons);
 
       this.addBuildFirstSettlementListener();
-      // this.addRefreshListener();
+      this.addBuildAndTradeListeners();
+
+      // error of type
+      // this.addPlayCardsListener(this.player); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
       this.createNewTurn()
-      // this.addBuildAndTradeListeners();
     }, 0);
   }
 
@@ -94,7 +97,6 @@ export default class Controller {
   addListenerDices() {
     // TODO Как типизировать callback?
     const nextBtn = document.getElementById("create-new-turn");
-
     if (this.canRoll) {
       document.getElementById("roll-dice")?.addEventListener(
         "click",
@@ -129,7 +131,7 @@ export default class Controller {
     const btnsWrap = document.getElementById("build-trade-card-list");
 
     btnsWrap?.addEventListener("click", (e: Event) => {
-      if (e.target instanceof HTMLElement) {
+      if (e.target instanceof HTMLElement && this.activePlayer) {
         const target = e.target.closest(".game-btn");
         if (target) {
           const name = target.className.split(" ")[1];
@@ -147,7 +149,10 @@ export default class Controller {
               this.view?.showConstructionCost();
               break;
             case "trade__btn":
+
               this.view?.showTradePopup();
+
+              // this.trade();   // logic of trade
               break;
             case "trade-devcard__btn":
               this.buyDevelopCard();
@@ -225,14 +230,12 @@ export default class Controller {
   }
 
   // Building
-  buildRoad(player: IPlayerInfo) {
-    console.log("road: im in!")
+  buildRoad(player: IPlayerInfo, isFree = false) {
     const roads = [
       ...new Set(
         this.player?.avalible.filter((e) => e.split("_")[1] === "road")
       ),
     ];
-    console.log(roads);
     const buildConst = {
       lumber: 1,
       brick: 1,
@@ -244,21 +247,23 @@ export default class Controller {
     if (player.roadsStock) {
       roads.forEach((e) => {
         const road = document.getElementById(e);
-        if (buildConst.lumber <= hand.lumber && buildConst.brick <= hand.brick) {
+        if ((buildConst.lumber <= hand.lumber && buildConst.brick <= hand.brick) || isFree) {
           if (road && !road.classList.contains("own")) {
             road.classList.add("select");
             road.addEventListener("click", (e) => {
-              console.log("im in road.eventListener!")
               socket.emit(
                 "setNewRoad",
                 this.player,
                 road.id,
-                localStorage.getItem("Room")
+                localStorage.getItem("Room"),
+                isFree,
               );
+              let roadBuildedEvent = new CustomEvent("road-builded");
+              window.dispatchEvent(roadBuildedEvent);
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('roadCounter', localStorage.getItem('Room'), this.player, road.id);
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-            }); //, {once: true}
+            });
           }
         } else {
           console.log('not money')
@@ -288,9 +293,9 @@ export default class Controller {
     if (player.settlementsStock) {
       settlements.forEach((e) => {
         const settlement = document.getElementById(e);
-        if (buildConst.lumber <= hand.lumber && 
-            buildConst.brick <= hand.brick && 
-            buildConst.wool <= hand.wool && 
+        if (buildConst.lumber <= hand.lumber &&
+            buildConst.brick <= hand.brick &&
+            buildConst.wool <= hand.wool &&
             buildConst.grain <= hand.grain) {
           if (settlement && !settlement?.classList.contains("own")) {
             settlement.classList.add("select");
@@ -304,7 +309,7 @@ export default class Controller {
               );
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-              // this.updateBuildCounter(".settlement__counter"); // unused function
+
               // settlement.classList.add("moveDown"); //need add class after render map
             });
           }
@@ -328,11 +333,11 @@ export default class Controller {
     if (player.settlementsStock) {
       settlements.forEach((e) => {
         const settlement = document.getElementById(e) as HTMLDivElement;
-        
+
         if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain) {
           settlement.style.transform = "scale(1.5)";
           settlement.addEventListener("click", (e) => {
-            // this.updateBuildCounter(".city__counter"); //unused function
+
             // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
             // this.state?.updateMap();
             if (e.target && e.target instanceof HTMLElement)
@@ -354,6 +359,148 @@ export default class Controller {
     } else {console.log('no city')}
   }
 
+  // TRADE LOGIC
+
+  tradeWithPlayers(player: IPlayerInfo) {
+    const offerContainer = document.getElementById("offer__container");
+    const wishContainer = document.getElementById("wish__container");
+    const positiveCheck = document.getElementById("offer__positive");
+    const negativeCheck = document.getElementById("offer__negative");
+
+    if (offerContainer)
+      offerContainer.addEventListener("click", (e) => {
+        this.offerHandler(e, player);
+      });
+    if (wishContainer)
+      wishContainer.addEventListener("click", (e) => {
+        this.wishHandler(e);
+      });
+
+    if (positiveCheck) positiveCheck.addEventListener("click", () => {
+      this.makeOffer();
+    });
+    if (negativeCheck) negativeCheck.addEventListener("click", () => {
+
+      this.view?.showTradePopup();
+    });
+  }
+
+  offerHandler(e: Event, player: IPlayerInfo) {
+    if (e.target instanceof HTMLElement) {
+      const target = e.target.closest(".trade__resource");
+      if (target) {
+        const resource = target.className.split(" ")[0] as keyof IResources;
+        const id = target.id;
+        if (target.classList.contains("empty")) {
+          // когда старт, в любом случае класс удаляю, счетчик увеличиваю до 1
+          target.classList.remove("empty");
+          target.classList.add("offer");
+          this.increaseCounter(id); //must be 1 in result
+        } else {
+          const counterNumber = this.getCounterNumber(id);
+          if (counterNumber && counterNumber < player.hand.resources[resource]) {
+            this.increaseCounter(id);
+          } else {
+            return;
+          }
+        }
+      }
+    }
+  }
+  wishHandler(e: Event) {
+    if (e.target instanceof HTMLElement) {
+      const target = e.target.closest(".trade__resource");
+      if (target) {
+        const id = target.id;
+        if (target.classList.contains("empty")) {
+          // когда старт, в любом случае класс удаляю, счетчик увеличиваю до 1
+          target.classList.remove("empty");
+          target.classList.add("wish");
+          this.increaseCounter(id); //must be 1 in result
+        } else {
+          this.increaseCounter(id);
+        }
+      }
+    }
+  }
+
+  makeOffer() {
+    const offerContainer = document.getElementById("offer__container"); // maybe must get by class?
+    const wishContainer = document.getElementById("wish__container"); // to have opportunity to call this function
+    // when hadle counteroffer popup
+
+    if (offerContainer && wishContainer) {
+      // Здесь делаю объект
+      const currentOffer: IOffer = {
+        have: {
+          brick: 0,
+          grain: 0,
+          lumber: 0,
+          ore: 0,
+          wool: 0,
+        },
+        wish: {
+          brick: 0,
+          grain: 0,
+          lumber: 0,
+          ore: 0,
+          wool: 0,
+        },
+      };
+      const offerResources = offerContainer.querySelectorAll(".offer");
+      const wishResources = wishContainer.querySelectorAll(".wish");
+
+      this.addToCurrentOffer(offerResources, currentOffer.have);
+      this.addToCurrentOffer(wishResources, currentOffer.wish);
+    }
+    // need make offer another players => render counterOfferPopup (gamePage modal-trade__counteroffer)acording currentOfferState ???
+    this.showSentOfferMessage();
+    this.view?.showTradePopup();
+  }
+
+  addToCurrentOffer(arr: NodeListOf<Element>, offerSide: IResources) {
+    arr.forEach((item) => {
+      const id = item.id;
+      const resource = item.className.split(" ")[0];
+      const counterNumber = this.getCounterNumber(id);
+      offerSide[resource as keyof typeof offerSide] = Number(counterNumber);
+    });
+  }
+
+  showSentOfferMessage() {
+    const offerMes = document.querySelector(".offer-message"); // show message about sending of offer
+    if (offerMes) {
+      offerMes.classList.add("moveDown");
+      setTimeout(() => {
+        offerMes.classList.remove("moveDown");
+        offerMes.classList.add("slideInUp");
+      }, 3000);
+    }
+  }
+
+  getCounterNumber(id: string) {
+    const counterParent = document.getElementById(id);
+    if (counterParent) {
+      const counter = counterParent.querySelector(".resource-counter");
+      if (counter) {
+        const counterTextContent = Number(counter.textContent);
+        return counterTextContent;
+      }
+    }
+  }
+
+  increaseCounter(id: string) {
+    const counterParent = document.getElementById(id);
+    if (counterParent) {
+      const counter = counterParent.querySelector(".resource-counter");
+      counter?.classList.remove("invisible");
+      let number = this.getCounterNumber(id) as number;
+      if (counter) {
+        counter.textContent = `${++number}`;
+      }
+    }
+  }
+
 
   // Development cards
   buyDevelopCard() {
@@ -361,7 +508,9 @@ export default class Controller {
   }
 
   addPlayCardsListener(player: IPlayerInfo) {
-    document.getElementById("develop-card-list")?.addEventListener("click", (e) => {
+    document
+      .getElementById("develop-card-list")
+      ?.addEventListener("click", (e) => {
         if (e.target instanceof HTMLElement) {
           const target = e.target.closest(".game-btn");
           if (target) {
@@ -383,15 +532,17 @@ export default class Controller {
                 // this.state?.playPlentyCard(player);
                 break;
               case "road":
-                // this.state?.playRoadCard(player);
-                this.buildRoad(player);
-                window.addEventListener(
-                  "road-builded",
-                  () => {
-                    this.buildRoad(player);
-                  },
-                  { once: true }
-                );
+                if (this.player?.hand.development.road) {
+                  this.buildRoad(player, true);
+                  window.addEventListener(
+                    "road-builded",
+                    () => {
+                      this.buildRoad(player, true);
+                    },
+                    { once: true }
+                  );
+                  socket.emit("playDevelopRoads", localStorage.get("Room"), this.player)
+                }
                 break;
             }
           }

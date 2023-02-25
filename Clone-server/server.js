@@ -162,14 +162,16 @@ io.on("connection", (socket) => {
         io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
 
-    socket.on('setNewRoad', (player, id, room) =>{
+    socket.on('setNewRoad', (player, id, room, isFree) =>{
         allGame.get(room).setNewRoad(player, id)
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
         allGame.get(room).playersInfo[index].roadsStock--
         if (allGame.get(room).turn > 0) {
-            allGame.get(room).playersInfo[index].hand.resources.lumber -= 1
-            allGame.get(room).playersInfo[index].hand.resources.brick -= 1
+            if (!isFree) {
+                allGame.get(room).playersInfo[index].hand.resources.lumber -= 1
+                allGame.get(room).playersInfo[index].hand.resources.brick -= 1
+            }
         }
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
         io.to(room).emit('list-players', allGame.get(room).playersInfo)
@@ -232,6 +234,14 @@ io.on("connection", (socket) => {
             roadId
         );
     });
+
+    socket.on('playDevelopRoads', (room, player) =>{
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
+        allGame.get(room).playersInfo[index].hand.development.road--
+
+        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+    })
 
     socket.on('disconnect', () => {
     });
