@@ -264,8 +264,13 @@ io.on("connection", (socket) => {
 
     socket.on('playMonopolyCard', (room, player, resource) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
-        allGame.get(room).monopolyCard(allGame.get(room).playersInfo, player, resource)
-        allGame.get(room).playersInfo[index] = player
+        allGame.get(room).monopolyCard(allGame.get(room).playersInfo, allGame.get(room).playersInfo[index], resource)
+
+        io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
+    })
+    socket.on('playPlentyCard', (room, player, resource) =>{
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
+        allGame.get(room).plentyCard(allGame.get(room).playersInfo[index], resource)
 
         io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })

@@ -106,7 +106,7 @@ export default class View {
                 <div id="offer__container" class="resources trade__resources">
                  <div id="trade__offer_lumber" class="lumber resource__container resource trade__resource empty flex-bs">
                  ${
-                   player.hand.resources.lumber
+                   player.hand.resources.lumber > 3
                      ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-lumber"></div>
@@ -117,7 +117,7 @@ export default class View {
                  </div>
                  <div id="trade__offer_brick" class="brick resource__container resource trade__resource flex-bs empty">
                   ${
-                    player.hand.resources.brick
+                    player.hand.resources.brick > 3
                       ? `
                       <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-brick"></div>
@@ -128,7 +128,7 @@ export default class View {
                     </div>
                   <div id="trade__offer_wool" class="wool resource__container resource trade__resource flex-bs empty">
                     ${
-                      player.hand.resources.wool
+                      player.hand.resources.wool > 3
                         ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-wool"></div>
@@ -139,7 +139,7 @@ export default class View {
                     </div>
                   <div id="trade__offer_grain" class="grain resource__container resource trade__resource empty flex-bs">
                     ${
-                      player.hand.resources.grain
+                      player.hand.resources.grain > 3
                         ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-grain"></div>
@@ -150,7 +150,7 @@ export default class View {
                     </div>
                  <div id="trade__offer_ore" class="ore resource__container resource trade__resource flex-bs empty">
                      ${
-                       player.hand.resources.ore
+                       player.hand.resources.ore > 3
                          ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-ore"></div>
@@ -198,7 +198,6 @@ export default class View {
             </div>
           </div>
     `;
-
     const modalTrade = document.querySelector(".modal-trade");
     if(modalTrade) modalTrade.innerHTML = "";
     modalTrade?.classList.toggle("modal");

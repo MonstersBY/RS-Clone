@@ -394,6 +394,28 @@ export default class State {
         break;
     }
   }
+  plentyCard(player, resources){
+    player.hand.development.plenty--
+    for (let i = 0; i < resources.length; i++) {
+      switch (resources[i]) {
+        case 'grain':
+          player.hand.resources.grain++
+          break;
+        case 'wool':
+          player.hand.resources.wool++
+          break;
+        case 'ore':
+          player.hand.resources.ore++
+          break;
+        case 'lumber':
+          player.hand.resources.lumber++
+          break;
+        case 'brick':
+          player.hand.resources.brick++
+          break;
+      }
+    }
+  }
 
   transferOneToAnother(player, victimColor) {
     for (const playerVictim of this.playersInfo) {

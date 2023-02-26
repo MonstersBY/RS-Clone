@@ -571,12 +571,16 @@ export default class Controller {
                 this.setRobber(player, true);
                 break;
               case "dev-monopoly":
-                this.view?.showMonopolyPopup();
-                this.playMonopolyCard(player)
+                if(this.player?.hand.development.monopoly){
+                  this.view?.showMonopolyPopup();
+                  this.playMonopolyCard(player)
+                }
                 break;
               case "dev-plenty":
-                this.view?.showPlentyPopup();
-                // this.state?.playPlentyCard(player);
+                if(this.player?.hand.development.plenty){
+                  this.view?.showPlentyPopup();
+                  this.playPlentyCard(player)
+                }
                 break;
               case "dev-road":
                 if (this.player?.hand.development.road) {
@@ -588,7 +592,7 @@ export default class Controller {
                     },
                     { once: true }
                   );
-                  socket.emit("playDevelopRoads", localStorage.get("Room"), this.player)
+                  socket.emit("playDevelopRoads", localStorage.getItem("Room"), this.player)
                 }
                 break;
             }
@@ -599,16 +603,30 @@ export default class Controller {
 
   playMonopolyCard(player: IPlayerInfo){
     const div = document.querySelector('.monopoly-choose')
+    // if(div?.classList.contains('modal')) {
+      
+    // }
+    div?.addEventListener('click', (e) =>{
+      console.log('monopoly')
+      if((e.target as HTMLDivElement)?.classList.contains('ready_take')) {
+        const checkedInputs = div?.querySelector<HTMLInputElement>(
+          "input.choose-checkbox:checked"
+        );
+        socket.emit('playMonopolyCard', localStorage.getItem('Room'), player, checkedInputs?.value)
+        this.view?.showMonopolyPopup();
+      }
+    })
+  }
+  playPlentyCard(player: IPlayerInfo){
+    const div = document.querySelector('.plenty-choose')
     div?.addEventListener('click', (e) =>{
       if((e.target as HTMLDivElement)?.classList.contains('ready_take')) {
-        const res = div.querySelectorAll('.choose-checkbox')
-        res.forEach((e) =>{
-          if ((e as HTMLInputElement).checked) {
-            const res = e.classList[1].split("_")[1]
-            socket.emit('playMonopolyCard', localStorage.getItem('Room'), player, res)
-            this.view?.showMonopolyPopup();
-          }
-        })
+        const checkedInputs = div?.querySelectorAll<HTMLInputElement>(
+          "input.choose-checkbox:checked"
+        );
+        const resources = [checkedInputs[0].value, checkedInputs[1].value]
+        socket.emit('playPlentyCard', localStorage.getItem('Room'), player, resources)
+        this.view?.showPlentyPopup();
       }
     })
   }
