@@ -52,8 +52,8 @@ export default class Controller {
         console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
 
         const nextBtn = document.getElementById("create-new-turn");
+        nextBtn?.classList.remove("active");
         if (this.activePlayer) {
-          nextBtn?.classList.remove("active");
           this.addListenerDices();
         }
       });
@@ -76,7 +76,7 @@ export default class Controller {
   createNewTurn() {
     const btn = document.getElementById("create-new-turn");
     btn?.addEventListener("click", (e) => {
-      if (btn.classList.length == 2) {
+      if (btn.classList.contains("active")) {
         socket.emit(
           "Next-person",
           localStorage.getItem("Room"),
@@ -106,12 +106,8 @@ export default class Controller {
             this.dice.audio.play();
             this.canRoll = false;
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
-            socket.emit(
-              "give-room-list-players",
-              localStorage.getItem("Room"),
-              localStorage.getItem("Name")
-            );
-
+            socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+            nextBtn?.classList.add("active");
             this.addBuildAndTradeListeners();
           }
         },
@@ -130,9 +126,6 @@ export default class Controller {
   //   document.getElementById("refresh")?.addEventListener("click", () => { this.state?.updateMap(); })
   // }
 
-  // NEED add listener to construction cost - it independent from turn listener
-
-  //this listener add only in turn of active player
   addBuildAndTradeListeners() {
     const btnsWrap = document.getElementById("build-trade-card-list");
 
@@ -158,6 +151,7 @@ export default class Controller {
               this.view?.showTradePopup(this.player as IPlayerInfo); // class modal toggle(maybe need only add class? or also clear curentState)
               // if(tradeWithPlayers)
               this.tradeWithPlayers(this.player as IPlayerInfo);
+              break;
             case "trade-devcard__btn":
               this.buyDevelopCard();
               break;
@@ -166,23 +160,6 @@ export default class Controller {
       }
     });
   }
-
-  /* addRobberListener() {
-    document.getElementById("robber")?.addEventListener("click", () => { this.setRobber(this.player1 as IPlayerInfo); })
-  } */
-
-  // addAvaliableListener(player: IPlayerInfo) {
-  //   const mapContainer = document.querySelector("#map");
-  //   mapContainer?.addEventListener("click", e => {
-  //     if (e.target instanceof HTMLDivElement) {
-  //       if (e.target.classList.contains("hex_node")) {
-  //         if (e.target.classList.contains("active")) {
-  //           player.avalible.push(...e.target.dataset.next?.split(",") as Array<string>);
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
 
   buildFirstSettlementMode() {
     const places = [
@@ -233,12 +210,14 @@ export default class Controller {
           localStorage.getItem("Name")
         );
 
-        // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
+        window.addEventListener("settlementSet", () => {
+          window.addEventListener("mapLoaded", () => {
+            this.buildFirstRoadMode(chousen.dataset.next || "")
+          }, {once: true})
+        }, {once: true})
 
-        if (this.map) {
-          this.map.onclick = () =>
-            this.buildFirstRoadMode(chousen.dataset.next || "");
-        }
+        let settlementSetEvent = new CustomEvent('settlementSet');
+        window.dispatchEvent(settlementSetEvent);
       }
     }
   }
@@ -273,7 +252,7 @@ export default class Controller {
   }
 
   // Building
-  buildRoad(player: IPlayerInfo) {
+  buildRoad(player: IPlayerInfo, isFree = false) {
     const roads = [
       ...new Set(
         this.player?.avalible.filter((e) => e.split("_")[1] === "road")
@@ -294,10 +273,8 @@ export default class Controller {
     if (player.roadsStock) {
       roads.forEach((e) => {
         const road = document.getElementById(e);
-        if (
-          buildConst.lumber <= hand.lumber &&
-          buildConst.brick <= hand.brick
-        ) {
+
+        if ((buildConst.lumber <= hand.lumber && buildConst.brick <= hand.brick) || isFree) {
           if (road && !road.classList.contains("own")) {
             road.classList.add("select");
             road.addEventListener("click", (e) => {
@@ -305,15 +282,13 @@ export default class Controller {
                 "setNewRoad",
                 this.player,
                 road.id,
-                localStorage.getItem("Room")
-              );
-              socket.emit("updateMap", localStorage.getItem("Room"));
-              socket.emit(
-                "give-room-list-players",
                 localStorage.getItem("Room"),
-                localStorage.getItem("Name")
+                isFree,
               );
-              road.classList.add("moveDown"); // need add class after render map (can add movedown class)
+              let roadBuildedEvent = new CustomEvent("road-builded");
+              window.dispatchEvent(roadBuildedEvent);
+              socket.emit('updateMap', localStorage.getItem('Room'))
+              socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"));
             });
           }
         } else {
@@ -606,15 +581,17 @@ export default class Controller {
                 // this.state?.playPlentyCard(player);
                 break;
               case "road":
-                // this.state?.playRoadCard(player);
-                this.buildRoad(player);
-                window.addEventListener(
-                  "road-builded", // this event doesn't generate
-                  () => {
-                    this.buildRoad(player);
-                  },
-                  { once: true }
-                );
+                if (this.player?.hand.development.road) {
+                  this.buildRoad(player, true);
+                  window.addEventListener(
+                    "road-builded",
+                    () => {
+                      this.buildRoad(player, true);
+                    },
+                    { once: true }
+                  );
+                  socket.emit("playDevelopRoads", localStorage.get("Room"), this.player)
+                }
                 break;
             }
           }

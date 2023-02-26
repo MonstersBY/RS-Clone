@@ -1,5 +1,6 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
+import roadCounter from "./modules/State/RoadCounter.js";
 import State from './modules/State/State.js';
 
 const httpServer = createServer();
@@ -161,15 +162,24 @@ io.on("connection", (socket) => {
         io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
 
-    socket.on('setNewRoad', (player, id, room) =>{
+    socket.on('setNewRoad', (player, id, room, isFree) =>{
         allGame.get(room).setNewRoad(player, id)
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
         allGame.get(room).playersInfo[index].roadsStock--
         if (allGame.get(room).turn > 0) {
-            allGame.get(room).playersInfo[index].hand.resources.lumber -= 1
-            allGame.get(room).playersInfo[index].hand.resources.brick -= 1
+            if (!isFree) {
+                allGame.get(room).playersInfo[index].hand.resources.lumber -= 1
+                allGame.get(room).playersInfo[index].hand.resources.brick -= 1
+            }
         }
+
+        allGame.get(room).playersInfo[index].roadChain = roadCounter(
+            allGame.get(room).mapObject,
+            player.color, 
+            id
+        );
+
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
         io.to(room).emit('list-players', allGame.get(room).playersInfo)
     })
@@ -190,7 +200,6 @@ io.on("connection", (socket) => {
 
     socket.on('updateMap', (room) => {
         io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
-        console.log(room)
     })
 
     socket.on('Next-person', (room, name) => {
@@ -223,6 +232,15 @@ io.on("connection", (socket) => {
             allGame.get(room).mapObject,
             allGame.get(room).playersInfo);
     });
+
+
+    socket.on('playDevelopRoads', (room, player) =>{
+        const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
+        allGame.get(room).playersInfo[index].hand.development.road--
+
+        socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])
+        io.to(room).emit('list-players', allGame.get(room).playersInfo)
+    })
 
     socket.on('disconnect', () => {
     });
