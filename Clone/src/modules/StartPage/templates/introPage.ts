@@ -95,8 +95,8 @@ export const intro = `
                           </p>
                             <p class="team__card-text">Secretary of Team!</p>
                             <p class="team__card-text">Developer of UI game.</p>
+                            <p class="team__card-text">The young mother which worked with her daughter - the youngest member of team!</p>
                             <p class="team__card-text">Hardworking and efficient team member.</p>
-
                       </div>
                   </div>
               </div>

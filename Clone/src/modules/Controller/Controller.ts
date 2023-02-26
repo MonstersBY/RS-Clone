@@ -594,7 +594,6 @@ export default class Controller {
                 break;
               case "monopoly":
                 this.view?.showMonopolyPopup();
-                this.playMonopolyCard(player);
                 // this.state?.playMonopolyCard(player);
                 // this.state?.useMonopolyEffect(player, this.choiceHandler());
                 break;
@@ -696,20 +695,7 @@ export default class Controller {
     // this.removeEventListener("click", this.cardPopupHandler)
   }
 
-  playMonopolyCard(player: IPlayerInfo) {
-    const positiveCheck = document.querySelector(".monopoly__check");
-    const closeCheck = document.querySelector(".monopoly__close");
 
-    positiveCheck?.addEventListener("click", ()=> {
-      this.cardPopupHandler(player, ".monopoly-choose", "playMonopolyCard");
-    });
-
-    closeCheck?.addEventListener("click", () => {
-      const popup = document.querySelector(".monopoly-choose");
-      popup?.classList.remove("modal");
-     });
-
-  }
   playKnightCard(player: IPlayerInfo) {
     player.hand.development.knights -= 1;
     player.armySize += 1;

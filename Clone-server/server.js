@@ -224,23 +224,6 @@ io.on("connection", (socket) => {
             allGame.get(room).playersInfo);
     });
 
-    socket.on("playPlentycard", (room, resoucesObj, player) => {
-        const index = allGame.get(room).playersInfo.findIndex((findUser) => findUser.name === player.name);
-        allGame.get(room).playersInfo[index] = player;
-
-        const resources = Object.entries(resoucesObj);
-        console.log(resources);
-        resources.forEach(item => {
-            const [key, value] = item;
-            // allGame.get(room).playersInfo.hand.resources[key] += value;
-            allGame.get(room).playersInfo[index].hand.resources[key] += value;
-        })
-        // console.log(allGame.get(room).playersInfo.hand.resources);
-
-        // socket.emit("Change-playerInfo", allGame.get(room).playersInfo[index]);
-        // io.to(room).emit("list-players", allGame.get(room).playersInfo);
-    });
-
     socket.on('disconnect', () => {
     });
 });
