@@ -25,7 +25,17 @@ export default class Mode {
   }
 
   CreateName() {
-
+    const divNick = document.querySelector('.random__nick')?.querySelector('span')
+    const chatBtn = document.querySelector('.nick__form-btn')
+    const msg = <HTMLInputElement>document.getElementById('new__nick')
+    chatBtn?.addEventListener('click', e => {
+      if (msg?.value === '') return
+      localStorage.setItem('Name', msg?.value)
+      msg.value = ''
+      msg.focus()
+      if (divNick != null) divNick.innerHTML = `${localStorage.getItem('Name')}`;
+    })
+    if (divNick != null) divNick.innerHTML = `${localStorage.getItem('Name')}`;
   }
 
   RoomList() {

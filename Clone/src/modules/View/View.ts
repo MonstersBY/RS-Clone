@@ -1,11 +1,16 @@
 // import State from "../../backend/State/State";
 // import Room from "../../backend/Room";
-import { IHex, ISettlement, IResources, IDevCards } from "../types/types";
+import { IHex, ISettlement, IResources, IDevCards, IPlayerInfo } from "../types/types";
 import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
 import { game } from "../StartPage/templates/gamePage";
 import socket from "../Socket";
-import { IPlayerInfo } from "../types/types";
+
+interface IStock {
+  road: number,
+  settlement: number,
+  city: number,
+}
 
 export default class View {
   constructor(
@@ -14,17 +19,11 @@ export default class View {
   ) // public dice: Dice = new Dice,
   {}
 
-  init() {
-    setTimeout(() => {
-      // this.renderStaticUI(playerInfo, player) //need player and playerINfo[]
+    init() {
+      setTimeout(() => {
       this.renderFullMap();
-      socket.emit("updateMap", localStorage.getItem("Room"));
-      this.createPlayers();
-      this.resources();
-      this.buildingStock();
-
-      // add renderfullUI(player: number)
-    }, 0);
+      socket.emit('updateMap', localStorage.getItem('Room'))
+      }, 0);
   }
 
   renderFullMap() {
@@ -108,23 +107,11 @@ export default class View {
   }
   showPlentyPopup() {
     const modalPlenty = document.querySelector(".plenty-choose");
-    const checkedInputs = modalPlenty?.querySelectorAll<HTMLInputElement>(
-      "input.choose-checkbox:checked"
-    );
-    checkedInputs?.forEach((item) => {
-      item.checked = false;
-    });
     modalPlenty?.classList.toggle("modal");
   }
 
   showMonopolyPopup() {
     const modalMonopoly = document.querySelector(".monopoly-choose");
-    const checkedInputs = modalMonopoly?.querySelectorAll<HTMLInputElement>(
-      "input.choose-checkbox:checked"
-    );
-    checkedInputs?.forEach((item) => {
-      item.checked = false;
-    });
     modalMonopoly?.classList.toggle("modal");
   }
 
@@ -137,7 +124,7 @@ export default class View {
                 <div id="offer__container" class="resources trade__resources">
                  <div id="trade__offer_lumber" class="lumber resource__container resource trade__resource empty flex-bs">
                  ${
-                   player.hand.resources.lumber
+                   player.hand.resources.lumber > 3
                      ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-lumber"></div>
@@ -148,7 +135,7 @@ export default class View {
                  </div>
                  <div id="trade__offer_brick" class="brick resource__container resource trade__resource flex-bs empty">
                   ${
-                    player.hand.resources.brick
+                    player.hand.resources.brick > 3
                       ? `
                       <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-brick"></div>
@@ -159,7 +146,7 @@ export default class View {
                     </div>
                   <div id="trade__offer_wool" class="wool resource__container resource trade__resource flex-bs empty">
                     ${
-                      player.hand.resources.wool
+                      player.hand.resources.wool > 3
                         ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-wool"></div>
@@ -170,7 +157,7 @@ export default class View {
                     </div>
                   <div id="trade__offer_grain" class="grain resource__container resource trade__resource empty flex-bs">
                     ${
-                      player.hand.resources.grain
+                      player.hand.resources.grain > 3
                         ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-grain"></div>
@@ -181,7 +168,7 @@ export default class View {
                     </div>
                  <div id="trade__offer_ore" class="ore resource__container resource trade__resource flex-bs empty">
                      ${
-                       player.hand.resources.ore
+                       player.hand.resources.ore > 3
                          ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-ore"></div>
@@ -229,7 +216,6 @@ export default class View {
             </div>
           </div>
     `;
-
     const modalTrade = document.querySelector(".modal-trade");
     if (modalTrade) modalTrade.innerHTML = "";
     modalTrade?.classList.toggle("modal");
@@ -241,26 +227,22 @@ export default class View {
     constructionBlock?.classList.toggle("modal");
   }
 
-  createPlayers() {
-    socket.emit(
-      "give-room-list-players",
-      localStorage.getItem("Room"),
-      localStorage.getItem("Name")
-    );
-    socket.on("list-players", (usersInfo) => {
-      const list = document.querySelector(".all-player-board");
+
+  createPlayers(usersInfo: [IPlayerInfo]) {
+        const list = document.querySelector('.all-player-board')
 
       const color = ["red", "blue", "green", "orange"];
       while (list?.firstChild) {
         list.removeChild(list.firstChild);
       }
 
-      for (let i = 0; i < usersInfo.length; i++) {
-        const allRes = this.SummCards(usersInfo[i].hand.resources);
-        const allDev = this.SummCards(usersInfo[i].hand.development);
-        const div = document.createElement("div");
-        div.classList.add("player-board");
-        div.innerHTML = `
+        for (let i = 0; i < usersInfo.length; i++) {
+          const allRes = this.SummCards(usersInfo[i].hand.resources)
+          const allDev = this.SummCards(usersInfo[i].hand.development)
+          // const victoryPoin = 
+          const div = document.createElement('div')
+          div.classList.add('player-board')
+          div.innerHTML = `
             <div class="player-board">
             <div class="nickname__wrap flex-bs">
               <div class="avatar__wrap avatar__${color[i]} flex-bs">
@@ -291,42 +273,67 @@ export default class View {
               </div>
             </div>
           </div>`;
+          list?.appendChild(div)
+          }
+  }
 
-        list?.appendChild(div);
+  resources(player: IPlayerInfo) {
+    const resources = player.hand.resources
+    for (let key in resources) {
+      const div = document.getElementById(`player-hand_${key}`);
+      const addRes = document.getElementById(`hand-counter_${key}`);
+      if(resources[key as keyof IResources]) {
+        div?.classList.remove('empty')
+        addRes?.classList.remove('invisible')
+        if (addRes != null) addRes.innerHTML = `${resources[key as keyof IResources]}`;
+      } else {
+        div?.classList.add('empty')
+        addRes?.classList.add('invisible')
       }
-    });
+    }
   }
-
-  resources() {
-    socket.on("players-hand", (resources) => {
-      const lumbCount = document.getElementById("hand-counter_lumber");
-      if (lumbCount != null) lumbCount.innerHTML = `${resources.lumber}`;
-      const brickCount = document.getElementById("hand-counter_brick");
-      if (brickCount != null) brickCount.innerHTML = `${resources.brick}`;
-      const woolCount = document.getElementById("hand-counter_wool");
-      if (woolCount != null) woolCount.innerHTML = `${resources.wool}`;
-      const grainCount = document.getElementById("hand-counter_grain");
-      if (grainCount != null) grainCount.innerHTML = `${resources.grain}`;
-      const oreCount = document.getElementById("hand-counter_ore");
-      if (oreCount != null) oreCount.innerHTML = `${resources.ore}`;
-    });
+  buildingStock(player: IPlayerInfo) {
+    const stock = {
+      road: player.roadsStock,
+      settlement: player.settlementsStock,
+      city: player.citiesStock,
+    }
+    for (let key in stock) {
+      const div = document.querySelector(`.${key}__btn`);
+      const infStock = div?.querySelector('.player-stock__counter')
+      if(stock[key as keyof IStock]) {
+        div?.classList.remove('empty')
+      } else {
+        div?.classList.add('empty')
+      }
+      if (infStock != null) infStock.innerHTML = `${stock[key as keyof IStock]}`;
+    }
   }
-  buildingStock() {
-    socket.on("players-stock", (players) => {
-      const road = document
-        .getElementById("build-road")
-        ?.querySelector(".player-stock__counter");
-      if (road != null) road.innerHTML = `${players.roadsStock}`;
-      const settlement = document
-        .getElementById("build-settlement")
-        ?.querySelector(".player-stock__counter");
-      if (settlement != null)
-        settlement.innerHTML = `${players.settlementsStock}`;
-      const city = document
-        .getElementById("build-city")
-        ?.querySelector(".player-stock__counter");
-      if (city != null) city.innerHTML = `${players.citiesStock}`;
-    });
+  devCardStock(player: IPlayerInfo) {
+    const development = player.hand.development
+    for (let key in development) {
+      const div = document.querySelector(`.${key}-develop__btn`);
+      const infStock = div?.querySelector('.player-stock__counter')
+      if(development[key as keyof IDevCards]) {
+        div?.classList.remove('empty')
+      } else {
+        div?.classList.add('empty')
+      }
+      if (infStock != null) infStock.innerHTML = `${development[key as keyof IDevCards]}`;
+    }
+  }
+  constructionConst(player: IPlayerInfo) {
+    const resources = player.hand.resources
+    const costDiv = document.querySelector('.construction-cost')
+    for (let key in resources) {
+      costDiv?.querySelectorAll(`.icon-${key}`).forEach((e) =>{
+        if(resources[key as keyof IResources]) {
+          e.querySelector('.icon-check')?.classList.remove('hidden')
+        } else {
+          e.querySelector('.icon-check')?.classList.add('hidden')
+        }
+      })
+    }
   }
 
   SummCards(obj: IResources | IDevCards) {
