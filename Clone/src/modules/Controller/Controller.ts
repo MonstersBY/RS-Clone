@@ -568,7 +568,9 @@ export default class Controller {
             const name = e.target.className.split(" ")[1];
             switch (name) {
               case "dev-knight":
-                this.setRobber(player, true);
+                if(this.player?.hand.development.knights){
+                  this.setRobber(player, true);
+                }
                 break;
               case "dev-monopoly":
                 if(this.player?.hand.development.monopoly){
