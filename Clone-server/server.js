@@ -13,10 +13,12 @@ const io = new Server(httpServer, {
 
 const port = process.env.PORT || 3000;
 
-let allrooms = []
+const allrooms = []
 const allGame = new Map()
 
 io.on("connection", (socket) => {
+
+    io.emit('room-list', allrooms)
 
     socket.on('join-room', (username, room) => {
         const index = allrooms.findIndex(findRoom => findRoom.room === room)
@@ -57,6 +59,12 @@ io.on("connection", (socket) => {
         io.emit('room-list', allrooms)
     })
 
+    socket.on('change-settings-map', (room, settings) =>{
+        const index = allrooms.findIndex(findRoom => findRoom.room === room)
+        allrooms[index].gameMap = settings
+        io.to(room).emit('see-map-changes', settings)
+    })
+
     socket.on('create-game', room => {
         const index = allrooms.findIndex(findRoom => findRoom.room === room)
         if (index != -1) {
@@ -94,8 +102,6 @@ io.on("connection", (socket) => {
         }
     })
 
-    io.emit('room-list', allrooms)
-
     socket.on('chatMessage', (msg, room, user) => {
         io.to(room).emit('message', user, msg)
     })
@@ -111,7 +117,15 @@ io.on("connection", (socket) => {
     })
 
     socket.on('StartGame', (room) => {
-        io.to(room).emit('ChangeToGamePage')
+        const index = allrooms.findIndex(findRoom => findRoom.room === room)
+        let ready = true
+        for (let i = 0; i < allrooms[index].users.length; i++) {
+            if (!allrooms[index].users[i].ready) {
+                ready = false
+                io.to(room).emit('message', 'Bot', `${allrooms[index].users[i].username} not ready`)
+            }
+        }
+        if(ready) io.to(room).emit('ChangeToGamePage')
     })
 
     // game

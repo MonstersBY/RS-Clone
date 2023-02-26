@@ -12,6 +12,7 @@ export default class Room {
     this.CreateError()
     this.CheckReady()
     this.CreateGame()
+    this.changeGameSetting()
   }
 
   CreateRoom() {
@@ -71,6 +72,17 @@ export default class Room {
         list?.appendChild(li)
       }
 
+    })
+  }
+
+  changeGameSetting() {
+    const infoMap = document.getElementById('gameMap')
+    infoMap?.addEventListener('change', (e) => {
+      console.log((e.target as HTMLInputElement).value)
+      socket.emit('change-settings-map', localStorage.getItem('Room'), (e.target as HTMLInputElement).value)
+    })
+    socket.on('see-map-changes', settings =>{
+      (infoMap as HTMLInputElement).value = settings
     })
   }
 
