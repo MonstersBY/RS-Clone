@@ -10,37 +10,38 @@ import { IPlayerInfo } from "../types/types";
 export default class View {
   constructor(
     private renderer: MapRenderer = new MapRenderer(),
-    private ui?: PlayerInterface,
-    // public dice: Dice = new Dice,
-  ) {}
+    private ui?: PlayerInterface
+  ) // public dice: Dice = new Dice,
+  {}
 
-    init() {
-      setTimeout(() => {
+  init() {
+    setTimeout(() => {
       // this.renderStaticUI(playerInfo, player) //need player and playerINfo[]
       this.renderFullMap();
-      socket.emit('updateMap', localStorage.getItem('Room'))
-      this.createPlayers()
-      this.resources()
-      this.buildingStock()
+      socket.emit("updateMap", localStorage.getItem("Room"));
+      this.createPlayers();
+      this.resources();
+      this.buildingStock();
 
       // add renderfullUI(player: number)
-      }, 0);
-
+    }, 0);
   }
 
   renderFullMap() {
-    socket.on('renderFullMapView', mapObj => {
+    socket.on("renderFullMapView", (mapObj) => {
       const mapContainer = document.getElementById("map");
       if (mapContainer) {
         mapContainer.innerHTML = "";
-        const mapTree = this.renderer.getMapAsNodeTree(mapObj as Array<IHex>) as string;
+        const mapTree = this.renderer.getMapAsNodeTree(
+          mapObj as Array<IHex>
+        ) as string;
         mapContainer?.insertAdjacentHTML("beforeend", mapTree);
 
-        let mapLoadedEvent = new CustomEvent('mapLoaded');
+        let mapLoadedEvent = new CustomEvent("mapLoaded");
         window.dispatchEvent(mapLoadedEvent);
-        console.log("mapLoaded")
+        console.log("mapLoaded");
       }
-    })
+    });
   }
 
   renderfullUI(playerInfo: IPlayerInfo[], player: number) {
@@ -50,7 +51,7 @@ export default class View {
   }
 
   renderStaticUI(playerInfo: IPlayerInfo[], player: number) {
-    this.renderStock(playerInfo[player])
+    this.renderStock(playerInfo[player]);
     // transfer this.state.playersInfo object to UI
   }
 
@@ -63,7 +64,7 @@ export default class View {
 
     const ids = ["build-road", "build-settlement", "build-city"];
     const stockElements: any = []; // what type?
-    ids.forEach(id => {
+    ids.forEach((id) => {
       stockElements.push(document.getElementById(id));
     });
 
@@ -73,7 +74,9 @@ export default class View {
           stockElements[i].classList.add(`player-stock__road_${player.color}`);
           break;
         case "build-settlement":
-          stockElements[i].classList.add(`player-stock__settlement_${player.color}`);
+          stockElements[i].classList.add(
+            `player-stock__settlement_${player.color}`
+          );
           break;
         case "build-city":
           stockElements[i].classList.add(`player-stock__city_${player.color}`);
@@ -89,13 +92,40 @@ export default class View {
     stockCity?.classList.add(`player-stock__city_${player.color}`); */
   }
 
+  renderErrorMessage() {
+    const errorMessage = `
+    <div class="error-message moveDown flex-bs">
+      <h3 class="error-message__text">You should choose correct number of resources</h3>
+    </div>
+    `;
+    const mainWrap = document.querySelector(".main__wrapper");
+    mainWrap?.insertAdjacentHTML("afterbegin", errorMessage);
+
+    setTimeout(() => {
+      const error = document.querySelector(".error-message");
+      error?.remove();
+     }, 3000)
+
+  }
   showPlentyPopup() {
     const modalPlenty = document.querySelector(".plenty-choose");
+    const checkedInputs = modalPlenty?.querySelectorAll<HTMLInputElement>(
+      "input.choose-checkbox:checked"
+    );
+    checkedInputs?.forEach((item) => {
+      item.checked = false;
+    });
     modalPlenty?.classList.toggle("modal");
   }
 
   showMonopolyPopup() {
     const modalMonopoly = document.querySelector(".monopoly-choose");
+    const checkedInputs = modalMonopoly?.querySelectorAll<HTMLInputElement>(
+      "input.choose-checkbox:checked"
+    );
+    checkedInputs?.forEach((item) => {
+      item.checked = false;
+    });
     modalMonopoly?.classList.toggle("modal");
   }
 
@@ -202,7 +232,7 @@ export default class View {
     `;
 
     const modalTrade = document.querySelector(".modal-trade");
-    if(modalTrade) modalTrade.innerHTML = "";
+    if (modalTrade) modalTrade.innerHTML = "";
     modalTrade?.classList.toggle("modal");
     modalTrade?.insertAdjacentHTML("afterbegin", modalTradeWrap);
   }
@@ -212,24 +242,26 @@ export default class View {
     constructionBlock?.classList.toggle("modal");
   }
 
-
   createPlayers() {
-    socket.emit('give-room-list-players', localStorage.getItem('Room'), localStorage.getItem('Name'))
-    socket.on('list-players', (usersInfo) => {
+    socket.emit(
+      "give-room-list-players",
+      localStorage.getItem("Room"),
+      localStorage.getItem("Name")
+    );
+    socket.on("list-players", (usersInfo) => {
+      const list = document.querySelector(".all-player-board");
 
-        const list = document.querySelector('.all-player-board')
+      const color = ["red", "blue", "green", "orange"];
+      while (list?.firstChild) {
+        list.removeChild(list.firstChild);
+      }
 
-        const color = ['red', 'blue', 'green', 'orange']
-        while(list?.firstChild){
-            list.removeChild(list.firstChild);
-        }
-
-        for (let i = 0; i < usersInfo.length; i++) {
-          const allRes = this.SummCards(usersInfo[i].hand.resources)
-          const allDev = this.SummCards(usersInfo[i].hand.development)
-          const div = document.createElement('div')
-          div.classList.add('player-board')
-          div.innerHTML = `
+      for (let i = 0; i < usersInfo.length; i++) {
+        const allRes = this.SummCards(usersInfo[i].hand.resources);
+        const allDev = this.SummCards(usersInfo[i].hand.development);
+        const div = document.createElement("div");
+        div.classList.add("player-board");
+        div.innerHTML = `
             <div class="player-board">
             <div class="nickname__wrap flex-bs">
               <div class="avatar__wrap avatar__${color[i]} flex-bs">
@@ -259,36 +291,43 @@ export default class View {
                 <div class="miniboard__counter flex-bs all-chainRoad">${usersInfo[i].roadChain}</div>
               </div>
             </div>
-          </div>`
+          </div>`;
 
-          list?.appendChild(div)
-          }
-    })
+        list?.appendChild(div);
+      }
+    });
   }
 
   resources() {
-    socket.on('players-hand', resources => {
-      const lumbCount = document.getElementById('hand-counter_lumber');
+    socket.on("players-hand", (resources) => {
+      const lumbCount = document.getElementById("hand-counter_lumber");
       if (lumbCount != null) lumbCount.innerHTML = `${resources.lumber}`;
-      const brickCount = document.getElementById('hand-counter_brick');
+      const brickCount = document.getElementById("hand-counter_brick");
       if (brickCount != null) brickCount.innerHTML = `${resources.brick}`;
-      const woolCount = document.getElementById('hand-counter_wool');
+      const woolCount = document.getElementById("hand-counter_wool");
       if (woolCount != null) woolCount.innerHTML = `${resources.wool}`;
-      const grainCount = document.getElementById('hand-counter_grain');
+      const grainCount = document.getElementById("hand-counter_grain");
       if (grainCount != null) grainCount.innerHTML = `${resources.grain}`;
-      const oreCount = document.getElementById('hand-counter_ore');
+      const oreCount = document.getElementById("hand-counter_ore");
       if (oreCount != null) oreCount.innerHTML = `${resources.ore}`;
-    })
+    });
   }
   buildingStock() {
-    socket.on('players-stock', players => {
-      const road = document.getElementById('build-road')?.querySelector('.player-stock__counter');
+    socket.on("players-stock", (players) => {
+      const road = document
+        .getElementById("build-road")
+        ?.querySelector(".player-stock__counter");
       if (road != null) road.innerHTML = `${players.roadsStock}`;
-      const settlement = document.getElementById('build-settlement')?.querySelector('.player-stock__counter');
-      if (settlement != null) settlement.innerHTML = `${players.settlementsStock}`;
-      const city = document.getElementById('build-city')?.querySelector('.player-stock__counter');
+      const settlement = document
+        .getElementById("build-settlement")
+        ?.querySelector(".player-stock__counter");
+      if (settlement != null)
+        settlement.innerHTML = `${players.settlementsStock}`;
+      const city = document
+        .getElementById("build-city")
+        ?.querySelector(".player-stock__counter");
       if (city != null) city.innerHTML = `${players.citiesStock}`;
-    })
+    });
   }
 
   SummCards(obj: IResources | IDevCards) {

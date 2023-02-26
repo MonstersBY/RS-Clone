@@ -21,7 +21,8 @@
   width: 9vh;
   border-radius: 50%;
 }
-.offer-message {
+.offer-message,
+.error-message {
   @extend %transition;
   position: absolute;
   top: -100%;
@@ -41,6 +42,10 @@
 }
 
 .offer-message.moveDown {
+  top: 15vh;
+  visibility: visible;
+}
+.error-message.moveDown {
   top: 15vh;
   visibility: visible;
 }

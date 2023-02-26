@@ -10,15 +10,13 @@ export default class Controller {
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
-    public canRoll?: boolean,
-    // private timer: Timer = new Timer(),
-    // private master: GameMaster = new GameMaster(),
-  )
+    public canRoll?: boolean // private timer: Timer = new Timer(),
+  ) // private master: GameMaster = new GameMaster(),
   {}
-
 
   init() {
     this.dice.init();
+    // this.addPlayCardsListener(this.player as IPlayerInfo);
 
     const buttons = `
     <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
@@ -38,7 +36,6 @@ export default class Controller {
         localStorage.getItem("Name")
       );
 
-
       socket.on("firstSettlementMode", (player, active) => {
         this.player = player;
         this.activePlayer = active;
@@ -47,7 +44,6 @@ export default class Controller {
         if (this.activePlayer) {
           this.buildFirstSettlementMode();
         }
-
       });
       socket.on("Turn-player", (player, active) => {
         this.player = player;
@@ -60,7 +56,6 @@ export default class Controller {
           nextBtn?.classList.remove("active");
           this.addListenerDices();
         }
-
       });
       socket.on("Change-playerInfo", (player) => {
         this.player = player;
@@ -73,8 +68,8 @@ export default class Controller {
       this.addBuildAndTradeListeners();
 
       // error of type
-      // this.addPlayCardsListener(this.player); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
-      this.createNewTurn()
+      this.addPlayCardsListener(this.player as IPlayerInfo); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
+      this.createNewTurn();
     }, 0);
   }
 
@@ -90,7 +85,11 @@ export default class Controller {
       }
     });
     socket.on("Client-turn", () => {
-      socket.emit("isYouTurnPlayer", localStorage.getItem("Room"), localStorage.getItem("Name"));
+      socket.emit(
+        "isYouTurnPlayer",
+        localStorage.getItem("Room"),
+        localStorage.getItem("Name")
+      );
     });
   }
 
@@ -107,7 +106,11 @@ export default class Controller {
             this.dice.audio.play();
             this.canRoll = false;
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
-            socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+            socket.emit(
+              "give-room-list-players",
+              localStorage.getItem("Room"),
+              localStorage.getItem("Name")
+            );
 
             this.addBuildAndTradeListeners();
           }
@@ -152,7 +155,6 @@ export default class Controller {
               this.view?.showConstructionCost();
               break;
             case "trade__btn":
-
               this.view?.showTradePopup(this.player as IPlayerInfo); // class modal toggle(maybe need only add class? or also clear curentState)
               // if(tradeWithPlayers)
               this.tradeWithPlayers(this.player as IPlayerInfo);
@@ -200,10 +202,10 @@ export default class Controller {
   choosePlaceSettlement(e: Event) {
     const chousen = e.target;
     if (
-      chousen instanceof HTMLDivElement
-      && chousen.classList.contains("select")
-      && (chousen.classList.contains("hex__settlement_N")
-          || chousen.classList.contains("hex__settlement_S"))
+      chousen instanceof HTMLDivElement &&
+      chousen.classList.contains("select") &&
+      (chousen.classList.contains("hex__settlement_N") ||
+        chousen.classList.contains("hex__settlement_S"))
     ) {
       if (
         chousen.classList.contains("hex__settlement_N") ||
@@ -214,18 +216,29 @@ export default class Controller {
           ...document.querySelectorAll(".hex__settlement_S"),
         ];
 
-        places.forEach((e) => { e.classList.remove("select") });
+        places.forEach((e) => {
+          e.classList.remove("select");
+        });
 
-        socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
-        socket.emit('updateMap', localStorage.getItem('Room'))
-        socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+        socket.emit(
+          "setNewSettlement",
+          this.player,
+          chousen.id,
+          localStorage.getItem("Room")
+        );
+        socket.emit("updateMap", localStorage.getItem("Room"));
+        socket.emit(
+          "give-room-list-players",
+          localStorage.getItem("Room"),
+          localStorage.getItem("Name")
+        );
 
         // chousen.classList.add("moveDown"); // Не добавляется анимация постройки города и дорог
 
         if (this.map) {
-          this.map.onclick = () => this.buildFirstRoadMode(chousen.dataset.next || "");
+          this.map.onclick = () =>
+            this.buildFirstRoadMode(chousen.dataset.next || "");
         }
-
       }
     }
   }
@@ -236,14 +249,27 @@ export default class Controller {
       if (!road.classList.contains("own")) {
         road.classList.add("select");
         road.addEventListener("click", (e) => {
-          socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
-          socket.emit('updateMap', localStorage.getItem('Room'))
-          socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-          socket.emit('Next-person', localStorage.getItem('Room'), localStorage.getItem('Name'))
+          socket.emit(
+            "setNewRoad",
+            this.player,
+            road.id,
+            localStorage.getItem("Room")
+          );
+          socket.emit("updateMap", localStorage.getItem("Room"));
+          socket.emit(
+            "give-room-list-players",
+            localStorage.getItem("Room"),
+            localStorage.getItem("Name")
+          );
+          socket.emit(
+            "Next-person",
+            localStorage.getItem("Room"),
+            localStorage.getItem("Name")
+          );
           if (this.map) this.map.onclick = null;
-        })
+        });
       }
-    })
+    });
   }
 
   // Building
@@ -256,16 +282,23 @@ export default class Controller {
     const buildConst = {
       lumber: 1,
       brick: 1,
-    }
+    };
     const hand = {
-      lumber: player.hand.resources.lumber,
+      lumber: player.hand.resources.lumber, //Controller.ts:215 Uncaught TypeError: Cannot read properties of undefined (reading 'hand')
+      // at Controller.buildRoad (Controller.ts:215:28)
+      // at HTMLDivElement.eval (Controller.ts:491:34)
+      // buildRoad @ Controller.ts:215
+      // eval @ Controller.ts:491
       brick: player.hand.resources.brick,
-    }
+    };
     if (player.roadsStock) {
       roads.forEach((e) => {
         const road = document.getElementById(e);
-        if (buildConst.lumber <= hand.lumber && buildConst.brick <= hand.brick) {
-          if (road && !road.classList.contains("own" ) ) {
+        if (
+          buildConst.lumber <= hand.lumber &&
+          buildConst.brick <= hand.brick
+        ) {
+          if (road && !road.classList.contains("own")) {
             road.classList.add("select");
             road.addEventListener("click", (e) => {
               socket.emit(
@@ -274,16 +307,22 @@ export default class Controller {
                 road.id,
                 localStorage.getItem("Room")
               );
-              socket.emit('updateMap', localStorage.getItem('Room'))
-              socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+              socket.emit("updateMap", localStorage.getItem("Room"));
+              socket.emit(
+                "give-room-list-players",
+                localStorage.getItem("Room"),
+                localStorage.getItem("Name")
+              );
               road.classList.add("moveDown"); // need add class after render map (can add movedown class)
             });
           }
         } else {
-          console.log('not money')
+          console.log("not money");
         }
-      })
-    } else {console.log('no road')};
+      });
+    } else {
+      console.log("no road");
+    }
   }
 
   buildSettlement(player: IPlayerInfo) {
@@ -297,20 +336,22 @@ export default class Controller {
       brick: 1,
       wool: 1,
       grain: 1,
-    }
+    };
     const hand = {
       lumber: player.hand.resources.lumber,
       brick: player.hand.resources.brick,
       wool: player.hand.resources.wool,
       grain: player.hand.resources.grain,
-    }
+    };
     if (player.settlementsStock) {
       settlements.forEach((e) => {
         const settlement = document.getElementById(e);
-        if (buildConst.lumber <= hand.lumber &&
-            buildConst.brick <= hand.brick &&
-            buildConst.wool <= hand.wool &&
-            buildConst.grain <= hand.grain) {
+        if (
+          buildConst.lumber <= hand.lumber &&
+          buildConst.brick <= hand.brick &&
+          buildConst.wool <= hand.wool &&
+          buildConst.grain <= hand.grain
+        ) {
           if (settlement && !settlement?.classList.contains("own")) {
             settlement.classList.add("select");
             settlement.addEventListener("click", (x) => {
@@ -321,17 +362,23 @@ export default class Controller {
                 chousen.id,
                 localStorage.getItem("Room")
               );
-              socket.emit('updateMap', localStorage.getItem('Room'))
-              socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
+              socket.emit("updateMap", localStorage.getItem("Room"));
+              socket.emit(
+                "give-room-list-players",
+                localStorage.getItem("Room"),
+                localStorage.getItem("Name")
+              );
 
               // settlement.classList.add("moveDown"); //need add class after render map
             });
           }
         } else {
-          console.log('not money')
+          console.log("not money");
         }
       });
-    } else {console.log('no settlements')}
+    } else {
+      console.log("no settlements");
+    }
   }
 
   buildCity(player: IPlayerInfo) {
@@ -339,11 +386,11 @@ export default class Controller {
     const buildConst = {
       ore: 3,
       grain: 2,
-    }
+    };
     const hand = {
       ore: player.hand.resources.ore,
       grain: player.hand.resources.grain,
-    }
+    };
     if (player.settlementsStock) {
       settlements.forEach((e) => {
         const settlement = document.getElementById(e) as HTMLDivElement;
@@ -351,7 +398,6 @@ export default class Controller {
         if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain) {
           settlement.style.transform = "scale(1.5)";
           settlement.addEventListener("click", (e) => {
-
             // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
             // this.state?.updateMap();
             if (e.target && e.target instanceof HTMLElement)
@@ -361,16 +407,22 @@ export default class Controller {
                 settlement.id,
                 localStorage.getItem("Room")
               );
-              socket.emit('updateMap', localStorage.getItem('Room'))
-              socket.emit('give-room-list-players', localStorage.getItem("Room"), localStorage.getItem("Name"))
-              // e.target.classList.add("city", "moveDown"); //need add animation,
-              // maybe city need add in another place
+            socket.emit("updateMap", localStorage.getItem("Room"));
+            socket.emit(
+              "give-room-list-players",
+              localStorage.getItem("Room"),
+              localStorage.getItem("Name")
+            );
+            // e.target.classList.add("city", "moveDown"); //need add animation,
+            // maybe city need add in another place
           });
         } else {
-          console.log('not money')
+          console.log("not money");
         }
       });
-    } else {console.log('no city')}
+    } else {
+      console.log("no city");
+    }
   }
 
   // TRADE LOGIC
@@ -390,13 +442,14 @@ export default class Controller {
         this.wishHandler(e);
       });
 
-    if (positiveCheck) positiveCheck.addEventListener("click", () => {
-      this.makeOffer();
-    });
-    if (negativeCheck) negativeCheck.addEventListener("click", () => {
-
-      this.view?.showTradePopup(this.player as IPlayerInfo);
-    });
+    if (positiveCheck)
+      positiveCheck.addEventListener("click", () => {
+        this.makeOffer();
+      });
+    if (negativeCheck)
+      negativeCheck.addEventListener("click", () => {
+        this.view?.showTradePopup(this.player as IPlayerInfo);
+      });
   }
 
   offerHandler(e: Event, player: IPlayerInfo) {
@@ -412,7 +465,10 @@ export default class Controller {
           this.increaseCounter(id); //must be 1 in result
         } else {
           const counterNumber = this.getCounterNumber(id);
-          if (counterNumber && counterNumber < player.hand.resources[resource]) {
+          if (
+            counterNumber &&
+            counterNumber < player.hand.resources[resource]
+          ) {
             this.increaseCounter(id);
           } else {
             return;
@@ -515,7 +571,6 @@ export default class Controller {
     }
   }
 
-
   // Development cards
   buyDevelopCard() {
     // this.state?.buyDevelopmentCard(this.player1 as IPlayerInfo);
@@ -528,7 +583,8 @@ export default class Controller {
         if (e.target instanceof HTMLElement) {
           const target = e.target.closest(".game-btn");
           if (target) {
-            const name = e.target.className.split(" ")[1];
+            const name = target.className.split(" ")[1];
+            console.log(name);
             switch (name) {
               case "knight":
                 console.log(name, "knight");
@@ -538,11 +594,16 @@ export default class Controller {
                 break;
               case "monopoly":
                 this.view?.showMonopolyPopup();
+                this.playMonopolyCard(player);
                 // this.state?.playMonopolyCard(player);
                 // this.state?.useMonopolyEffect(player, this.choiceHandler());
                 break;
               case "plenty":
-                this.view?.showPlentyPopup();
+                if (/* isAfterBuyingTurn */ true) {
+                  this.view?.showPlentyPopup();
+                  this.playPlentyCard(player);
+                }
+
                 // this.state?.playPlentyCard(player);
                 break;
               case "road":
@@ -562,6 +623,93 @@ export default class Controller {
       });
   }
 
+  playPlentyCard(player: IPlayerInfo) {
+    const positiveCheck = document.querySelector(".plenty__check");
+    const closeCheck = document.querySelector(".plenty__close");
+
+   /*  positiveCheck?.addEventListener("click", () => {
+      this.cardPopupHandler(player, ".plenty-choose", "playPlentyCard");
+    }); */
+
+ /*    positiveCheck?.removeEventListener(
+      "click",
+      this.cardPopupHandler.bind(
+        this,
+        player,
+        ".plenty-choose",
+        "playPlentyCard"
+      )
+    ); */
+
+    const fn = () => {
+      this.cardPopupHandler(player, ".plenty-choose", "playPlentyCard");
+    }
+    positiveCheck?.removeEventListener("click", fn);
+    positiveCheck?.addEventListener("click", fn);
+
+    // positiveCheck?.addEventListener("click", this.cardPopupHandler.bind(this, player, ".plenty-choose", "playPlentyCard"));
+
+    closeCheck?.addEventListener("click", () => {
+      const popup = document.querySelector(".plenty-choose");
+      positiveCheck?.removeEventListener("click", fn);
+      popup?.classList.remove("modal");
+    });
+  }
+
+  cardPopupHandler(player: IPlayerInfo, sel: string, eventType: string) {
+    const cardPopup = document.querySelector(sel);
+    const wishResources: IResources = {
+      brick: 0,
+      grain: 0,
+      lumber: 0,
+      ore: 0,
+      wool: 0,
+    };
+
+    const checkedInputs = cardPopup?.querySelectorAll<HTMLInputElement>(
+      "input.choose-checkbox:checked"
+    );
+
+    switch (sel) {
+      case ".plenty-choose":
+        if (checkedInputs && checkedInputs.length > 2) {
+          this.view?.renderErrorMessage();
+        }
+        break;
+      case ".monopoly-choose":
+        if (checkedInputs && checkedInputs.length > 1) {
+          this.view?.renderErrorMessage();
+        }
+    }
+    checkedInputs?.forEach((item) => {
+      wishResources[item.value as keyof IResources]++;
+    });
+
+    console.log(wishResources);
+    socket.emit(
+      eventType,
+      localStorage.getItem("Room"),
+      wishResources,
+      this.player
+    );
+    cardPopup?.classList.remove("modal");
+    // this.removeEventListener("click", this.cardPopupHandler)
+  }
+
+  playMonopolyCard(player: IPlayerInfo) {
+    const positiveCheck = document.querySelector(".monopoly__check");
+    const closeCheck = document.querySelector(".monopoly__close");
+
+    positiveCheck?.addEventListener("click", ()=> {
+      this.cardPopupHandler(player, ".monopoly-choose", "playMonopolyCard");
+    });
+
+    closeCheck?.addEventListener("click", () => {
+      const popup = document.querySelector(".monopoly-choose");
+      popup?.classList.remove("modal");
+     });
+
+  }
   playKnightCard(player: IPlayerInfo) {
     player.hand.development.knights -= 1;
     player.armySize += 1;

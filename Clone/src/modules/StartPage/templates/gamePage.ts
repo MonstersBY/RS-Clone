@@ -251,32 +251,32 @@ export const game = `
           <div class="modal-choose__wrap flex-bs">
             <div id="plenty-choose_lumber" class="resource__container choose-resource resource flex-bs">
               <div class="resource-icon icon-lumber"></div>
-              <input type="checkbox" checked class="choose-checkbox">
-              <input type="checkbox" checked class="choose-checkbox">
+              <input type="checkbox" value="lumber" class="choose-checkbox">
+              <input type="checkbox" value="lumber" class="choose-checkbox">
             </div>
             <div id="plenty-choose_grain" class="resource__container choose-resource resource flex-bs">
               <div class="resource-icon icon-grain"></div>
-              <input type="checkbox" checked class="choose-checkbox">
-              <input type="checkbox" checked class="choose-checkbox">
+              <input type="checkbox" value="grain" class="choose-checkbox">
+              <input type="checkbox" value="grain" class="choose-checkbox">
             </div>
             <div id="plenty-choose_wool" class="resource__container choose-resource resource flex-bs">
               <div class="resource-icon icon-wool"></div>
-              <input type="checkbox" class="choose-checkbox">
-              <input type="checkbox" checked class="choose-checkbox">
+              <input type="checkbox" value="wool" class="choose-checkbox">
+              <input type="checkbox" value="wool" class="choose-checkbox">
             </div>
             <div id="plenty-choose_brick" class="resource__container choose-resource resource flex-bs">
               <div class="resource-icon icon-brick"></div>
-              <input type="checkbox" class="choose-checkbox">
-              <input type="checkbox" checked class="choose-checkbox">
+              <input type="checkbox" value="brick" class="choose-checkbox">
+              <input type="checkbox" value="brick" class="choose-checkbox">
             </div>
             <div id="plenty-choose_ore" class="resource__container choose-resource resource flex-bs">
               <div class="resource-icon icon-ore"></div>
-              <input type="checkbox" class="choose-checkbox">
-              <input type="checkbox" checked class="choose-checkbox">
+              <input type="checkbox" value="ore" class="choose-checkbox">
+              <input type="checkbox" value="ore" class="choose-checkbox">
             </div>
             <div class="choose__btns flex-row">
-              <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon">
-              <img src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
+              <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon plenty__check">
+              <img src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon plenty__close">
             </div>
           </div>
         </div>
@@ -284,27 +284,27 @@ export const game = `
           <div class="modal-choose__wrap flex-bs">
             <div id="monopoly-choose_lumber" class="resource__container choose-resource resource flex-bs">
               <div class="resource-icon icon-lumber"></div>
-              <input type="checkbox" checked class="choose-checkbox">
+              <input type="checkbox" value="lumber" class="choose-checkbox">
             </div>
             <div id="monopoly-choose_grain" class="resource__container choose-resource resource flex-bs">
               <div class="resource-icon icon-grain"></div>
-              <input type="checkbox" checked class="choose-checkbox">
+              <input type="checkbox" value="grain" class="choose-checkbox">
             </div>
             <div id="monopoly-choose_wool" class="resource__container choose-resource resource flex-bs">
               <div class="resource-icon icon-wool"></div>
-              <input type="checkbox" class="choose-checkbox">
+              <input type="checkbox" value="wool "class="choose-checkbox">
             </div>
             <div id="monopoly-choose_brick" class="resource__container choose-resource resource flex-bs">
               <div class="resource-icon icon-brick"></div>
-              <input type="checkbox" class="choose-checkbox">
+              <input type="checkbox" value="brick" class="choose-checkbox">
             </div>
             <div id="monopoly-choose_ore" class="resource__container choose-resource resource flex-bs">
               <div class="resource-icon icon-ore"></div>
-              <input type="checkbox" class="choose-checkbox">
+              <input type="checkbox" value="ore" class="choose-checkbox">
             </div>
             <div class="choose__btns flex-row">
-              <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon">
-              <img src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
+              <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon monopoly__check">
+              <img src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon monopoly__close">
             </div>
           </div>
         </div>
