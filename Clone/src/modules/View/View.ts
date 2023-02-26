@@ -15,30 +15,31 @@ interface IStock {
 export default class View {
   constructor(
     private renderer: MapRenderer = new MapRenderer(),
-    private ui?: PlayerInterface,
-    // public dice: Dice = new Dice,
-  ) {}
+    private ui?: PlayerInterface
+  ) // public dice: Dice = new Dice,
+  {}
 
     init() {
       setTimeout(() => {
       this.renderFullMap();
       socket.emit('updateMap', localStorage.getItem('Room'))
       }, 0);
-
   }
 
   renderFullMap() {
-    socket.on('renderFullMapView', mapObj => {
+    socket.on("renderFullMapView", (mapObj) => {
       const mapContainer = document.getElementById("map");
       if (mapContainer) {
         mapContainer.innerHTML = "";
-        const mapTree = this.renderer.getMapAsNodeTree(mapObj as Array<IHex>) as string;
+        const mapTree = this.renderer.getMapAsNodeTree(
+          mapObj as Array<IHex>
+        ) as string;
         mapContainer?.insertAdjacentHTML("beforeend", mapTree);
 
-        let mapLoadedEvent = new CustomEvent('mapLoaded');
+        let mapLoadedEvent = new CustomEvent("mapLoaded");
         window.dispatchEvent(mapLoadedEvent);
       }
-    })
+    });
   }
 
   renderfullUI(playerInfo: IPlayerInfo[], player: number) {
@@ -48,7 +49,7 @@ export default class View {
   }
 
   renderStaticUI(playerInfo: IPlayerInfo[], player: number) {
-    this.renderStock(playerInfo[player])
+    this.renderStock(playerInfo[player]);
     // transfer this.state.playersInfo object to UI
   }
 
@@ -61,7 +62,7 @@ export default class View {
 
     const ids = ["build-road", "build-settlement", "build-city"];
     const stockElements: any = []; // what type?
-    ids.forEach(id => {
+    ids.forEach((id) => {
       stockElements.push(document.getElementById(id));
     });
 
@@ -71,7 +72,9 @@ export default class View {
           stockElements[i].classList.add(`player-stock__road_${player.color}`);
           break;
         case "build-settlement":
-          stockElements[i].classList.add(`player-stock__settlement_${player.color}`);
+          stockElements[i].classList.add(
+            `player-stock__settlement_${player.color}`
+          );
           break;
         case "build-city":
           stockElements[i].classList.add(`player-stock__city_${player.color}`);
@@ -87,13 +90,40 @@ export default class View {
     stockCity?.classList.add(`player-stock__city_${player.color}`); */
   }
 
+  renderErrorMessage() {
+    const errorMessage = `
+    <div class="error-message moveDown flex-bs">
+      <h3 class="error-message__text">You should choose correct number of resources</h3>
+    </div>
+    `;
+    const mainWrap = document.querySelector(".main__wrapper");
+    mainWrap?.insertAdjacentHTML("afterbegin", errorMessage);
+
+    setTimeout(() => {
+      const error = document.querySelector(".error-message");
+      error?.remove();
+     }, 3000)
+
+  }
   showPlentyPopup() {
     const modalPlenty = document.querySelector(".plenty-choose");
+    const checkedInputs = modalPlenty?.querySelectorAll<HTMLInputElement>(
+      "input.choose-checkbox:checked"
+    );
+    checkedInputs?.forEach((item) => {
+      item.checked = false;
+    });
     modalPlenty?.classList.toggle("modal");
   }
 
   showMonopolyPopup() {
     const modalMonopoly = document.querySelector(".monopoly-choose");
+    const checkedInputs = modalMonopoly?.querySelectorAll<HTMLInputElement>(
+      "input.choose-checkbox:checked"
+    );
+    checkedInputs?.forEach((item) => {
+      item.checked = false;
+    });
     modalMonopoly?.classList.toggle("modal");
   }
 
@@ -199,7 +229,7 @@ export default class View {
           </div>
     `;
     const modalTrade = document.querySelector(".modal-trade");
-    if(modalTrade) modalTrade.innerHTML = "";
+    if (modalTrade) modalTrade.innerHTML = "";
     modalTrade?.classList.toggle("modal");
     modalTrade?.insertAdjacentHTML("afterbegin", modalTradeWrap);
   }
@@ -209,13 +239,14 @@ export default class View {
     constructionBlock?.classList.toggle("modal");
   }
 
+
   createPlayers(usersInfo: [IPlayerInfo]) {
         const list = document.querySelector('.all-player-board')
 
-        const color = ['red', 'blue', 'green', 'orange']
-        while(list?.firstChild){
-            list.removeChild(list.firstChild);
-        }
+      const color = ["red", "blue", "green", "orange"];
+      while (list?.firstChild) {
+        list.removeChild(list.firstChild);
+      }
 
         for (let i = 0; i < usersInfo.length; i++) {
           const allRes = this.SummCards(usersInfo[i].hand.resources)
@@ -253,8 +284,7 @@ export default class View {
                 <div class="miniboard__counter flex-bs all-chainRoad">${usersInfo[i].roadChain}</div>
               </div>
             </div>
-          </div>`
-
+          </div>`;
           list?.appendChild(div)
           }
   }

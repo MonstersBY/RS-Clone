@@ -10,13 +10,11 @@ export default class Controller {
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
+
     public canRoll?: boolean,
     public robbering?: boolean,
-    // private timer: Timer = new Timer(),
-    // private master: GameMaster = new GameMaster(),
   )
   {}
-
 
   init() {
     this.dice.init();
@@ -34,8 +32,6 @@ export default class Controller {
         localStorage.getItem("Room"),
         localStorage.getItem("Name")
       );
-      this.robbering = false
-
 
       socket.on("firstSettlementMode", (player, active) => {
         this.player = player;
@@ -45,7 +41,6 @@ export default class Controller {
         if (this.activePlayer) {
           this.buildFirstSettlementMode();
         }
-
       });
       socket.on("Turn-player", (player, active) => {
         this.player = player;
@@ -58,7 +53,6 @@ export default class Controller {
         if (this.activePlayer) {
           this.addListenerDices();
         }
-
       });
       socket.on("Change-playerInfo", (players) => {
         const indexUser = players.findIndex((findUser: { name: string | undefined; }) => findUser.name === this.player?.name)
@@ -76,8 +70,8 @@ export default class Controller {
       document.body.insertAdjacentHTML("afterbegin", buttons);
 
       // error of type
-      // this.addPlayCardsListener(this.player); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
-      this.createNewTurn()
+      this.addPlayCardsListener(this.player as IPlayerInfo); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
+      this.createNewTurn();
     }, 0);
     // this.countCardRobber()
   }
@@ -125,7 +119,11 @@ export default class Controller {
       }
     });
     socket.on("Client-turn", () => {
-      socket.emit("isYouTurnPlayer", localStorage.getItem("Room"), localStorage.getItem("Name"));
+      socket.emit(
+        "isYouTurnPlayer",
+        localStorage.getItem("Room"),
+        localStorage.getItem("Name")
+      );
     });
   }
 
@@ -189,9 +187,8 @@ export default class Controller {
             case "trade__btn":
               this.view?.showTradePopup(this.player as IPlayerInfo); // class modal toggle(maybe need only add class? or also clear curentState)
               // if(tradeWithPlayers)
-              // this.trade();   // logic of trade
               this.tradeWithPlayers(this.player as IPlayerInfo);
-              break
+              break;
             case "trade-devcard__btn":
               this.buyDevelopCard(this.player as IPlayerInfo);
               break;
@@ -219,10 +216,10 @@ export default class Controller {
   choosePlaceSettlement(e: Event) {
     const chousen = e.target;
     if (
-      chousen instanceof HTMLDivElement
-      && chousen.classList.contains("select")
-      && (chousen.classList.contains("hex__settlement_N")
-          || chousen.classList.contains("hex__settlement_S"))
+      chousen instanceof HTMLDivElement &&
+      chousen.classList.contains("select") &&
+      (chousen.classList.contains("hex__settlement_N") ||
+        chousen.classList.contains("hex__settlement_S"))
     ) {
       if (
         chousen.classList.contains("hex__settlement_N") ||
@@ -233,7 +230,9 @@ export default class Controller {
           ...document.querySelectorAll(".hex__settlement_S"),
         ];
 
-        places.forEach((e) => { e.classList.remove("select") });
+        places.forEach((e) => {
+          e.classList.remove("select");
+        });
 
         socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
         socket.emit('updateMap', localStorage.getItem('Room'))
@@ -262,9 +261,9 @@ export default class Controller {
           socket.emit('give-room-list-players', localStorage.getItem("Room"))
           socket.emit('Next-person', localStorage.getItem('Room'))
           if (this.map) this.map.onclick = null;
-        })
+        });
       }
-    })
+    });
   }
 
   // Building
@@ -277,14 +276,15 @@ export default class Controller {
     const buildConst = {
       lumber: 1,
       brick: 1,
-    }
+    };
     const hand = {
       lumber: player.hand.resources.lumber,
       brick: player.hand.resources.brick,
-    }
+    };
     if (player.roadsStock) {
       roads.forEach((e) => {
         const road = document.getElementById(e);
+
         if ((buildConst.lumber <= hand.lumber && buildConst.brick <= hand.brick) || isFree) {
           if (road && !road.classList.contains("own")) {
             road.classList.add("select");
@@ -304,10 +304,12 @@ export default class Controller {
             });
           }
         } else {
-          console.log('not money')
+          console.log("not money");
         }
-      })
-    } else {console.log('no road')};
+      });
+    } else {
+      console.log("no road");
+    }
   }
 
   buildSettlement(player: IPlayerInfo) {
@@ -321,20 +323,22 @@ export default class Controller {
       brick: 1,
       wool: 1,
       grain: 1,
-    }
+    };
     const hand = {
       lumber: player.hand.resources.lumber,
       brick: player.hand.resources.brick,
       wool: player.hand.resources.wool,
       grain: player.hand.resources.grain,
-    }
+    };
     if (player.settlementsStock) {
       settlements.forEach((e) => {
         const settlement = document.getElementById(e);
-        if (buildConst.lumber <= hand.lumber &&
-            buildConst.brick <= hand.brick &&
-            buildConst.wool <= hand.wool &&
-            buildConst.grain <= hand.grain) {
+        if (
+          buildConst.lumber <= hand.lumber &&
+          buildConst.brick <= hand.brick &&
+          buildConst.wool <= hand.wool &&
+          buildConst.grain <= hand.grain
+        ) {
           if (settlement && !settlement?.classList.contains("own")) {
             settlement.classList.add("select");
             settlement.addEventListener("click", (x) => {
@@ -352,10 +356,12 @@ export default class Controller {
             });
           }
         } else {
-          console.log('not money')
+          console.log("not money");
         }
       });
-    } else {console.log('no settlements')}
+    } else {
+      console.log("no settlements");
+    }
   }
 
   buildCity(player: IPlayerInfo) {
@@ -363,11 +369,11 @@ export default class Controller {
     const buildConst = {
       ore: 3,
       grain: 2,
-    }
+    };
     const hand = {
       ore: player.hand.resources.ore,
       grain: player.hand.resources.grain,
-    }
+    };
     if (player.settlementsStock) {
       settlements.forEach((e) => {
         const settlement = document.getElementById(e) as HTMLDivElement;
@@ -375,7 +381,6 @@ export default class Controller {
         if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain) {
           settlement.style.transform = "scale(1.5)";
           settlement.addEventListener("click", (e) => {
-
             // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
             // this.state?.updateMap();
             if (e.target && e.target instanceof HTMLElement)
@@ -387,14 +392,14 @@ export default class Controller {
               );
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
-              // e.target.classList.add("city", "moveDown"); //need add animation,
-              // maybe city need add in another place
           });
         } else {
-          console.log('not money')
+          console.log("not money");
         }
       });
-    } else {console.log('no city')}
+    } else {
+      console.log("no city");
+    }
   }
 
   // TRADE LOGIC
@@ -414,13 +419,14 @@ export default class Controller {
         this.wishHandler(e);
       });
 
-    if (positiveCheck) positiveCheck.addEventListener("click", () => {
-      this.makeOffer();
-    });
-    if (negativeCheck) negativeCheck.addEventListener("click", () => {
-
-      this.view?.showTradePopup(this.player as IPlayerInfo);
-    });
+    if (positiveCheck)
+      positiveCheck.addEventListener("click", () => {
+        this.makeOffer();
+      });
+    if (negativeCheck)
+      negativeCheck.addEventListener("click", () => {
+        this.view?.showTradePopup(this.player as IPlayerInfo);
+      });
   }
 
   offerHandler(e: Event, player: IPlayerInfo) {
@@ -436,7 +442,10 @@ export default class Controller {
           this.increaseCounter(id); //must be 1 in result
         } else {
           const counterNumber = this.getCounterNumber(id);
-          if (counterNumber && counterNumber < player.hand.resources[resource]) {
+          if (
+            counterNumber &&
+            counterNumber < player.hand.resources[resource]
+          ) {
             this.increaseCounter(id);
           } else {
             return;
@@ -539,7 +548,6 @@ export default class Controller {
     }
   }
 
-
   // Development cards
   buyDevelopCard(player: IPlayerInfo) {
     const buildConst = {
@@ -566,26 +574,28 @@ export default class Controller {
         if (e.target instanceof HTMLElement) {
           const target = e.target.closest(".game-btn");
           if (target) {
-            const name = e.target.className.split(" ")[1];
+            const name = target.className.split(" ")[1];
+            console.log(name);
             switch (name) {
-              case "dev-knight":
+              case "knights-develop__btn":
                 if(this.player?.hand.development.knights){
                   this.setRobber(player, true);
                 }
                 break;
-              case "dev-monopoly":
+              case "monopoly-develop__btn":
                 if(this.player?.hand.development.monopoly){
+                  console.log('work')
                   this.view?.showMonopolyPopup();
                   this.playMonopolyCard(player)
                 }
                 break;
-              case "dev-plenty":
+              case "plenty-develop__btn":
                 if(this.player?.hand.development.plenty){
                   this.view?.showPlentyPopup();
                   this.playPlentyCard(player)
                 }
                 break;
-              case "dev-road":
+              case "road-develop__btn":
                 if (this.player?.hand.development.road) {
                   this.buildRoad(player, true);
                   document.addEventListener(
