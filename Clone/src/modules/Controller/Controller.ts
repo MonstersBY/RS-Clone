@@ -69,8 +69,8 @@ export default class Controller {
       this.map = document.getElementById("map") as HTMLDivElement;
       document.body.insertAdjacentHTML("afterbegin", buttons);
 
-      // error of type
-      this.addPlayCardsListener(this.player as IPlayerInfo); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
+      
+      this.addPlayCardsListener(this.player as IPlayerInfo);
       this.createNewTurn();
     }, 0);
     // this.countCardRobber()
@@ -158,7 +158,6 @@ export default class Controller {
   activePlayerPlay() {
     const nextBtn = document.getElementById("create-new-turn");
     this.addBuildAndTradeListeners();
-    this.addPlayCardsListener(this.player as IPlayerInfo);
     nextBtn?.classList.add("active");
   }
 
@@ -571,11 +570,10 @@ export default class Controller {
     document
       .getElementById("develop-card-list")
       ?.addEventListener("click", (e) => {
-        if (e.target instanceof HTMLElement) {
+        if (e.target instanceof HTMLElement && this.activePlayer) {
           const target = e.target.closest(".game-btn");
           if (target) {
             const name = target.className.split(" ")[1];
-            console.log(name);
             switch (name) {
               case "knights-develop__btn":
                 if(this.player?.hand.development.knights){
@@ -584,7 +582,6 @@ export default class Controller {
                 break;
               case "monopoly-develop__btn":
                 if(this.player?.hand.development.monopoly){
-                  console.log('work')
                   this.view?.showMonopolyPopup();
                   this.playMonopolyCard(player)
                 }
@@ -634,13 +631,15 @@ export default class Controller {
     const plentyScreen = document.querySelector('.plenty-choose')
     const ready = getElementBySelector('.plenty_check')
     ready.onclick = function(){
-        const checkedInputs = plentyScreen?.querySelectorAll<HTMLInputElement>(
-          "input.choose-checkbox:checked"
-        );
-        if(checkedInputs) {
-          const resources = [checkedInputs[0].value, checkedInputs[1].value]
-          socket.emit('playPlentyCard', localStorage.getItem('Room'), player, resources)
-        }
+      const checkedInputs = plentyScreen?.querySelectorAll<HTMLInputElement>(
+        "input.choose-checkbox:checked"
+      );
+      if(checkedInputs) {
+        const resources = [checkedInputs[0].value, checkedInputs[1].value]
+        socket.emit('playPlentyCard', localStorage.getItem('Room'), player, resources)
+      }
+      const modalPlenty = document.querySelector(".plenty-choose");
+      modalPlenty?.classList.toggle("modal");
     }
   }
 

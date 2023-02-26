@@ -107,23 +107,11 @@ export default class View {
   }
   showPlentyPopup() {
     const modalPlenty = document.querySelector(".plenty-choose");
-    const checkedInputs = modalPlenty?.querySelectorAll<HTMLInputElement>(
-      "input.choose-checkbox:checked"
-    );
-    checkedInputs?.forEach((item) => {
-      item.checked = false;
-    });
     modalPlenty?.classList.toggle("modal");
   }
 
   showMonopolyPopup() {
     const modalMonopoly = document.querySelector(".monopoly-choose");
-    const checkedInputs = modalMonopoly?.querySelectorAll<HTMLInputElement>(
-      "input.choose-checkbox:checked"
-    );
-    checkedInputs?.forEach((item) => {
-      item.checked = false;
-    });
     modalMonopoly?.classList.toggle("modal");
   }
 
