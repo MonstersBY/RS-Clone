@@ -73,7 +73,7 @@ export default class Controller {
       this.addBuildAndTradeListeners();
 
       // error of type
-      // this.addPlayCardsListener(this.player); // don't work???, Type 'undefined' is not assignable to type 'IPlayerInfo'.
+      this.addPlayCardsListener(this.player as IPlayerInfo);
       this.createNewTurn()
     }, 0);
   }

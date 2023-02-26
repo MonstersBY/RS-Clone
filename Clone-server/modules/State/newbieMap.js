@@ -789,7 +789,7 @@ const newbieMap = [
     road_W: {
       id: "27_road_W",
       player: false,
-      nextNodes: ["20_settlement_S", "33_settlement_N"],
+      nextNodes: ["20_settlement_S", "32_settlement_N"],
     },
     road_S: false,
     settlement_S: false,

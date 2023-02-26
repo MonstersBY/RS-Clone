@@ -176,8 +176,7 @@ io.on("connection", (socket) => {
 
         allGame.get(room).playersInfo[index].roadChain = roadCounter(
             allGame.get(room).mapObject,
-            player.color, 
-            id
+            player,
         );
 
         socket.emit('Change-playerInfo', allGame.get(room).playersInfo[index])

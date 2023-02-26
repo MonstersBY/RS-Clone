@@ -227,8 +227,6 @@ export default class State {
     // add to playerInfo
     player.roads.push(id);
     player.avalible.push(...nearRoads, ...nearNodes);
-
-    // this.calculateRoadChain(player, id, nearNodes);
   }
 
   // Development
@@ -298,10 +296,6 @@ export default class State {
         };
       }
     }
-  }
-
-  calculateRoadChain(map, playerInfo, id) {
-    playerInfo.roadChain = roadCounter(map, playerInfo.color, id);
   }
 
   calculateMaxRoadChain(map, playersInfo) {
