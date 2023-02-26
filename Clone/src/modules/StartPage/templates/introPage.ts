@@ -57,7 +57,7 @@ export const intro = `
                   </div>
                   <div class="team__card">
                       <div class="team__photo-wrap">
-                          <img src="assets/images/photo_staf.png" alt="anonymous" class="team__photo">
+                          <img src="assets/images/team_photo/Arsenii.jpg" alt="anonymous" class="team__photo">
                       </div>
                       <div class="team__card-body">
                         <h3 class="team__card-title">
