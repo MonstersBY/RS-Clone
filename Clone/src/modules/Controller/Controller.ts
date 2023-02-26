@@ -20,11 +20,7 @@ export default class Controller {
     this.dice.init();
     this.chatMessages()
     this.createMessage()
-    const buttons = `
-    <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
-    <button id="first-set" style='display: none'>first-set<button>
-    </div>
-    `;
+
     socket.emit('give-room-list-players', localStorage.getItem('Room'))
     setTimeout(() => {
       socket.emit(
@@ -33,47 +29,45 @@ export default class Controller {
         localStorage.getItem("Name")
       );
 
-      socket.on("firstSettlementMode", (player, active) => {
-        this.player = player;
-        this.activePlayer = active;
-        console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
+    socket.on("firstSettlementMode", (player, active) => {
+      this.player = player;
+      this.activePlayer = active;
+      console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
 
-        if (this.activePlayer) {
-          this.buildFirstSettlementMode();
-        }
-      });
-      socket.on("Turn-player", (player, active) => {
-        this.player = player;
-        this.activePlayer = active;
-        this.canRoll = active;
-        console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
+      if (this.activePlayer) {
+        this.buildFirstSettlementMode();
+      }
+    });
 
-        const nextBtn = document.getElementById("create-new-turn");
-        nextBtn?.classList.remove("active");
-        if (this.activePlayer) {
-          this.addListenerDices();
-        }
-      });
-      socket.on("Change-playerInfo", (players) => {
-        const indexUser = players.findIndex((findUser: { name: string | undefined; }) => findUser.name === this.player?.name)
-        this.player = players[indexUser];
-        if (this.player){
-          this.view?.resources(this.player as IPlayerInfo);
-          this.view?.buildingStock(this.player as IPlayerInfo);
-          this.view?.devCardStock(this.player as IPlayerInfo);
-          this.view?.constructionConst(this.player as IPlayerInfo);
-        }
-        this.view?.createPlayers(players as [IPlayerInfo])
-      });
+    socket.on("Turn-player", (player, active) => {
+      this.player = player;
+      this.activePlayer = active;
+      this.canRoll = active;
+      console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`); // TODO delete console.log()
 
-      this.map = document.getElementById("map") as HTMLDivElement;
-      document.body.insertAdjacentHTML("afterbegin", buttons);
+      const nextBtn = document.getElementById("create-new-turn");
+      nextBtn?.classList.remove("active");
+      if (this.activePlayer) {
+        this.addListenerDices();
+      }
+    });
 
-      
-      this.addPlayCardsListener(this.player as IPlayerInfo);
-      this.createNewTurn();
+    socket.on("Change-playerInfo", (players) => {
+      const indexUser = players.findIndex((findUser: { name: string | undefined; }) => findUser.name === this.player?.name)
+      this.player = players[indexUser];
+      if (this.player){
+        this.view?.resources(this.player as IPlayerInfo);
+        this.view?.buildingStock(this.player as IPlayerInfo);
+        this.view?.devCardStock(this.player as IPlayerInfo);
+        this.view?.constructionConst(this.player as IPlayerInfo);
+      }
+      this.view?.createPlayers(players as [IPlayerInfo])
+    });
+
+    this.map = document.getElementById("map") as HTMLDivElement;
+    this.addPlayCardsListener(this.player as IPlayerInfo);
+    this.createNewTurn();
     }, 0);
-    // this.countCardRobber()
   }
 
   chatMessages() {
@@ -96,12 +90,14 @@ export default class Controller {
       }
     })
   }
+
   createMessage() {
     socket.on('game-message', (user, message) => {
       const chatMessages = document.querySelector('.chat__messages')
       this.outputMessage(user, message);
     })
   }
+
   outputMessage(user: string, message: string) {
     const div = document.createElement('div')
     div.classList.add('message__post')
@@ -128,7 +124,6 @@ export default class Controller {
   }
 
   addListenerDices() {
-    // TODO Как типизировать callback?
     if (this.canRoll) {
       document.getElementById("roll-dice")?.addEventListener(
         "click",
@@ -136,7 +131,6 @@ export default class Controller {
           const target = e.target as HTMLElement;
           if (target && target.closest(".dice__container") && this.dice) {
             const roll = this.dice.randomDiceRoll();
-            // const roll = [5,2];
 
             this.dice.audio.play();
             this.canRoll = false;
@@ -155,6 +149,7 @@ export default class Controller {
       );
     }
   }
+
   activePlayerPlay() {
     const nextBtn = document.getElementById("create-new-turn");
     this.addBuildAndTradeListeners();
@@ -303,11 +298,11 @@ export default class Controller {
             });
           }
         } else {
-          console.log("not money");
+          console.log("not enough resources");
         }
       });
     } else {
-      console.log("no road");
+      console.log("no roads left");
     }
   }
 
@@ -355,11 +350,11 @@ export default class Controller {
             });
           }
         } else {
-          console.log("not money");
+          console.log("not enough resources");
         }
       });
     } else {
-      console.log("no settlements");
+      console.log("no settlements left");
     }
   }
 
@@ -393,11 +388,11 @@ export default class Controller {
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
           });
         } else {
-          console.log("not money");
+          console.log("not enough resources");
         }
       });
     } else {
-      console.log("no city");
+      console.log("no cities left");
     }
   }
 
@@ -562,13 +557,12 @@ export default class Controller {
     if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain && buildConst.wool <= hand.wool) {
       socket.emit('buy-develop-card', player, localStorage.getItem('Room'))
     } else {
-      console.log('not money')
+      console.log('not enough resources')
     }
   }
 
   addPlayCardsListener(player: IPlayerInfo) {
-    document
-      .getElementById("develop-card-list")
+    document.getElementById("develop-card-list")
       ?.addEventListener("click", (e) => {
         if (e.target instanceof HTMLElement && this.activePlayer) {
           const target = e.target.closest(".game-btn");
@@ -664,10 +658,11 @@ export default class Controller {
       }
     })
   }
+
   takeFromRobber() {
-    socket.on('take-one-res', sett => {
+    socket.on('take-one-res', settlement => {
       const colors: string[] = []
-      sett.forEach((e: string) =>{
+      settlement.forEach((e: string) =>{
         const div = document.getElementById(e) as HTMLDivElement
         if (div?.classList.contains('own') && !div?.classList.contains(`own_${this.player?.color}`)) {
           if (div?.classList[3].split("_")[1] != 'nobody') {
@@ -696,15 +691,4 @@ export default class Controller {
     return "here will be string with resourse";
   }
 
-  rollDiceTimer() {}
-
-  turnTimer() {}
-
-  updateState() {}
-
-  checkIsWinner() {}
-
-  endGame() {}
-
-  // Maybe need modal with game over??
 }
