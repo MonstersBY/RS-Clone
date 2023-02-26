@@ -296,10 +296,11 @@ export default class Controller {
                 localStorage.getItem("Room"),
                 isFree,
               );
-              let roadBuildedEvent = new CustomEvent("road-builded");
-              window.dispatchEvent(roadBuildedEvent);
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
+
+              let roadBuildedEvent = new CustomEvent("road-builded");
+              document.dispatchEvent(roadBuildedEvent);
             });
           }
         } else {
@@ -587,10 +588,12 @@ export default class Controller {
               case "dev-road":
                 if (this.player?.hand.development.road) {
                   this.buildRoad(player, true);
-                  window.addEventListener(
+                  document.addEventListener(
                     "road-builded",
                     () => {
-                      this.buildRoad(player, true);
+                      window.addEventListener('mapLoaded', ()=>{
+                        this.buildRoad(player, true);
+                      }, { once: true })
                     },
                     { once: true }
                   );
@@ -604,33 +607,31 @@ export default class Controller {
   }
 
   playMonopolyCard(player: IPlayerInfo){
-    const div = document.querySelector('.monopoly-choose')
-    // if(div?.classList.contains('modal')) {
-      
-    // }
-    div?.addEventListener('click', (e) =>{
+    const monopolyScreen = document.querySelector('.monopoly-choose')
+    const ready = getElementBySelector('.monopoly_check')
+    ready.onclick = function(){
       console.log('monopoly')
-      if((e.target as HTMLDivElement)?.classList.contains('ready_take')) {
-        const checkedInputs = div?.querySelector<HTMLInputElement>(
-          "input.choose-checkbox:checked"
-        );
-        socket.emit('playMonopolyCard', localStorage.getItem('Room'), player, checkedInputs?.value)
-        this.view?.showMonopolyPopup();
-      }
-    })
+      const checkedInputs = monopolyScreen?.querySelector<HTMLInputElement>(
+        "input.choose-checkbox:checked"
+      );
+      socket.emit('playMonopolyCard', localStorage.getItem('Room'), player, checkedInputs?.value)
+      const modalMonopoly = document.querySelector(".monopoly-choose");
+      modalMonopoly?.classList.toggle("modal");
+    }
   }
+
   playPlentyCard(player: IPlayerInfo){
-    const div = document.querySelector('.plenty-choose')
-    div?.addEventListener('click', (e) =>{
-      if((e.target as HTMLDivElement)?.classList.contains('ready_take')) {
-        const checkedInputs = div?.querySelectorAll<HTMLInputElement>(
+    const plentyScreen = document.querySelector('.plenty-choose')
+    const ready = getElementBySelector('.plenty_check')
+    ready.onclick = function(){
+        const checkedInputs = plentyScreen?.querySelectorAll<HTMLInputElement>(
           "input.choose-checkbox:checked"
         );
-        const resources = [checkedInputs[0].value, checkedInputs[1].value]
-        socket.emit('playPlentyCard', localStorage.getItem('Room'), player, resources)
-        this.view?.showPlentyPopup();
-      }
-    })
+        if(checkedInputs) {
+          const resources = [checkedInputs[0].value, checkedInputs[1].value]
+          socket.emit('playPlentyCard', localStorage.getItem('Room'), player, resources)
+        }
+    }
   }
 
   setRobber(player: IPlayerInfo, knight: boolean) {

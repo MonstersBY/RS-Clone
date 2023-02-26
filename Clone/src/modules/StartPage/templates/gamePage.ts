@@ -275,7 +275,7 @@ export const game = `
               <input type="radio" name="plenty-two" value="ore" class="choose-checkbox">
             </div>
             <div class="choose__btns flex-row">
-              <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon ready_take">
+              <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon plenty_check">
               <img src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
             </div>
           </div>
@@ -303,7 +303,7 @@ export const game = `
               <input type="radio" name="monopoly" value="ore" class="choose-checkbox choose_ore">
             </div>
             <div class="choose__btns flex-row">
-              <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon ready_take">
+              <img src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon monopoly_check">
               <img src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
             </div>
           </div>
