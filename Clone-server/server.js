@@ -197,10 +197,11 @@ io.on("connection", (socket) => {
         if(knights) {
             allGame.get(room).playersInfo[index].hand.development.knights -=1
             allGame.get(room).playersInfo[index].armySize +=1
+            allGame.get(room).calculateMaxArmySize(allGame.get(room), allGame.get(room).playersInfo)
         }
-        socket.emit('take-one-res', sett)
         io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
         io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
+        socket.emit('take-one-res', sett)
     })
     socket.on('robberCheckCards',(room) =>{
         allGame.get(room).countCardRobber(allGame.get(room).playersInfo)
@@ -275,13 +276,13 @@ io.on("connection", (socket) => {
         io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
 
-
     socket.on('playDevelopRoads', (room, player) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index].hand.development.road--
-
-
         io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
+    })
+    socket.on('victory', (room, player) =>{
+        io.to(room).emit('victory-info', player)
     })
 
     socket.on('disconnect', () => {

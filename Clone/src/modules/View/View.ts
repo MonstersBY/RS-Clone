@@ -4,6 +4,7 @@ import { IHex, ISettlement, IResources, IDevCards, IPlayerInfo } from "../types/
 import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
 import { game } from "../StartPage/templates/gamePage";
+import victoryPopup from "../StartPage/templates/gameOverPopup/gameOver"
 import socket from "../Socket";
 
 interface IStock {
@@ -22,6 +23,7 @@ export default class View {
     init() {
       setTimeout(() => {
       this.renderFullMap();
+      this.victoryInfo()
       socket.emit('updateMap', localStorage.getItem('Room'))
       }, 0);
   }
@@ -237,9 +239,9 @@ export default class View {
       }
 
         for (let i = 0; i < usersInfo.length; i++) {
-          const allRes = this.SummCards(usersInfo[i].hand.resources)
-          const allDev = this.SummCards(usersInfo[i].hand.development)
-          // const victoryPoin = 
+          const allRes = this.summCards(usersInfo[i].hand.resources)
+          const allDev = this.summCards(usersInfo[i].hand.development)
+          const victoryPoin = this.summVictory(usersInfo[i])
           const div = document.createElement('div')
           div.classList.add('player-board')
           div.innerHTML = `
@@ -250,7 +252,7 @@ export default class View {
               </div>
               <div class="nickname">${usersInfo[i].name}</div>
               <div class="player-score flex-bs">
-                <span>${usersInfo[i].settlements.length}</span>
+                <span>${victoryPoin}</span>
               </div>
             </div>
             <div class="player-miniboard flex-bs">
@@ -336,12 +338,30 @@ export default class View {
     }
   }
 
-  SummCards(obj: IResources | IDevCards) {
+  summCards(obj: IResources | IDevCards) {
     let sum = 0;
     for (let cards of Object.values(obj)) {
       sum += cards;
     }
     return sum;
+  }
+
+  summVictory(player: IPlayerInfo) {
+    let sum = 0
+    sum +=player.settlements.length
+    sum += (player.cities.length*2)
+    if(player.longestRoad) sum +=2
+    if(player.largestArmy) sum +=2
+    if (sum+player.hand.development.victory >= 10) {
+      socket.emit('victory', localStorage.getItem('Room'), player)
+    }
+    return sum
+  }
+
+  victoryInfo() {
+    socket.on('victory-info', (player) =>{
+      victoryPopup(player)
+    })
   }
 }
 
