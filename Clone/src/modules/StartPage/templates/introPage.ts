@@ -35,51 +35,51 @@ export const intro = `
               <div class="main-page__grid">
                   <div class="team__card">
                       <div class="team__photo-wrap">
-                          <img src="assets/images/photo_staf.png" alt="anonymous" class="team__photo">
+                          <img src="assets/images/team_photo/Alex.jpg" alt="anonymous" class="team__photo">
                       </div>
                       <div class="team__card-body">
-                          <h3 class="team__card-title">
-                              Alexei Romanchenko
-                              <img src="assets/images/icons/flags/Belarus_flag.png" alt="flag icon" class="flag_icon">
-                          </h3>
-                          <div class="github__logo flex-basis">
-                              <img src="assets/images/icons/github.png" alt="github" class="github__img">
-                              <a href="https://github.com/MonstersBY" class="link">MonstersBY</a>
-                          </div>
-                          <p class="team__card-text team__role">
-                              Team Lead, developer
-                          </p>
-                          <p class="team__card-text">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempore, nesciunt, dolorum, facilis numquam sed odit exercitationem eveniet inventore itaque odio voluptatum hic iusto. Officia magni qui labore, culpa omnis aliquid.
-                          </p>
+                        <h3 class="team__card-title">
+                            Alexei Romanchenko
+                            <img src="assets/images/icons/flags/Belarus_flag.png" alt="flag icon" class="flag_icon">
+                        </h3>
+                        <div class="github__logo flex-basis">
+                            <img src="assets/images/icons/github.png" alt="github" class="github__img">
+                            <a href="https://github.com/MonstersBY" class="link">MonstersBY</a>
+                        </div>
+                        <p class="team__card-text team__role">
+                            Team Lead, developer
+                        </p>
+                        <p class="team__card-text">Team Lead in project and in life!</p>
+                        <p class="team__card-text">Developer of backend part of project.</p>
+                        <p class="team__card-text">Solved of organisational questions and gave tasks to all members of team.</p>
+                        <p class="team__card-text">An optimist in life, an animal lover and just a great person.</p>
                       </div>
                   </div>
                   <div class="team__card">
                       <div class="team__photo-wrap">
-                          <img src="assets/images/photo_staf.png" alt="anonymous" class="team__photo">
+                          <img src="assets/images/team_photo/Arsenii.jpg" alt="anonymous" class="team__photo">
                       </div>
                       <div class="team__card-body">
-                          <h3 class="team__card-title">
-                              Arsenii Fedorchenko
-                              <img src="assets/images/icons/flags/Russia_flag.png" alt="flag icon" class="flag_icon">
-                          </h3>
-                          <div class="github__logo flex-basis">
-                              <img src="assets/images/icons/github.png" alt="github" class="github__img">
-                              <a href="https://github.com/Arantola" class="link">Arantola</a>
-                          </div>
-                          <p class="team__card-text team__role">
-                              Developer
-                          </p>
-                          <p class="team__card-text">
-                              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempore, nesciunt, dolorum, facilis numquam sed
-                              odit exercitationem eveniet inventore itaque odio voluptatum hic iusto. Officia magni qui labore, culpa
-                              omnis aliquid.
-                          </p>
+                        <h3 class="team__card-title">
+                            Arsenii Fedorchenko
+                            <img src="assets/images/icons/flags/Russia_flag.png" alt="flag icon" class="flag_icon">
+                        </h3>
+                        <div class="github__logo flex-basis">
+                            <img src="assets/images/icons/github.png" alt="github" class="github__img">
+                            <a href="https://github.com/Arantola" class="link">Arantola</a>
+                        </div>
+                        <p class="team__card-text team__role">
+                            Developer
+                        </p>
+                        <p class="team__card-text">Awesome Team Brain!</p>
+                        <p class="team__card-text">Developer of game logic and many others things.</p>
+                        <p class="team__card-text">Assisted all team members in resolving issues that arose.</p>
+                        <p class="team__card-text">A perfectionist, reliable, patient and and just an amazing person.</p>
                       </div>
                   </div>
                   <div class="team__card">
                       <div class="team__photo-wrap">
-                          <img src="assets/images/photo_staf.png" alt="anonymous" class="team__photo">
+                          <img src="assets/images/team_photo/Y1.jpg" alt="anonymous" class="team__photo">
                       </div>
                       <div class="team__card-body">
                           <h3 class="team__card-title">
@@ -93,11 +93,10 @@ export const intro = `
                           <p class="team__card-text team__role">
                               Developer
                           </p>
-                          <p class="team__card-text">
-                              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempore, nesciunt, dolorum, facilis numquam sed
-                              odit exercitationem eveniet inventore itaque odio voluptatum hic iusto. Officia magni qui labore, culpa
-                              omnis aliquid.
-                          </p>
+                            <p class="team__card-text">Secretary of Team!</p>
+                            <p class="team__card-text">Developer of UI game.</p>
+                            <p class="team__card-text">The young mother which worked with her daughter - the youngest member of team!</p>
+                            <p class="team__card-text">Hardworking and efficient team member.</p>
                       </div>
                   </div>
               </div>

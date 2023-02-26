@@ -46,19 +46,6 @@
   height: 75vh;
 }
 
-.sidebar__link {
-  @include font(2rem, 120%, 700);
-  margin: 0.6rem 1.6rem;
-  border-radius: 8px;
-  padding: 1rem 1.6rem;
-  width: calc(100% - 3.2rem);
-  &:active {
-    background-color: #1e63ac;
-  }
-  &:hover {
-    background-color: #1e63ac;
-  }
-}
 .link_active {
   background-color: #1e63ac;
 }
@@ -81,19 +68,20 @@
 .team__photo {
   display: block;
   margin: 0;
-  width: 25rem;
-  max-width: none;
-  height: 15rem;
-  max-height: none;
+  border-radius: 5%;
   &-wrap {
     display: flex;
     justify-content: center;
     background-color: #006cb1;
     width: 100%;
-    height: 15rem;
     overflow: hidden;
   }
 }
+
+.team__photo-wrap > img {
+  height: 25rem;
+}
+
 .team__role {
   @include font(1.8rem, 120%, 700);
   margin-bottom: 1.6rem;
