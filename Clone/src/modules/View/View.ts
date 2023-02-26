@@ -39,10 +39,6 @@ export default class View {
 
         let mapLoadedEvent = new CustomEvent("mapLoaded");
         window.dispatchEvent(mapLoadedEvent);
-<<<<<<< HEAD
-        console.log("mapLoaded");
-=======
->>>>>>> 26380a72ee4d97b228164923e049ed673c7d41e9
       }
     });
   }
