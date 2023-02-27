@@ -704,14 +704,4 @@ export default class Controller {
     );
     return "here will be string with resourse";
   }
-
-  rollDiceTimer() {}
-
-  turnTimer() {}
-
-  updateState() {}
-
-  checkIsWinner() {}
-
-  endGame() {}
 }

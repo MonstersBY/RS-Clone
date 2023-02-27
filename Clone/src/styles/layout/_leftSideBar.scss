@@ -294,11 +294,3 @@
   background: url("../assets/images/ingame/devcards/card_vp.svg");
   background-size: 100% 100%;
 }
-.timer {
-  @include font(3vh, 120%, 700);
-  position: absolute;
-  top: 2rem;
-  left: 25%;
-  width: fit-content;
-  height: 8vh;
-}

@@ -242,11 +242,6 @@ export const game = `
           <div class = "all-player-board">
           </div>
         </div>
-        <div class="timer game-btn flex-bs">Time:
-          <span class="minutes">1:</span>
-          <span class="seconds">45</span>
-        </div>
-
         <div class="modal-choose plenty-choose">
           <div class="modal-choose__wrap flex-bs">
             <div id="plenty-choose_lumber" class="resource__container choose-resource resource flex-bs">

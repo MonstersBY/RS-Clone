@@ -5,7 +5,6 @@ export default class Room {
   ) { }
 
   init() {
-    this.AllSockets()
     this.ChatMessages()
     this.CreateMessage()
     this.CreateRoom()
@@ -30,10 +29,7 @@ export default class Room {
       document.querySelector('.room__header')?.append(text)
     })
 
-    // Users is array
-
     socket.on('all-user-room', users => {
-      // const need = users.filter((user: { room: string | null; }) => user.room === room)
       let list = document.querySelector('.player__list')
       while (list?.firstChild) {
         list.removeChild(list.firstChild);
@@ -93,11 +89,6 @@ export default class Room {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     return text
   }
-
-  AllSockets() {
-
-  }
-
 
   ChatMessages() {
     const room = localStorage.getItem('Room')
