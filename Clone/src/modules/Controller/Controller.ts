@@ -40,6 +40,10 @@ export default class Controller {
       this.player = player;
       this.activePlayer = active;
       this.canRoll = active;
+      const dices = document.querySelectorAll("dice");
+      if (dices) dices.forEach(dice => {
+        dice.classList.add("select");
+      });
       if (this.activePlayer) {
         const audio = new Audio('../../assets/files/NextTurn.mov')
         audio.play();
@@ -69,6 +73,7 @@ export default class Controller {
     });
 
     this.map = document.getElementById("map") as HTMLDivElement;
+
     this.addPlayCardsListener();
     this.addBuildAndTradeListeners();
     this.createNewTurn();
@@ -136,10 +141,13 @@ export default class Controller {
       "click",
       (e: Event) => {
         if (this.canRoll && this.activePlayer) {
+          const dices = document.querySelectorAll("dice");
+          if (dices) dices.forEach((dice) => {
+              dice.classList.remove("select");
+            });
           const target = e.target as HTMLElement;
           if (target && target.closest(".dice__container") && this.dice) {
             const roll = this.dice.randomDiceRoll();
-
             this.dice.audio.play();
             this.canRoll = false;
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
@@ -236,7 +244,8 @@ export default class Controller {
           e.classList.remove("select");
         });
 
-        const audio = new Audio('../../assets/files/BuildingComplete.wav');
+        const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
+        audio.volume = 0.2;
         audio.play();
         socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
         socket.emit('updateMap', localStorage.getItem('Room'))
@@ -260,7 +269,8 @@ export default class Controller {
       if (!road.classList.contains("own")) {
         road.classList.add("select");
         road.addEventListener("click", (e) => {
-          const audio = new Audio('../../assets/files/Building.wav');
+          const audio = new Audio('../../assets/files/Building_1.wav');
+          audio.volume = 0.1;
           audio.play();
           socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
           socket.emit('updateMap', localStorage.getItem('Room'))
@@ -301,7 +311,8 @@ export default class Controller {
                 localStorage.getItem("Room"),
                 isFree,
               );
-              const audio = new Audio('../../assets/files/Building.wav');
+              const audio = new Audio('../../assets/files/Building_1.wav');
+              audio.volume = 0.1;
               audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
@@ -352,7 +363,8 @@ export default class Controller {
                 chousen.id,
                 localStorage.getItem("Room")
               );
-              const audio = new Audio('../../assets/files/BuildingComplete.wav');
+              const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
+              audio.volume = 0.2;
               audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
@@ -387,7 +399,8 @@ export default class Controller {
                 settlement.id,
                 localStorage.getItem("Room")
               );
-              const audio = new Audio('../../assets/files/Upgrade.wav');
+              const audio = new Audio('../../assets/files/Upgrade_1.wav');
+              audio.volume = 0.2;
               audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
@@ -625,8 +638,9 @@ export default class Controller {
             knight
           );
           const audio = new Audio(`${
-            knight ? '../../assets/files/Knight.wav' : '../../assets/files/Bandit.wav'
+            knight ? '../../assets/files/Knight_1.wav' : '../../assets/files/Bandit_1.wav'
           }`)
+          audio.volume = 0.2;
           audio.play();
           socket.emit('give-room-list-players', localStorage.getItem("Room"))
           this.activePlayerPlay();

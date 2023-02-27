@@ -9,6 +9,7 @@ export default class Dice {
     this.renderDice();
     this.serverDice();
     this.audio.currentTime = 0;
+    this.audio.volume = 0.1;
     this.audio.src = "../../assets/files/6f488185486f9cf.mp3";
   }
 

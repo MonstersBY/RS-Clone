@@ -19,6 +19,8 @@ export default class Mode {
     socket.on('connect', () => {
         if (!localStorage.getItem('Name')){
           localStorage.setItem('Name', this.getRandomHash())
+          const divNick = document.querySelector('.random__nick')?.querySelector('span')
+          if (divNick != null) divNick.innerHTML = `${localStorage.getItem('Name')}`;
         }
     })
   }
@@ -55,9 +57,6 @@ export default class Mode {
           </div>
           <div class="ranked-card__text">
             <h3 class="ranked-card__title">Room: <span class="room-name">${rooms[i].room}</span></h3>
-            <div class="ranked-card__link">
-              <a href="#" class="link login__link">Log in to play</a>
-            </div>
           </div>
           <div class="ranked-card__icon">
             <img src="assets/images/icons/icon_info.svg" alt="info icon" class="info__icon">
