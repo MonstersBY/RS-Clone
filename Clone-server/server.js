@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
                     id: socket.id,
                     ready: false,
                 }],
-                colors: ['red', 'blue', 'orange', 'green'],
+                colors: ['red', 'blue', 'green', 'orange'],
                 hideBank: true,
                 friendlyRobber: true,
                 gameMode: 'classic',
