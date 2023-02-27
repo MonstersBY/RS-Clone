@@ -17,9 +17,10 @@ export default class Mode {
 
   ConnectSocket() {
     socket.on('connect', () => {
-        // console.log(socket.id);
         if (!localStorage.getItem('Name')){
           localStorage.setItem('Name', this.getRandomHash())
+          const divNick = document.querySelector('.random__nick')?.querySelector('span')
+          if (divNick != null) divNick.innerHTML = `${localStorage.getItem('Name')}`;
         }
     })
   }

@@ -1,7 +1,7 @@
 export const mode = `
       <div class="landing-page__wrapper">
         <div class="ranked-block__wrapper">
-          <h2 class="ranked-cards__title">no rooms created</h2>
+          <h2 class="ranked-cards__title">rooms created</h2>
           <div class="ranked-cards__wrapper">
           </div>
           </div>
