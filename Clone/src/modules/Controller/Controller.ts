@@ -70,10 +70,10 @@ export default class Controller {
       document.body.insertAdjacentHTML("afterbegin", buttons);
 
       
-      this.addPlayCardsListener(this.player as IPlayerInfo);
+      this.addPlayCardsListener();
+      this.addBuildAndTradeListeners();
       this.createNewTurn();
     }, 0);
-    // this.countCardRobber()
   }
 
   chatMessages() {
@@ -90,7 +90,7 @@ export default class Controller {
       if(e.key === 'Enter') {
         const msg = <HTMLInputElement>document.querySelector('.chat__input')
         if (msg?.value === '') return
-        socket.emit('chatMessage', msg?.value, room, this.player?.name)
+        socket.emit('game-chatMessage', msg?.value, room, this.player?.name)
         msg.value = ''
         msg.focus()
       }
@@ -128,7 +128,6 @@ export default class Controller {
   }
 
   addListenerDices() {
-    // TODO Как типизировать callback?
     if (this.canRoll) {
       document.getElementById("roll-dice")?.addEventListener(
         "click",
@@ -136,7 +135,6 @@ export default class Controller {
           const target = e.target as HTMLElement;
           if (target && target.closest(".dice__container") && this.dice) {
             const roll = this.dice.randomDiceRoll();
-            // const roll = [5,2];
 
             this.dice.audio.play();
             this.canRoll = false;
@@ -157,7 +155,6 @@ export default class Controller {
   }
   activePlayerPlay() {
     const nextBtn = document.getElementById("create-new-turn");
-    this.addBuildAndTradeListeners();
     nextBtn?.classList.add("active");
   }
 
@@ -166,7 +163,7 @@ export default class Controller {
     const btnsWrap = document.getElementById("build-trade-card-list");
 
     btnsWrap?.addEventListener("click", (e: Event) => {
-      if (e.target instanceof HTMLElement && this.activePlayer) {
+      if (e.target instanceof HTMLElement && this.activePlayer && !this.canRoll) {
         const target = e.target.closest(".game-btn");
         if (target) {
           const name = target.className.split(" ")[1];
@@ -233,6 +230,8 @@ export default class Controller {
           e.classList.remove("select");
         });
 
+        const audio = new Audio('../../assets/files/BuildingComplete.wav');
+        audio.play();
         socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
         socket.emit('updateMap', localStorage.getItem('Room'))
         socket.emit('give-room-list-players', localStorage.getItem("Room"))
@@ -255,6 +254,8 @@ export default class Controller {
       if (!road.classList.contains("own")) {
         road.classList.add("select");
         road.addEventListener("click", (e) => {
+          const audio = new Audio('../../assets/files/Building.wav');
+          audio.play();
           socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
           socket.emit('updateMap', localStorage.getItem('Room'))
           socket.emit('give-room-list-players', localStorage.getItem("Room"))
@@ -283,7 +284,6 @@ export default class Controller {
     if (player.roadsStock) {
       roads.forEach((e) => {
         const road = document.getElementById(e);
-
         if ((buildConst.lumber <= hand.lumber && buildConst.brick <= hand.brick) || isFree) {
           if (road && !road.classList.contains("own")) {
             road.classList.add("select");
@@ -295,6 +295,8 @@ export default class Controller {
                 localStorage.getItem("Room"),
                 isFree,
               );
+              const audio = new Audio('../../assets/files/Building.wav');
+              audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
 
@@ -348,10 +350,10 @@ export default class Controller {
                 chousen.id,
                 localStorage.getItem("Room")
               );
+              const audio = new Audio('../../assets/files/BuildingComplete.wav');
+              audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
-
-              // settlement.classList.add("moveDown"); //need add class after render map
             });
           }
         } else {
@@ -380,8 +382,6 @@ export default class Controller {
         if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain) {
           settlement.style.transform = "scale(1.5)";
           settlement.addEventListener("click", (e) => {
-            // this.state?.setNewCity(this.player1 as IPlayerInfo, settlement.id);
-            // this.state?.updateMap();
             if (e.target && e.target instanceof HTMLElement)
               socket.emit(
                 "setNewCity",
@@ -389,6 +389,8 @@ export default class Controller {
                 settlement.id,
                 localStorage.getItem("Room")
               );
+              const audio = new Audio('../../assets/files/Upgrade.wav');
+              audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
           });
@@ -566,40 +568,40 @@ export default class Controller {
     }
   }
 
-  addPlayCardsListener(player: IPlayerInfo) {
+  addPlayCardsListener() {
     document
       .getElementById("develop-card-list")
       ?.addEventListener("click", (e) => {
-        if (e.target instanceof HTMLElement && this.activePlayer) {
+        if (e.target instanceof HTMLElement && this.activePlayer && !this.canRoll) {
           const target = e.target.closest(".game-btn");
           if (target) {
             const name = target.className.split(" ")[1];
             switch (name) {
               case "knights-develop__btn":
                 if(this.player?.hand.development.knights){
-                  this.setRobber(player, true);
+                  this.setRobber(this.player as IPlayerInfo, true);
                 }
                 break;
               case "monopoly-develop__btn":
                 if(this.player?.hand.development.monopoly){
                   this.view?.showMonopolyPopup();
-                  this.playMonopolyCard(player)
+                  this.playMonopolyCard(this.player as IPlayerInfo)
                 }
                 break;
               case "plenty-develop__btn":
                 if(this.player?.hand.development.plenty){
                   this.view?.showPlentyPopup();
-                  this.playPlentyCard(player)
+                  this.playPlentyCard(this.player as IPlayerInfo)
                 }
                 break;
               case "road-develop__btn":
                 if (this.player?.hand.development.road) {
-                  this.buildRoad(player, true);
+                  this.buildRoad(this.player as IPlayerInfo, true);
                   document.addEventListener(
                     "road-builded",
                     () => {
                       window.addEventListener('mapLoaded', ()=>{
-                        this.buildRoad(player, true);
+                        this.buildRoad(this.player as IPlayerInfo, true);
                       }, { once: true })
                     },
                     { once: true }
@@ -657,10 +659,17 @@ export default class Controller {
             localStorage.getItem("Room"),
             knight
           );
+          var audio
+          if(knight) {
+            audio = new Audio('../../assets/files/Knight.wav')
+          } else {
+            audio = new Audio('../../assets/files/Bandit.wav');
+          }
+          audio.play();
           socket.emit('give-room-list-players', localStorage.getItem("Room"))
           this.takeFromRobber()
           this.activePlayerPlay()
-        })
+        }, {once: true})
       }
     })
   }
@@ -678,33 +687,4 @@ export default class Controller {
       socket.emit('transfer-one-to-another', this.player,localStorage.getItem("Room"), colors[Math.floor(Math.random() * colors.length)])
     })
   }
-
-  choiceHandler() {
-    // add listener on "accept choice btn"
-    getElementBySelector("accept-choice-btn").addEventListener(
-      "click",
-      (e) => {
-        let res;
-        if (e.target instanceof HTMLDivElement) {
-          if (e.target.classList.contains("resourse-for-choice")) {
-            res = e.target.dataset.resource;
-          }
-        }
-      },
-      { once: true }
-    );
-    return "here will be string with resourse";
-  }
-
-  rollDiceTimer() {}
-
-  turnTimer() {}
-
-  updateState() {}
-
-  checkIsWinner() {}
-
-  endGame() {}
-
-  // Maybe need modal with game over??
 }

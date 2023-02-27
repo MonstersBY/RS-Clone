@@ -7,16 +7,18 @@ const httpServer = createServer();
 
 const io = new Server(httpServer, {
     cors: {
-      origin: ['http://localhost:8080', 'https://admin.socket.io', 'https://fluffy-panda-da842f.netlify.app']
+      origin: ['http://localhost:8080', 'https://admin.socket.io', 'https://comforting-narwhal-588f6b.netlify.app/']
     }
 });
 
 const port = process.env.PORT || 3000;
 
-let allrooms = []
+const allrooms = []
 const allGame = new Map()
 
 io.on("connection", (socket) => {
+
+    io.emit('room-list', allrooms)
 
     socket.on('join-room', (username, room) => {
         const index = allrooms.findIndex(findRoom => findRoom.room === room)
@@ -57,6 +59,12 @@ io.on("connection", (socket) => {
         io.emit('room-list', allrooms)
     })
 
+    socket.on('change-settings-map', (room, settings) =>{
+        const index = allrooms.findIndex(findRoom => findRoom.room === room)
+        allrooms[index].gameMap = settings
+        io.to(room).emit('see-map-changes', settings)
+    })
+
     socket.on('create-game', room => {
         const index = allrooms.findIndex(findRoom => findRoom.room === room)
         if (index != -1) {
@@ -94,8 +102,6 @@ io.on("connection", (socket) => {
         }
     })
 
-    io.emit('room-list', allrooms)
-
     socket.on('chatMessage', (msg, room, user) => {
         io.to(room).emit('message', user, msg)
     })
@@ -111,7 +117,15 @@ io.on("connection", (socket) => {
     })
 
     socket.on('StartGame', (room) => {
-        io.to(room).emit('ChangeToGamePage')
+        const index = allrooms.findIndex(findRoom => findRoom.room === room)
+        let ready = true
+        for (let i = 0; i < allrooms[index].users.length; i++) {
+            if (!allrooms[index].users[i].ready) {
+                ready = false
+                io.to(room).emit('message', 'Bot', `${allrooms[index].users[i].username} not ready`)
+            }
+        }
+        if(ready) io.to(room).emit('ChangeToGamePage')
     })
 
     // game
@@ -197,10 +211,11 @@ io.on("connection", (socket) => {
         if(knights) {
             allGame.get(room).playersInfo[index].hand.development.knights -=1
             allGame.get(room).playersInfo[index].armySize +=1
+            allGame.get(room).calculateMaxArmySize(allGame.get(room), allGame.get(room).playersInfo)
         }
-        socket.emit('take-one-res', sett)
         io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
         io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
+        socket.emit('take-one-res', sett)
     })
     socket.on('robberCheckCards',(room) =>{
         allGame.get(room).countCardRobber(allGame.get(room).playersInfo)
@@ -212,7 +227,7 @@ io.on("connection", (socket) => {
         allGame.get(room).playersInfo[index] = player
         io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
-    socket.on('del-card-robber', (player, room) =>{
+    socket.on('updateHand', (player, room) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
 
@@ -275,13 +290,13 @@ io.on("connection", (socket) => {
         io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
 
-
     socket.on('playDevelopRoads', (room, player) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index].hand.development.road--
-
-
         io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
+    })
+    socket.on('victory', (room, player) =>{
+        io.to(room).emit('victory-info', player)
     })
 
     socket.on('disconnect', () => {

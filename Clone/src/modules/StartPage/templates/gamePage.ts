@@ -74,17 +74,17 @@ export const game = `
           </div>
           <div id="build-trade-card-list" class="game-btns__wrapper  flex-bs">
               <div class="game-btn road__btn">
-                <div id="build-road" class="player-stock__icon player-stock__road_red">
+                <div id="build-road" class="player-stock__icon">
                   <div class="player-stock__counter flex-bs road__counter">15</div>
                 </div>
               </div>
               <div class="game-btn settlement__btn">
-                <div id="build-settlement" class="player-stock__icon player-stock__settlement_red">
+                <div id="build-settlement" class="player-stock__icon">
                   <div class="player-stock__counter flex-bs settlement__counter">5</div>
                 </div>
               </div>
               <div class="game-btn city__btn">
-                <div id="build-city" class="player-stock__icon player-stock__city_red">
+                <div id="build-city" class="player-stock__icon">
                   <div class="player-stock__counter flex-bs city__counter">4</div>
                 </div>
               </div>
@@ -242,11 +242,6 @@ export const game = `
           <div class = "all-player-board">
           </div>
         </div>
-        <div class="timer game-btn flex-bs">Time:
-          <span class="minutes">1:</span>
-          <span class="seconds">45</span>
-        </div>
-
         <div class="modal-choose plenty-choose">
           <div class="modal-choose__wrap flex-bs">
             <div id="plenty-choose_lumber" class="resource__container choose-resource resource flex-bs">

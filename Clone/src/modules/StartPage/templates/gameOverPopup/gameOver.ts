@@ -3,6 +3,7 @@ import { IPlayerInfo } from "../../../types/types";
 export const modal = document.createElement("div");
 
 export function closePopup() {
+  window.location.pathname = '/mode'
   const element = document.querySelector(".popup");
   if (element) {
     element.classList.add("slideInUp");
@@ -15,7 +16,7 @@ export function closePopup() {
   document.body.style.marginRight = "0px";
 }
 
-const createPopup = (player: IPlayerInfo) => {
+const victoryPopup = (player: IPlayerInfo) => {
   const scroll = calcScroll();
 
   modal.classList.add("popup", "slideInDown");
@@ -38,11 +39,6 @@ const createPopup = (player: IPlayerInfo) => {
           </div>
         </div>
       `;
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
-      closePopup();
-    }
-  });
 
   document.body.append(modal);
   document.body.style.overflow = "hidden";
@@ -75,4 +71,4 @@ const createPopup = (player: IPlayerInfo) => {
     });
   }
 };
-export default createPopup;
+export default victoryPopup;
