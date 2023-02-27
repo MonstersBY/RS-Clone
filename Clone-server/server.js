@@ -227,7 +227,7 @@ io.on("connection", (socket) => {
         allGame.get(room).playersInfo[index] = player
         io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
     })
-    socket.on('del-card-robber', (player, room) =>{
+    socket.on('updateHand', (player, room) =>{
         const index = allGame.get(room).playersInfo.findIndex(findUser => findUser.name === player.name)
         allGame.get(room).playersInfo[index] = player
 

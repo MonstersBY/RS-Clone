@@ -669,7 +669,7 @@ export default class Controller {
           socket.emit('give-room-list-players', localStorage.getItem("Room"))
           this.takeFromRobber()
           this.activePlayerPlay()
-        })
+        }, {once: true})
       }
     })
   }
