@@ -8,5 +8,10 @@ const socket = io('http://localhost:3000/')
 //   }
 // })
 // 127.0.0.1
+// const socket = io('https://test-server-production-b456.up.railway.app/',{
+//   extraHeaders: {
+//     "my-custom-header": "colonist"
+//   }
+// })
 
 export default socket
