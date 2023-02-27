@@ -106,21 +106,21 @@ export default class State {
   }
 
   // Player actions
-  setRobber(player, id) {
+  setRobber(map, id) {
     const i = id.split("_")[1];
-    if (this.mapObject) {
-      this.mapObject.forEach((hex) => {
+    if (map) {
+      map.forEach((hex) => {
         hex.robber = false;
       })
-      this.mapObject[i].robber = true;
+      map[i].robber = true;
     }
-    let roads = [...this.mapObject[i].settlement_N.nextNodes, ...this.mapObject[i].settlement_S.nextNodes];
+    let roads = [...map[i].settlement_N.nextNodes, ...map[i].settlement_S.nextNodes];
     roads = roads.filter(e => e.split("_")[2] !== "W");
     let settlementsToRob = [];
     roads.forEach(road => {
       const hex = road.split("_")[0];
       const hode = "road_" + road.split("_")[2];
-      settlementsToRob.push(...this.mapObject[hex][hode].nextNodes);
+      settlementsToRob.push(...map[hex][hode].nextNodes);
     })
     settlementsToRob = [...new Set(settlementsToRob)];
     return settlementsToRob;

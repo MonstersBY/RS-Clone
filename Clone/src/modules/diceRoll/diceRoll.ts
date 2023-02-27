@@ -108,7 +108,6 @@ export default class Dice {
     const dieOneValue = Math.round(Math.random() * 5) +1;
     const dieTwoValue = Math.round(Math.random() * 5) +1;
 
-    console.log(`ROLL: ${dieOneValue} - ${dieTwoValue}`)
     this.roll(dieOneValue, dieTwoValue);
     return [dieOneValue, dieTwoValue];
   }

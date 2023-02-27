@@ -74,7 +74,6 @@ export default class Room {
   changeGameSetting() {
     const infoMap = document.getElementById('gameMap')
     infoMap?.addEventListener('change', (e) => {
-      console.log((e.target as HTMLInputElement).value)
       socket.emit('change-settings-map', localStorage.getItem('Room'), (e.target as HTMLInputElement).value)
     })
     socket.on('see-map-changes', settings =>{
@@ -115,7 +114,6 @@ export default class Room {
   CreateMessage() {
     socket.on('message', (user, message) => {
       const chatMessages = document.querySelector('.chat__messages')
-      console.log(message);
       this.outputMessage(user, message);
     })
   }
