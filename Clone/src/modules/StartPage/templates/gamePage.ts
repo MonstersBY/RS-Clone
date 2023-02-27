@@ -5,7 +5,7 @@ export const game = `
         </div>
         <div class="left__sidebar">
           <div id="game-menu__wrap" class="game-menu__wrap flex-bs">
-            <a href="/" class="link menu__link">Home</a>
+            <a href="/" class="link menu__link btn btn_primary flex-bs">Home</a>
           </div>
           <div id='hand' class="player-hand">
             <div class="player-hand__title">Hand <span></span></div>
@@ -227,8 +227,6 @@ export const game = `
           <div class="game-chat">
             <div class="chat__messages game-chat__text">
               <div class="message__post">
-                <img src="assets/images/icons/icon_player.svg" alt="player icon" class="nick">
-                <b>some:</b> Hi
               </div>
             </div>
             <div class="chat__form">

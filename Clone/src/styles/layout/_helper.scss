@@ -20,21 +20,15 @@
     overflow-x: scroll;
     overflow-y: scroll;
     z-index: 20;
-    /* &::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-      display: none;
-      background: transparent;
-    } */
   }
   &___button {
     width: 50px;
     height: 50px;
     background-color: $color-btn-primary;
-    color: black;
+    color: $color-primary-light;
     font-size: larger;
     font-weight: 700;
-    border-radius: 50%;
+    border-radius: 8px;
     z-index: 1;
     filter: drop-shadow(2px 4px 4px rgba(20, 20, 20, 0.4));
     &:hover {
