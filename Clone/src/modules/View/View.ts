@@ -17,12 +17,12 @@ export default class View {
   )
   {}
 
-    init() {
-      setTimeout(() => {
-      this.renderFullMap();
-      this.victoryInfo()
-      socket.emit('updateMap', localStorage.getItem('Room'))
-      }, 0);
+  init() {
+    setTimeout(() => {
+    this.victoryInfo()
+    socket.emit('updateMap', localStorage.getItem('Room'))
+    this.renderFullMap();
+    }, 0);
   }
 
   renderFullMap() {

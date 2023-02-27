@@ -16,11 +16,6 @@ export default class App {
     public router: Router = new Router(),
     public controller: Controller = new Controller(),
     public view: View = new View(),
-    // public dice: Dice = new Dice,
-
-    // public state: State = new State(),
-
-    public inGame: boolean = false, // unused
     ) {}
 
   init() {
@@ -30,8 +25,8 @@ export default class App {
     modificatePage();
     this.setRouter();
     this.router.setRoutes();
-    this.CreateRoom();
-    this.CreateMode();
+    this.сreateRoom();
+    this.сreateMode();
   }
 
   setRouter() {
@@ -39,14 +34,14 @@ export default class App {
     this.router.setRoutes();
   }
 
-  CreateRoom() {
+  сreateRoom() {
     if (window.location.pathname === "/room") {
       const room = new Room();
       room.init();
     }
   }
 
-  CreateMode() {
+  сreateMode() {
     if (window.location.pathname === "/mode") {
       const mode = new Mode();
       mode.init();
@@ -61,7 +56,9 @@ export default class App {
       socket.on('Map-object', (obj, players) => {
         this.view.init();
         this.controller.view = this.view;
-        this.controller.init();
+        window.addEventListener("mapLoaded", () => {
+          this.controller.init();
+        }, {once: true})
       })
       setTimeout(() => {
         addHelper();

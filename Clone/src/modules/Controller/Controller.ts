@@ -20,6 +20,7 @@ export default class Controller {
     this.createMessage()
 
     socket.emit('give-room-list-players', localStorage.getItem('Room'))
+
     setTimeout(() => {
       socket.emit(
         "isYouTurnPlayer",
@@ -473,18 +474,18 @@ export default class Controller {
   makeDeal(player: IPlayerInfo) {
       const currentOffer: IOffer = {
         have: {
-          brick: Number(document.getElementById("brick-give")?.innerText),
-          grain: Number(document.getElementById("grain-give")?.innerText),
-          lumber: Number(document.getElementById("lumber-give")?.innerText),
-          ore: Number(document.getElementById("ore-give")?.innerText),
-          wool: Number(document.getElementById("wool-give")?.innerText),
+          brick:  Number(document.getElementById("brick-give")?.innerText)  || 0,
+          grain:  Number(document.getElementById("grain-give")?.innerText)  || 0,
+          lumber: Number(document.getElementById("lumber-give")?.innerText) || 0,
+          ore:    Number(document.getElementById("ore-give")?.innerText)    || 0,
+          wool:   Number(document.getElementById("wool-give")?.innerText)   || 0,
         },
         wish: {
-          brick: Number(document.getElementById("brick-wish")?.innerText),
-          grain: Number(document.getElementById("grain-wish")?.innerText),
-          lumber: Number(document.getElementById("lumber-wish")?.innerText),
-          ore: Number(document.getElementById("ore-wish")?.innerText),
-          wool: Number(document.getElementById("wool-wish")?.innerText),
+          brick:  Number(document.getElementById("brick-wish")?.innerText)  || 0,
+          grain:  Number(document.getElementById("grain-wish")?.innerText)  || 0,
+          lumber: Number(document.getElementById("lumber-wish")?.innerText) || 0,
+          ore:    Number(document.getElementById("ore-wish")?.innerText)    || 0,
+          wool:   Number(document.getElementById("wool-wish")?.innerText)   || 0,
         },
       };
 
@@ -497,7 +498,6 @@ export default class Controller {
           player.hand.resources[resource as keyof IResources] += count;
         }
         this.view?.showTradePopup(this.player as IPlayerInfo);
-
         socket.emit('updateHand', player, localStorage.getItem('Room'));
       } else {
         alert("Deal is not fair! Add more");
@@ -510,7 +510,7 @@ export default class Controller {
     const allCost = player.harbors.includes("all") ? 3 : 4;
     for (const [resource, count] of Object.entries(offer.have)) {
       const modificator = player.harbors.includes(`${resource}`) ? 2 : allCost;
-      giveValue += count / modificator;
+      giveValue += Number(count) / modificator;
     }
 
     for (const count of Object.values(offer.wish)) {
