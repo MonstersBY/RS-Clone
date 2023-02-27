@@ -40,11 +40,11 @@ export default class Controller {
       this.player = player;
       this.activePlayer = active;
       this.canRoll = active;
-      const dices = document.querySelectorAll(".dice");
-      if (dices) dices.forEach(dice => {
-        dice.classList.add("select");
-      });
       if (this.activePlayer) {
+        const dices = document.querySelectorAll(".dice");
+        if (dices) dices.forEach(dice => {
+          dice.classList.add("select");
+        });
         const audio = new Audio('../../assets/files/NextTurn.mov')
         audio.play();
       }
