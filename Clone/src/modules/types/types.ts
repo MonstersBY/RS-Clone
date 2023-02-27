@@ -76,6 +76,11 @@ interface IOffer {
   wish: IResources,
 };
 
+interface IStock {
+  road: number,
+  settlement: number,
+  city: number,
+}
 
 function getElementBySelector<T extends HTMLElement>(
   selector: string,
@@ -87,4 +92,4 @@ function getElementBySelector<T extends HTMLElement>(
   return element;
 }
 
-export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand, IResources, IDevCards, IOffer}
+export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand, IResources, IDevCards, IOffer, IStock}

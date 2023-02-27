@@ -22,6 +22,5 @@
         "layout/gameOver";
 
 
-@import "animation/animation";
-
-@import "../modules/diceRoll/dice";
+@import "animation/animation",
+        "animation/dice";

@@ -18,9 +18,9 @@
   animation-fill-mode: both;
 }
 
-.get {
-  animation: pulse_hex 2s alternate;
-  transition: all 0.2s ease-in-out;
+.provides{
+  transform: scale(1.5);
+  transition: 0.5s;
 }
 
 @keyframes pulse {
