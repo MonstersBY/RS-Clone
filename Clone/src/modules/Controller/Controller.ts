@@ -50,7 +50,6 @@ export default class Controller {
       }
     });
 
-<<<<<<< HEAD
     socket.on("Change-playerInfo", (players) => {
       const indexUser = players.findIndex((findUser: { name: string | undefined; }) => findUser.name === this.player?.name)
       this.player = players[indexUser];
@@ -64,14 +63,9 @@ export default class Controller {
     });
 
     this.map = document.getElementById("map") as HTMLDivElement;
-    this.addPlayCardsListener(this.player as IPlayerInfo);
+    this.addPlayCardsListener();
+    this.addBuildAndTradeListeners();
     this.createNewTurn();
-=======
-      
-      this.addPlayCardsListener();
-      this.addBuildAndTradeListeners();
-      this.createNewTurn();
->>>>>>> origin/develop
     }, 0);
   }
 
@@ -545,14 +539,9 @@ export default class Controller {
     }
   }
 
-<<<<<<< HEAD
-  addPlayCardsListener(player: IPlayerInfo) {
-    document.getElementById("develop-card-list")
-=======
   addPlayCardsListener() {
     document
       .getElementById("develop-card-list")
->>>>>>> origin/develop
       ?.addEventListener("click", (e) => {
         if (e.target instanceof HTMLElement && this.activePlayer && !this.canRoll) {
           const target = e.target.closest(".game-btn");
