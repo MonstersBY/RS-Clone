@@ -339,7 +339,7 @@ export default class View {
     sum += (player.cities.length*2)
     if(player.longestRoad) sum +=2
     if(player.largestArmy) sum +=2
-    if (sum + player.hand.development.victory >= 5) {
+    if (sum + player.hand.development.victory >= 10) {
       socket.emit('victory', localStorage.getItem('Room'), player)
     }
     return sum
