@@ -275,6 +275,7 @@ io.on("connection", (socket) => {
             (roll[0] + roll[1]),
             allGame.get(room).mapObject,
             allGame.get(room).playersInfo);
+        socket.to(room).emit("displayDiceState", roll);
     });
 
     socket.on('playMonopolyCard', (room, player, resource) =>{

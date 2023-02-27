@@ -5,8 +5,6 @@ import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
-import  Dice  from "./diceRoll/diceRoll";
-import createModal from "./StartPage/templates/gameOverPopup/gameOver";
 
 import socket from "./Socket";
 import { modificatePage } from "./StartPage/templates/modificateIngamePage";

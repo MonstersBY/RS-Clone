@@ -97,6 +97,7 @@
   background: url("../assets/images/ingame/terrains_hexes.png");
   background-size: 700% 400%;
   background-position-y: 0;
+  transition: 0.5s;
 }
 
 .hex {
@@ -113,6 +114,7 @@
     color: black;
     border: 1px solid #00000067;
     user-select: none;
+    transition: 0.5s;
   }
   &__settlement {
     &_N {

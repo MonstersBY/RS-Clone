@@ -1,6 +1,6 @@
 import View from "../View/View";
 import Dice from "../diceRoll/diceRoll";
-import { getElementBySelector, IPlayerInfo, IResources, IOffer, IPlayerHand } from "../types/types";
+import { getElementBySelector, IPlayerInfo, IResources, IOffer } from "../types/types";
 import socket from "../Socket";
 
 export default class Controller {
@@ -11,8 +11,7 @@ export default class Controller {
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
     public canRoll?: boolean,
-  )
-  {}
+  ) {}
 
   init() {
     this.dice.init();
@@ -42,7 +41,6 @@ export default class Controller {
       this.player = player;
       this.activePlayer = active;
       this.canRoll = active;
-      console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`); // TODO delete console.log()
 
       const nextBtn = document.getElementById("create-new-turn");
       nextBtn?.classList.remove("active");
@@ -61,6 +59,10 @@ export default class Controller {
         this.view?.constructionConst(this.player as IPlayerInfo);
       }
       this.view?.createPlayers(players as [IPlayerInfo])
+    });
+
+    socket.on("displayDiceState", (roll) => {
+      this.view?.highlighHexesWithCurrentRollNumber(roll[0] + roll[1]);
     });
 
     this.map = document.getElementById("map") as HTMLDivElement;
@@ -141,7 +143,8 @@ export default class Controller {
               socket.emit('robberCheckCards', localStorage.getItem("Room"))
               this.setRobber(this.player as IPlayerInfo, false)
             } else {
-              this.activePlayerPlay()
+              this.view?.highlighHexesWithCurrentRollNumber(roll[0] + roll[1]);
+              this.activePlayerPlay();
             }
           }
         },
@@ -151,8 +154,10 @@ export default class Controller {
   }
 
   activePlayerPlay() {
-    const nextBtn = document.getElementById("create-new-turn");
-    nextBtn?.classList.add("active");
+    setTimeout(() => {
+      const nextBtn = document.getElementById("create-new-turn");
+      nextBtn?.classList.add("active");
+    }, 1500);
   }
 
   //this listener add only in turn of active player
