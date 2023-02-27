@@ -83,10 +83,6 @@ export const room = `
             <img src="assets/images/icons/chat/icon_trash.svg" alt="trash icon" class="trash__icon">
         </div>
         <div class="chat__messages">
-            <div class="message__post">
-                <img src="assets/images/icons/icon_player.svg" alt="player icon" class="nick">
-                <b>some:</b> Hi
-            </div>
         </div>
         <div class="chat__form">
             <input type="text" autocomplete="off" placeholder="Say hello" maxlength='200' aria-label="Send message input" class="chat__input">

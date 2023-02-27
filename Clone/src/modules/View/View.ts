@@ -1,28 +1,20 @@
-import { IHex, ISettlement, IResources, IDevCards, IPlayerInfo } from "../types/types";
+import { IHex, IResources, IDevCards, IPlayerInfo, IStock } from "../types/types";
 import MapRenderer from "./MapRenderer";
-import PlayerInterface from "./PlayerInterface";
 import victoryPopup from "../StartPage/templates/gameOverPopup/gameOver"
 import socket from "../Socket";
-
-interface IStock {
-  road: number,
-  settlement: number,
-  city: number,
-}
 
 export default class View {
   constructor(
     private renderer: MapRenderer = new MapRenderer(),
-    private ui?: PlayerInterface
   )
   {}
 
-    init() {
-      setTimeout(() => {
-      this.renderFullMap();
-      this.victoryInfo()
-      socket.emit('updateMap', localStorage.getItem('Room'))
-      }, 0);
+  init() {
+    setTimeout(() => {
+    this.victoryInfo()
+    socket.emit('updateMap', localStorage.getItem('Room'))
+    this.renderFullMap();
+    }, 0);
   }
 
   renderFullMap() {
@@ -56,6 +48,7 @@ export default class View {
      }, 3000)
 
   }
+
   showPlentyPopup() {
     const modalPlenty = document.querySelector(".plenty-choose");
     modalPlenty?.classList.toggle("modal");
@@ -357,13 +350,16 @@ export default class View {
       victoryPopup(player)
     })
   }
+
+  highlighHexesWithCurrentRollNumber(number: number){
+    const allToken = document.querySelectorAll(".hex__num_tocken");
+    allToken.forEach((token) =>{
+      if (token instanceof HTMLDivElement && Number(token.innerText) === number) {
+        token.classList.add("provides");
+        setTimeout(() => {
+          token.classList.remove("provides");
+        }, 1000);
+      }
+    })
+  }
 }
-
-// Classes: _animation.scss
-
-// city - меняет поселение на город надо добавлять, когда строим город уже
-// select - для подсветки поля, где нужно построить поселение
-// select__road - для подстветки дороги, которую можно построить
-// moveDown - нужно добавлять robber после отрисовки карты (иначе будет срабатывать не на том гексе), в функции где его переставляют
-// этот же класс можно добавлять и для поселений, городов, дорог при строительстве(или есть класс build - но он не очень)
-//  modal - для появления окошка встречной торговли

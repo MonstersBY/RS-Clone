@@ -1,6 +1,6 @@
 import View from "../View/View";
 import Dice from "../diceRoll/diceRoll";
-import { getElementBySelector, IPlayerInfo, IResources, IOffer, IPlayerHand } from "../types/types";
+import { getElementBySelector, IPlayerInfo, IResources, IOffer } from "../types/types";
 import socket from "../Socket";
 
 export default class Controller {
@@ -11,8 +11,7 @@ export default class Controller {
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
     public canRoll?: boolean,
-  )
-  {}
+  ) {}
 
   init() {
     this.dice.init();
@@ -20,6 +19,7 @@ export default class Controller {
     this.createMessage()
 
     socket.emit('give-room-list-players', localStorage.getItem('Room'))
+
     setTimeout(() => {
       socket.emit(
         "isYouTurnPlayer",
@@ -30,7 +30,6 @@ export default class Controller {
     socket.on("firstSettlementMode", (player, active) => {
       this.player = player;
       this.activePlayer = active;
-      console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
 
       if (this.activePlayer) {
         this.buildFirstSettlementMode();
@@ -45,12 +44,17 @@ export default class Controller {
       if (dices) dices.forEach(dice => {
         dice.classList.add("select");
       });
-      console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`); // TODO delete console.log()
+      if (this.activePlayer) {
+        const audio = new Audio('../../assets/files/NextTurn.mov')
+        audio.play();
+      }
 
       const nextBtn = document.getElementById("create-new-turn");
       nextBtn?.classList.remove("active");
-      this.addListenerDices();
     });
+
+    this.addListenerDices();
+    this.observerOfPlayersToRob();
 
     socket.on("Change-playerInfo", (players) => {
       const indexUser = players.findIndex((findUser: { name: string | undefined; }) => findUser.name === this.player?.name)
@@ -62,6 +66,10 @@ export default class Controller {
         this.view?.constructionConst(this.player as IPlayerInfo);
       }
       this.view?.createPlayers(players as [IPlayerInfo])
+    });
+
+    socket.on("displayDiceState", (roll) => {
+      this.view?.highlighHexesWithCurrentRollNumber(roll[0] + roll[1]);
     });
 
     this.map = document.getElementById("map") as HTMLDivElement;
@@ -96,6 +104,9 @@ export default class Controller {
   createMessage() {
     socket.on('game-message', (user, message) => {
       const chatMessages = document.querySelector('.chat__messages')
+      if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
       this.outputMessage(user, message);
     })
   }
@@ -112,7 +123,7 @@ export default class Controller {
   createNewTurn() {
     const btn = document.getElementById("create-new-turn");
     btn?.addEventListener("click", (e) => {
-      if (btn.classList.contains('active')) {
+      if (btn.classList.contains('active') && this.activePlayer) {
         socket.emit("Next-person",localStorage.getItem("Room"));
       }
     });
@@ -126,10 +137,10 @@ export default class Controller {
   }
 
   addListenerDices() {
-    if (this.canRoll && this.activePlayer) {
-      document.getElementById("roll-dice")?.addEventListener(
-        "click",
-        (e: Event) => {
+    document.getElementById("roll-dice")?.addEventListener(
+      "click",
+      (e: Event) => {
+        if (this.canRoll && this.activePlayer) {
           const dices = document.querySelectorAll("dice");
           if (dices) dices.forEach((dice) => {
               dice.classList.remove("select");
@@ -146,18 +157,20 @@ export default class Controller {
               socket.emit('robberCheckCards', localStorage.getItem("Room"))
               this.setRobber(this.player as IPlayerInfo, false)
             } else {
-              this.activePlayerPlay()
+              this.view?.highlighHexesWithCurrentRollNumber(roll[0] + roll[1]);
+              this.activePlayerPlay();
             }
           }
-        },
-        { once: true }
-      );
-    }
+        }
+      },
+    );
   }
 
   activePlayerPlay() {
-    const nextBtn = document.getElementById("create-new-turn");
-    nextBtn?.classList.add("active");
+    setTimeout(() => {
+      const nextBtn = document.getElementById("create-new-turn");
+      nextBtn?.classList.add("active");
+    }, 1500);
   }
 
   //this listener add only in turn of active player
@@ -183,7 +196,7 @@ export default class Controller {
               this.view?.showConstructionCost();
               break;
             case "trade__btn":
-              this.view?.showTradePopup(this.player as IPlayerInfo); // class modal toggle(maybe need only add class? or also clear curentState)
+              this.view?.showTradePopup(this.player as IPlayerInfo);
               this.tradeWithBank(this.player as IPlayerInfo);
               break;
             case "trade-devcard__btn":
@@ -232,7 +245,6 @@ export default class Controller {
         });
 
         const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
-        audio.volume = 0.2;
         audio.play();
         socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
         socket.emit('updateMap', localStorage.getItem('Room'))
@@ -255,9 +267,8 @@ export default class Controller {
       const road = document.getElementById(e) as HTMLDivElement;
       if (!road.classList.contains("own")) {
         road.classList.add("select");
-        road.addEventListener("click", (e) => {
+        road.addEventListener("click", () => {
           const audio = new Audio('../../assets/files/Building_1.wav');
-          audio.volume = 0.1;
           audio.play();
           socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
           socket.emit('updateMap', localStorage.getItem('Room'))
@@ -299,7 +310,6 @@ export default class Controller {
                 isFree,
               );
               const audio = new Audio('../../assets/files/Building_1.wav');
-              audio.volume = 0.1;
               audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
@@ -308,12 +318,8 @@ export default class Controller {
               document.dispatchEvent(roadBuildedEvent);
             });
           }
-        } else {
-          console.log("not enough resources");
         }
       });
-    } else {
-      console.log("no roads left");
     }
   }
 
@@ -355,18 +361,13 @@ export default class Controller {
                 localStorage.getItem("Room")
               );
               const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
-              audio.volume = 0.2;
               audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
             });
           }
-        } else {
-          console.log("not enough resources");
         }
       });
-    } else {
-      console.log("no settlements left");
     }
   }
 
@@ -395,22 +396,16 @@ export default class Controller {
                 localStorage.getItem("Room")
               );
               const audio = new Audio('../../assets/files/Upgrade_1.wav');
-              audio.volume = 0.2;
               audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
           });
-        } else {
-          console.log("not enough resources");
         }
       });
-    } else {
-      console.log("no cities left");
     }
   }
 
   // Trade logic
-
   tradeWithBank(player: IPlayerInfo) {
     const offerContainer = document.getElementById("offer__container");
     const wishContainer = document.getElementById("wish__container");
@@ -484,18 +479,18 @@ export default class Controller {
   makeDeal(player: IPlayerInfo) {
       const currentOffer: IOffer = {
         have: {
-          brick: Number(document.getElementById("brick-give")?.innerText),
-          grain: Number(document.getElementById("grain-give")?.innerText),
-          lumber: Number(document.getElementById("lumber-give")?.innerText),
-          ore: Number(document.getElementById("ore-give")?.innerText),
-          wool: Number(document.getElementById("wool-give")?.innerText),
+          brick:  Number(document.getElementById("brick-give")?.innerText)  || 0,
+          grain:  Number(document.getElementById("grain-give")?.innerText)  || 0,
+          lumber: Number(document.getElementById("lumber-give")?.innerText) || 0,
+          ore:    Number(document.getElementById("ore-give")?.innerText)    || 0,
+          wool:   Number(document.getElementById("wool-give")?.innerText)   || 0,
         },
         wish: {
-          brick: Number(document.getElementById("brick-wish")?.innerText),
-          grain: Number(document.getElementById("grain-wish")?.innerText),
-          lumber: Number(document.getElementById("lumber-wish")?.innerText),
-          ore: Number(document.getElementById("ore-wish")?.innerText),
-          wool: Number(document.getElementById("wool-wish")?.innerText),
+          brick:  Number(document.getElementById("brick-wish")?.innerText)  || 0,
+          grain:  Number(document.getElementById("grain-wish")?.innerText)  || 0,
+          lumber: Number(document.getElementById("lumber-wish")?.innerText) || 0,
+          ore:    Number(document.getElementById("ore-wish")?.innerText)    || 0,
+          wool:   Number(document.getElementById("wool-wish")?.innerText)   || 0,
         },
       };
 
@@ -508,7 +503,6 @@ export default class Controller {
           player.hand.resources[resource as keyof IResources] += count;
         }
         this.view?.showTradePopup(this.player as IPlayerInfo);
-
         socket.emit('updateHand', player, localStorage.getItem('Room'));
       } else {
         alert("Deal is not fair! Add more");
@@ -521,7 +515,7 @@ export default class Controller {
     const allCost = player.harbors.includes("all") ? 3 : 4;
     for (const [resource, count] of Object.entries(offer.have)) {
       const modificator = player.harbors.includes(`${resource}`) ? 2 : allCost;
-      giveValue += count / modificator;
+      giveValue += Number(count) / modificator;
     }
 
     for (const count of Object.values(offer.wish)) {
@@ -545,8 +539,6 @@ export default class Controller {
     }
     if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain && buildConst.wool <= hand.wool) {
       socket.emit('buy-develop-card', player, localStorage.getItem('Room'))
-    } else {
-      console.log('not enough resources')
     }
   }
 
@@ -601,7 +593,6 @@ export default class Controller {
     const monopolyScreen = document.querySelector('.monopoly-choose')
     const ready = getElementBySelector('.monopoly_check')
     ready.onclick = function(){
-      console.log('monopoly')
       const checkedInputs = monopolyScreen?.querySelector<HTMLInputElement>(
         "input.choose-checkbox:checked"
       );
@@ -614,7 +605,7 @@ export default class Controller {
   playPlentyCard(player: IPlayerInfo){
     const plentyScreen = document.querySelector('.plenty-choose')
     const ready = getElementBySelector('.plenty_check')
-    ready.onclick = function(){
+    ready.onclick = function() {
       const checkedInputs = plentyScreen?.querySelectorAll<HTMLInputElement>(
         "input.choose-checkbox:checked"
       );
@@ -641,26 +632,21 @@ export default class Controller {
             localStorage.getItem("Room"),
             knight
           );
-          var audio
-          if(knight) {
-            audio = new Audio('../../assets/files/Knight_1.wav')
-          } else {
-            audio = new Audio('../../assets/files/Bandit_1.wav');
-          }
-          audio.volume = 0.2;
+          const audio = new Audio(`${
+            knight ? '../../assets/files/Knight_1.wav' : '../../assets/files/Bandit_1.wav'
+          }`)
           audio.play();
           socket.emit('give-room-list-players', localStorage.getItem("Room"))
-          this.takeFromRobber()
-          this.activePlayerPlay()
+          this.activePlayerPlay();
         }, {once: true})
       }
     })
   }
 
-  takeFromRobber() {
-    socket.on('take-one-res', settlement => {
-      const colors: string[] = []
-      settlement.forEach((e: string) =>{
+  observerOfPlayersToRob() {
+    socket.on('take-one-res', (settlement) => {
+      const colors: string[] = [];
+      settlement.forEach((e: string) => {
         const div = document.getElementById(e) as HTMLDivElement
         if (div?.classList.contains('own') && !div?.classList.contains(`own_${this.player?.color}`)) {
           if (div?.classList[3].split("_")[1] != 'nobody') {
