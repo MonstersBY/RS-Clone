@@ -65,7 +65,7 @@ export default class Controller {
     });
 
     this.map = document.getElementById("map") as HTMLDivElement;
-    
+
     this.addPlayCardsListener();
     this.addBuildAndTradeListeners();
     this.createNewTurn();
@@ -137,7 +137,6 @@ export default class Controller {
           const target = e.target as HTMLElement;
           if (target && target.closest(".dice__container") && this.dice) {
             const roll = this.dice.randomDiceRoll();
-            target.classList.remove("select");
             this.dice.audio.play();
             this.canRoll = false;
             socket.emit("weRollDice", localStorage.getItem("Room"), roll);
@@ -233,7 +232,7 @@ export default class Controller {
         });
 
         const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
-        audio.volume = 0.1;
+        audio.volume = 0.2;
         audio.play();
         socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
         socket.emit('updateMap', localStorage.getItem('Room'))
@@ -356,7 +355,7 @@ export default class Controller {
                 localStorage.getItem("Room")
               );
               const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
-              audio.volume = 0.1;
+              audio.volume = 0.2;
               audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
@@ -396,7 +395,7 @@ export default class Controller {
                 localStorage.getItem("Room")
               );
               const audio = new Audio('../../assets/files/Upgrade_1.wav');
-              audio.volume = 0.1;
+              audio.volume = 0.2;
               audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
@@ -648,7 +647,7 @@ export default class Controller {
           } else {
             audio = new Audio('../../assets/files/Bandit_1.wav');
           }
-          audio.volume = 0.1;
+          audio.volume = 0.2;
           audio.play();
           socket.emit('give-room-list-players', localStorage.getItem("Room"))
           this.takeFromRobber()
