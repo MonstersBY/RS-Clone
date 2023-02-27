@@ -40,7 +40,7 @@ export default class Controller {
       this.player = player;
       this.activePlayer = active;
       this.canRoll = active;
-      const dices = document.querySelectorAll("dice");
+      const dices = document.querySelectorAll(".dice");
       if (dices) dices.forEach(dice => {
         dice.classList.add("select");
       });
@@ -141,7 +141,7 @@ export default class Controller {
       "click",
       (e: Event) => {
         if (this.canRoll && this.activePlayer) {
-          const dices = document.querySelectorAll("dice");
+          const dices = document.querySelectorAll(".dice");
           if (dices) dices.forEach((dice) => {
               dice.classList.remove("select");
             });
