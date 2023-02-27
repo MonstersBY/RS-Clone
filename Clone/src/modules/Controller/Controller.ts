@@ -245,7 +245,6 @@ export default class Controller {
         });
 
         const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
-        audio.volume = 0.2;
         audio.play();
         socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
         socket.emit('updateMap', localStorage.getItem('Room'))
@@ -268,9 +267,8 @@ export default class Controller {
       const road = document.getElementById(e) as HTMLDivElement;
       if (!road.classList.contains("own")) {
         road.classList.add("select");
-        road.addEventListener("click", (e) => {
+        road.addEventListener("click", () => {
           const audio = new Audio('../../assets/files/Building_1.wav');
-          audio.volume = 0.1;
           audio.play();
           socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
           socket.emit('updateMap', localStorage.getItem('Room'))
@@ -312,7 +310,6 @@ export default class Controller {
                 isFree,
               );
               const audio = new Audio('../../assets/files/Building_1.wav');
-              audio.volume = 0.1;
               audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
@@ -364,7 +361,6 @@ export default class Controller {
                 localStorage.getItem("Room")
               );
               const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
-              audio.volume = 0.2;
               audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
@@ -400,7 +396,6 @@ export default class Controller {
                 localStorage.getItem("Room")
               );
               const audio = new Audio('../../assets/files/Upgrade_1.wav');
-              audio.volume = 0.2;
               audio.play();
               socket.emit('updateMap', localStorage.getItem('Room'))
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
@@ -640,7 +635,6 @@ export default class Controller {
           const audio = new Audio(`${
             knight ? '../../assets/files/Knight_1.wav' : '../../assets/files/Bandit_1.wav'
           }`)
-          audio.volume = 0.2;
           audio.play();
           socket.emit('give-room-list-players', localStorage.getItem("Room"))
           this.activePlayerPlay();

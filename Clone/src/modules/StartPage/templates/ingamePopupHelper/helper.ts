@@ -2,7 +2,7 @@ export const helperNode = `
   <div class="helper__wrapper hidden"></div>
   <button class="helper___button btn">?</button>
   <div class="helper__body hidden">
-    <p>The game is designed for 1-4 players</p>
+    <p>The game is designed for 2-4 players</p>
     <h5 class="helper__title">The goal of the game</h5>
     <p>You need to score 10 victory points (VP). The first player to do so is the winner and the game ends. Players receive points:</p>
       <ul>
