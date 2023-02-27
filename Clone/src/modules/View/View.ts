@@ -68,105 +68,132 @@ export default class View {
 
   showTradePopup(player: IPlayerInfo) {
     const modalTradeWrap = `
-          <div class="modal-trade__wrap">
             <div class="trade-container__wrap flex-row">
-              <div class="trade-offer">
+              <div class="trade-column">
                 <h4 class="trade__subtitle">Give</h4>
                 <div id="offer__container" class="resources trade__resources">
-                 <div id="trade__offer_lumber" class="lumber resource__container resource trade__resource empty flex-bs">
+                 <div class="lumber resource__container resource trade__resource empty flex-bs">
                  ${
                    player.hand.resources.lumber > 3
                      ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-lumber"></div>
-                    <div id="trade__offer-counter_lumber" class="resource-counter invisible flex-bs">0</div>
+                    <div id="lumber-give" class="resource-counter invisible flex-bs">0</div>
                   `
                      : ""
                  }
                  </div>
-                 <div id="trade__offer_brick" class="brick resource__container resource trade__resource flex-bs empty">
+                 <div class="brick resource__container resource trade__resource flex-bs empty">
                   ${
                     player.hand.resources.brick > 3
                       ? `
                       <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-brick"></div>
-                    <div id="trade__offer-counter_brick" class="resource-counter invisible flex-bs">0</div>
+                    <div id="brick-give" class="resource-counter invisible flex-bs">0</div>
                     `
                       : ""
                   }
                     </div>
-                  <div id="trade__offer_wool" class="wool resource__container resource trade__resource flex-bs empty">
+                  <div class="wool resource__container resource trade__resource flex-bs empty">
                     ${
                       player.hand.resources.wool > 3
                         ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-wool"></div>
-                    <div id="trade__offer-counter_wool" class="resource-counter invisible flex-bs">0</div>
+                    <div id="wool-give" class="resource-counter invisible flex-bs">0</div>
                       `
                         : ""
                     }
                     </div>
-                  <div id="trade__offer_grain" class="grain resource__container resource trade__resource empty flex-bs">
+                  <div class="grain resource__container resource trade__resource empty flex-bs">
                     ${
                       player.hand.resources.grain > 3
                         ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-grain"></div>
-                    <div id="trade__offer-counter_grain" class="resource-counter invisible flex-bs">0</div>
+                    <div id="grain-give" class="resource-counter invisible flex-bs">0</div>
                     `
                         : ""
                     }
                     </div>
-                 <div id="trade__offer_ore" class="ore resource__container resource trade__resource flex-bs empty">
+                 <div class="ore resource__container resource trade__resource flex-bs empty">
                      ${
                        player.hand.resources.ore > 3
                          ? `
                     <div class="arrow_left"></div>
                     <div class="resource-icon trade__resource-icon icon-ore"></div>
-                    <div id="trade__offer-counter_ore" class="resource-counter invisible flex-bs">0</div>
+                    <div id="ore-give" class="resource-counter invisible flex-bs">0</div>
                       `
                          : ""
                      }
                     </div>
                 </div>
               </div>
-              <div class="trade-wish">
+              <div class="trade-cost" id="trade-cost">
+                <h4 class="trade__subtitle">Cost</h4>
+                <div class="cost_display">x<span id="lumber-cost">${
+                  (player.harbors.includes("lumber") ? "2" : 0)
+                  || (player.harbors.includes("all") ? "3" : 0)
+                  || "4"
+                }</span></div>
+                <div class="cost_display">x<span id="brick-cost">${
+                  (player.harbors.includes("brick") ? "2" : 0)
+                  || (player.harbors.includes("all") ? "3" : 0)
+                  || "4"
+                }</span></div>
+                <div class="cost_display">x<span id="wool-cost">${
+                  (player.harbors.includes("wool") ? "2" : 0)
+                  || (player.harbors.includes("all") ? "3" : 0)
+                  || "4"
+                }</span></div>
+                <div class="cost_display">x<span id="grain-cost">${
+                  (player.harbors.includes("grain") ? "2" : 0)
+                  || (player.harbors.includes("all") ? "3" : 0)
+                  || "4"
+                }</span></div>
+                <div class="cost_display">x<span id="ore-cost">${
+                  (player.harbors.includes("ore") ? "2" : 0)
+                  || (player.harbors.includes("all") ? "3" : 0)
+                  || "4"
+                }</span></div>
+              </div>
+              <div class="trade-column">
                 <h4 class="trade__subtitle">Get</h4>
                 <div id="wish__container" class="resources trade__resources">
-                  <div id="trade__wish_lumber" class="lumber resource resource__container trade__resource empty flex-bs">
+                  <div class="lumber resource resource__container trade__resource empty flex-bs">
                     <div class="resource-icon trade__resource-icon icon-lumber"></div>
-                    <div id="trade__wish-counter_lumber" class="resource-counter invisible flex-bs">0</div>
+                    <div id="lumber-wish" class="resource-counter invisible flex-bs">0</div>
                     <div class="arrow_right"></div>
                   </div>
-                  <div id="trade__wish_brick" class="brick resource resource__container trade__resource flex-bs empty">
+                  <div class="brick resource resource__container trade__resource flex-bs empty">
                     <div class="resource-icon trade__resource-icon icon-brick"></div>
-                    <div id="trade__wish-counter_brick" class="resource-counter invisible flex-bs">0</div>
+                    <div id="brick-wish" class="resource-counter invisible flex-bs">0</div>
                     <div class="arrow_right"></div>
                   </div>
-                  <div id="trade__wish_wool" class="wool resource resource__container trade__resource flex-bs empty">
+                  <div class="wool resource resource__container trade__resource flex-bs empty">
                     <div class="resource-icon trade__resource-icon icon-wool"></div>
-                    <div id="trade__wish-counter_wool" class="resource-counter invisible flex-bs">0</div>
+                    <div id="wool-wish" class="resource-counter invisible flex-bs">0</div>
                     <div class="arrow_right"></div>
                   </div>
-                  <div id="trade__wish_grain" class="grain resource resource__container trade__resource empty flex-bs">
+                  <div class="grain resource resource__container trade__resource empty flex-bs">
                     <div class="resource-icon trade__resource-icon icon-grain"></div>
-                    <div id="trade__wish-counter_grain" class="resource-counter invisible flex-bs">0</div>
+                    <div id="grain-wish" class="resource-counter invisible flex-bs">0</div>
                     <div class="arrow_right"></div>
                   </div>
-                  <div id="trade__wish_ore" class="ore resource resource__container trade__resource flex-bs empty">
+                  <div class="ore resource resource__container trade__resource flex-bs empty">
                     <div class="resource-icon trade__resource-icon icon-ore"></div>
-                    <div id="trade__wish-counter_ore" class="resource-counter invisible flex-bs">0</div>
+                    <div id="ore-wish" class="resource-counter invisible flex-bs">0</div>
                     <div class="arrow_right"></div>
                   </div>
                 </div>
               </div>
+              <div class="trade__btns">
+                <img id="offer__positive" src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon">
+                <img id="offer__negative" src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
+              </div>
             </div>
-            <div class="trade__btns flex-row">
-              <img id="offer__positive" src="assets/images/icons/icon_check.svg" alt="ready" class="status__icon">
-              <img id="offer__negative" src="assets/images/icons/icon_x.svg" alt="close icon" class="status__icon">
-            </div>
-          </div>
     `;
+
     const modalTrade = document.querySelector(".modal-trade");
     if (modalTrade) modalTrade.innerHTML = "";
     modalTrade?.classList.toggle("modal");

@@ -1,6 +1,6 @@
 import View from "../View/View";
 import Dice from "../diceRoll/diceRoll";
-import { getElementBySelector, IPlayerInfo, IResources, IOffer } from "../types/types";
+import { getElementBySelector, IPlayerInfo, IResources, IOffer, IPlayerHand } from "../types/types";
 import socket from "../Socket";
 
 export default class Controller {
@@ -10,9 +10,7 @@ export default class Controller {
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
-
     public canRoll?: boolean,
-    public robbering?: boolean,
   )
   {}
 
@@ -20,11 +18,7 @@ export default class Controller {
     this.dice.init();
     this.chatMessages()
     this.createMessage()
-    const buttons = `
-    <div style="position: absolute; z-index: 10; top: 0; left: 100px; display: flex; flex-direction: column; height: 30px; gap: 20px;">
-    <button id="first-set" style='display: none'>first-set<button>
-    </div>
-    `;
+
     socket.emit('give-room-list-players', localStorage.getItem('Room'))
     setTimeout(() => {
       socket.emit(
@@ -33,46 +27,45 @@ export default class Controller {
         localStorage.getItem("Name")
       );
 
-      socket.on("firstSettlementMode", (player, active) => {
-        this.player = player;
-        this.activePlayer = active;
-        console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
+    socket.on("firstSettlementMode", (player, active) => {
+      this.player = player;
+      this.activePlayer = active;
+      console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
 
-        if (this.activePlayer) {
-          this.buildFirstSettlementMode();
-        }
-      });
-      socket.on("Turn-player", (player, active) => {
-        this.player = player;
-        this.activePlayer = active;
-        this.canRoll = active;
-        console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`);
+      if (this.activePlayer) {
+        this.buildFirstSettlementMode();
+      }
+    });
 
-        const nextBtn = document.getElementById("create-new-turn");
-        nextBtn?.classList.remove("active");
-        if (this.activePlayer) {
-          this.addListenerDices();
-        }
-      });
-      socket.on("Change-playerInfo", (players) => {
-        const indexUser = players.findIndex((findUser: { name: string | undefined; }) => findUser.name === this.player?.name)
-        this.player = players[indexUser];
-        if (this.player){
-          this.view?.resources(this.player as IPlayerInfo);
-          this.view?.buildingStock(this.player as IPlayerInfo);
-          this.view?.devCardStock(this.player as IPlayerInfo);
-          this.view?.constructionConst(this.player as IPlayerInfo);
-        }
-        this.view?.createPlayers(players as [IPlayerInfo])
-      });
+    socket.on("Turn-player", (player, active) => {
+      this.player = player;
+      this.activePlayer = active;
+      this.canRoll = active;
+      console.log(`${localStorage.getItem("Name")}: ${this.activePlayer}`); // TODO delete console.log()
 
-      this.map = document.getElementById("map") as HTMLDivElement;
-      document.body.insertAdjacentHTML("afterbegin", buttons);
+      const nextBtn = document.getElementById("create-new-turn");
+      nextBtn?.classList.remove("active");
+      if (this.activePlayer) {
+        this.addListenerDices();
+      }
+    });
 
-      
-      this.addPlayCardsListener();
-      this.addBuildAndTradeListeners();
-      this.createNewTurn();
+    socket.on("Change-playerInfo", (players) => {
+      const indexUser = players.findIndex((findUser: { name: string | undefined; }) => findUser.name === this.player?.name)
+      this.player = players[indexUser];
+      if (this.player){
+        this.view?.resources(this.player as IPlayerInfo);
+        this.view?.buildingStock(this.player as IPlayerInfo);
+        this.view?.devCardStock(this.player as IPlayerInfo);
+        this.view?.constructionConst(this.player as IPlayerInfo);
+      }
+      this.view?.createPlayers(players as [IPlayerInfo])
+    });
+
+    this.map = document.getElementById("map") as HTMLDivElement;
+    this.addPlayCardsListener();
+    this.addBuildAndTradeListeners();
+    this.createNewTurn();
     }, 0);
   }
 
@@ -96,12 +89,14 @@ export default class Controller {
       }
     })
   }
+
   createMessage() {
     socket.on('game-message', (user, message) => {
       const chatMessages = document.querySelector('.chat__messages')
       this.outputMessage(user, message);
     })
   }
+
   outputMessage(user: string, message: string) {
     const div = document.createElement('div')
     div.classList.add('message__post')
@@ -153,6 +148,7 @@ export default class Controller {
       );
     }
   }
+
   activePlayerPlay() {
     const nextBtn = document.getElementById("create-new-turn");
     nextBtn?.classList.add("active");
@@ -182,8 +178,7 @@ export default class Controller {
               break;
             case "trade__btn":
               this.view?.showTradePopup(this.player as IPlayerInfo); // class modal toggle(maybe need only add class? or also clear curentState)
-              // if(tradeWithPlayers)
-              this.tradeWithPlayers(this.player as IPlayerInfo);
+              this.tradeWithBank(this.player as IPlayerInfo);
               break;
             case "trade-devcard__btn":
               this.buyDevelopCard(this.player as IPlayerInfo);
@@ -305,11 +300,11 @@ export default class Controller {
             });
           }
         } else {
-          console.log("not money");
+          console.log("not enough resources");
         }
       });
     } else {
-      console.log("no road");
+      console.log("no roads left");
     }
   }
 
@@ -357,11 +352,11 @@ export default class Controller {
             });
           }
         } else {
-          console.log("not money");
+          console.log("not enough resources");
         }
       });
     } else {
-      console.log("no settlements");
+      console.log("no settlements left");
     }
   }
 
@@ -395,17 +390,17 @@ export default class Controller {
               socket.emit('give-room-list-players', localStorage.getItem("Room"))
           });
         } else {
-          console.log("not money");
+          console.log("not enough resources");
         }
       });
     } else {
-      console.log("no city");
+      console.log("no cities left");
     }
   }
 
-  // TRADE LOGIC
+  // Trade logic
 
-  tradeWithPlayers(player: IPlayerInfo) {
+  tradeWithBank(player: IPlayerInfo) {
     const offerContainer = document.getElementById("offer__container");
     const wishContainer = document.getElementById("wish__container");
     const positiveCheck = document.getElementById("offer__positive");
@@ -413,8 +408,9 @@ export default class Controller {
 
     if (offerContainer)
       offerContainer.addEventListener("click", (e) => {
-        this.offerHandler(e, player);
+        this.giveHandler(e, player);
       });
+
     if (wishContainer)
       wishContainer.addEventListener("click", (e) => {
         this.wishHandler(e);
@@ -422,131 +418,106 @@ export default class Controller {
 
     if (positiveCheck)
       positiveCheck.addEventListener("click", () => {
-        this.makeOffer();
+        this.makeDeal(player);
       });
+
     if (negativeCheck)
       negativeCheck.addEventListener("click", () => {
         this.view?.showTradePopup(this.player as IPlayerInfo);
       });
   }
 
-  offerHandler(e: Event, player: IPlayerInfo) {
+  giveHandler(e: Event, player: IPlayerInfo) {
     if (e.target instanceof HTMLElement) {
       const target = e.target.closest(".trade__resource");
       if (target) {
         const resource = target.className.split(" ")[0] as keyof IResources;
-        const id = target.id;
-        if (target.classList.contains("empty")) {
-          // когда старт, в любом случае класс удаляю, счетчик увеличиваю до 1
-          target.classList.remove("empty");
-          target.classList.add("offer");
-          this.increaseCounter(id); //must be 1 in result
-        } else {
-          const counterNumber = this.getCounterNumber(id);
-          if (
-            counterNumber &&
-            counterNumber < player.hand.resources[resource]
-          ) {
-            this.increaseCounter(id);
-          } else {
-            return;
+        const modificator = Number(`${document.getElementById(`${resource}-cost`)?.innerText || 4}`)
+        if (player.hand.resources[resource] >= modificator) {
+          if (target.classList.contains("empty")) {
+            target.classList.remove("empty");
+            target.classList.add("offer");
+          }
+
+          const countDisplay = target.querySelector(".resource-counter");
+          countDisplay?.classList.remove("invisible");
+          let currentNumber = Number(countDisplay?.textContent);
+
+          if (countDisplay) {
+            countDisplay.textContent = `${currentNumber + modificator}`;
           }
         }
       }
     }
   }
+
   wishHandler(e: Event) {
     if (e.target instanceof HTMLElement) {
       const target = e.target.closest(".trade__resource");
       if (target) {
-        const id = target.id;
         if (target.classList.contains("empty")) {
-          // когда старт, в любом случае класс удаляю, счетчик увеличиваю до 1
           target.classList.remove("empty");
           target.classList.add("wish");
-          this.increaseCounter(id); //must be 1 in result
-        } else {
-          this.increaseCounter(id);
         }
+        const counter = target.querySelector(".resource-counter");
+        counter?.classList.remove("invisible");
+        let currentNumber = Number(counter?.textContent);
+        if (counter && currentNumber < 10) {
+          counter.textContent = `${++currentNumber}`;
+        }
+
       }
     }
   }
 
-  makeOffer() {
-    const offerContainer = document.getElementById("offer__container"); // maybe must get by class?
-    const wishContainer = document.getElementById("wish__container"); // to have opportunity to call this function
-    // when hadle counteroffer popup
-
-    if (offerContainer && wishContainer) {
-      // Здесь делаю объект
+  makeDeal(player: IPlayerInfo) {
       const currentOffer: IOffer = {
         have: {
-          brick: 0,
-          grain: 0,
-          lumber: 0,
-          ore: 0,
-          wool: 0,
+          brick: Number(document.getElementById("brick-give")?.innerText),
+          grain: Number(document.getElementById("grain-give")?.innerText),
+          lumber: Number(document.getElementById("lumber-give")?.innerText),
+          ore: Number(document.getElementById("ore-give")?.innerText),
+          wool: Number(document.getElementById("wool-give")?.innerText),
         },
         wish: {
-          brick: 0,
-          grain: 0,
-          lumber: 0,
-          ore: 0,
-          wool: 0,
+          brick: Number(document.getElementById("brick-wish")?.innerText),
+          grain: Number(document.getElementById("grain-wish")?.innerText),
+          lumber: Number(document.getElementById("lumber-wish")?.innerText),
+          ore: Number(document.getElementById("ore-wish")?.innerText),
+          wool: Number(document.getElementById("wool-wish")?.innerText),
         },
       };
-      const offerResources = offerContainer.querySelectorAll(".offer");
-      const wishResources = wishContainer.querySelectorAll(".wish");
 
-      this.addToCurrentOffer(offerResources, currentOffer.have);
-      this.addToCurrentOffer(wishResources, currentOffer.wish);
-    }
-    // need make offer another players => render counterOfferPopup (gamePage modal-trade__counteroffer)acording currentOfferState ???
-    this.showSentOfferMessage();
-    this.view?.showTradePopup(this.player as IPlayerInfo);
-  }
+      if (this.isTheDealFair(player, currentOffer)) {
+        for (const [resource, count] of Object.entries(currentOffer.have)) {
+          player.hand.resources[resource as keyof IResources] -= count;
+        }
 
-  addToCurrentOffer(arr: NodeListOf<Element>, offerSide: IResources) {
-    arr.forEach((item) => {
-      const id = item.id;
-      const resource = item.className.split(" ")[0];
-      const counterNumber = this.getCounterNumber(id);
-      offerSide[resource as keyof typeof offerSide] = Number(counterNumber);
-    });
-  }
+        for (const [resource, count] of Object.entries(currentOffer.wish)) {
+          player.hand.resources[resource as keyof IResources] += count;
+        }
+        this.view?.showTradePopup(this.player as IPlayerInfo);
 
-  showSentOfferMessage() {
-    const offerMes = document.querySelector(".offer-message"); // show message about sending of offer
-    if (offerMes) {
-      offerMes.classList.add("moveDown");
-      setTimeout(() => {
-        offerMes.classList.remove("moveDown");
-        offerMes.classList.add("slideInUp");
-      }, 3000);
-    }
-  }
-
-  getCounterNumber(id: string) {
-    const counterParent = document.getElementById(id);
-    if (counterParent) {
-      const counter = counterParent.querySelector(".resource-counter");
-      if (counter) {
-        const counterTextContent = Number(counter.textContent);
-        return counterTextContent;
+        socket.emit('updateHand', player, localStorage.getItem('Room'));
+      } else {
+        alert("Deal is not fair! Add more");
       }
-    }
   }
 
-  increaseCounter(id: string) {
-    const counterParent = document.getElementById(id);
-    if (counterParent) {
-      const counter = counterParent.querySelector(".resource-counter");
-      counter?.classList.remove("invisible");
-      let number = this.getCounterNumber(id) as number;
-      if (counter) {
-        counter.textContent = `${++number}`;
-      }
+  isTheDealFair(player: IPlayerInfo, offer: IOffer) {
+    let giveValue = 0;
+    let wishValue = 0;
+    const allCost = player.harbors.includes("all") ? 3 : 4;
+    for (const [resource, count] of Object.entries(offer.have)) {
+      const modificator = player.harbors.includes(`${resource}`) ? 2 : allCost;
+      giveValue += count / modificator;
     }
+
+    for (const count of Object.values(offer.wish)) {
+      wishValue += count;
+    }
+
+    return giveValue >= wishValue;
   }
 
   // Development cards
@@ -564,7 +535,7 @@ export default class Controller {
     if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain && buildConst.wool <= hand.wool) {
       socket.emit('buy-develop-card', player, localStorage.getItem('Room'))
     } else {
-      console.log('not money')
+      console.log('not enough resources')
     }
   }
 
@@ -673,10 +644,11 @@ export default class Controller {
       }
     })
   }
+
   takeFromRobber() {
-    socket.on('take-one-res', sett => {
+    socket.on('take-one-res', settlement => {
       const colors: string[] = []
-      sett.forEach((e: string) =>{
+      settlement.forEach((e: string) =>{
         const div = document.getElementById(e) as HTMLDivElement
         if (div?.classList.contains('own') && !div?.classList.contains(`own_${this.player?.color}`)) {
           if (div?.classList[3].split("_")[1] != 'nobody') {

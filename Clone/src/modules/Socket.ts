@@ -10,4 +10,4 @@ const socket = io('https://test-server-production-b456.up.railway.app/',{
   }
 })
 
-export default socket
+export default socket;

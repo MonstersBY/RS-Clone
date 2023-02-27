@@ -17,6 +17,7 @@ interface ISettlement {
   city: boolean,
   nextHexes: Array<number>,
   nextNodes: Array<string>,
+  harbor?: string,
 }
 
 interface IRoad {
