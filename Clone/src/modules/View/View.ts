@@ -1,9 +1,7 @@
-// import State from "../../backend/State/State";
-// import Room from "../../backend/Room";
 import { IHex, ISettlement, IResources, IDevCards, IPlayerInfo } from "../types/types";
 import MapRenderer from "./MapRenderer";
 import PlayerInterface from "./PlayerInterface";
-import { game } from "../StartPage/templates/gamePage";
+import victoryPopup from "../StartPage/templates/gameOverPopup/gameOver"
 import socket from "../Socket";
 
 interface IStock {
@@ -16,12 +14,13 @@ export default class View {
   constructor(
     private renderer: MapRenderer = new MapRenderer(),
     private ui?: PlayerInterface
-  ) // public dice: Dice = new Dice,
+  )
   {}
 
     init() {
       setTimeout(() => {
       this.renderFullMap();
+      this.victoryInfo()
       socket.emit('updateMap', localStorage.getItem('Room'))
       }, 0);
   }
@@ -40,54 +39,6 @@ export default class View {
         window.dispatchEvent(mapLoadedEvent);
       }
     });
-  }
-
-  renderfullUI(playerInfo: IPlayerInfo[], player: number) {
-    // hey, ui, transfer this.state.playersInfo[player] object to UI
-    this.renderStaticUI(playerInfo, player);
-    // Fthis.renderDynamicUI(playerInfo);
-  }
-
-  renderStaticUI(playerInfo: IPlayerInfo[], player: number) {
-    this.renderStock(playerInfo[player]);
-    // transfer this.state.playersInfo object to UI
-  }
-
-  renderDynamicUI(player: IPlayerInfo) {
-    // transfer this.state.playersInfo[player].hand object to UI
-  }
-
-  renderStock(player: IPlayerInfo) {
-    //Вариант, где есть вопросы с типами
-
-    const ids = ["build-road", "build-settlement", "build-city"];
-    const stockElements: any = []; // what type?
-    ids.forEach((id) => {
-      stockElements.push(document.getElementById(id));
-    });
-
-    for (let i = 0; i < stockElements; i++) {
-      switch (stockElements[i].id) {
-        case "build-road":
-          stockElements[i].classList.add(`player-stock__road_${player.color}`);
-          break;
-        case "build-settlement":
-          stockElements[i].classList.add(
-            `player-stock__settlement_${player.color}`
-          );
-          break;
-        case "build-city":
-          stockElements[i].classList.add(`player-stock__city_${player.color}`);
-          break;
-      }
-    }
-    // Точно рабочий вариант
-    /* const stockRoad = document.getElementById("build-road");
-    stockRoad?.classList.add(`player-stock__road_${player.color}`);
-    const stockSettlement = document.getElementById("build-settlement");
-    stockSettlement?.classList.add(`player-stock__settlement_${player.color}`);
-    const stockCity = document.getElementById("build-city");
-    stockCity?.classList.add(`player-stock__city_${player.color}`); */
   }
 
   renderErrorMessage() {
@@ -254,22 +205,21 @@ export default class View {
     constructionBlock?.classList.toggle("modal");
   }
 
-
   createPlayers(usersInfo: [IPlayerInfo]) {
-        const list = document.querySelector('.all-player-board')
+      const list = document.querySelector('.all-player-board')
 
       const color = ["red", "blue", "green", "orange"];
       while (list?.firstChild) {
         list.removeChild(list.firstChild);
       }
 
-        for (let i = 0; i < usersInfo.length; i++) {
-          const allRes = this.SummCards(usersInfo[i].hand.resources)
-          const allDev = this.SummCards(usersInfo[i].hand.development)
-          // const victoryPoin = 
-          const div = document.createElement('div')
-          div.classList.add('player-board')
-          div.innerHTML = `
+      for (let i = 0; i < usersInfo.length; i++) {
+        const allRes = this.summCards(usersInfo[i].hand.resources)
+        const allDev = this.summCards(usersInfo[i].hand.development)
+        const victoryPoin = this.summVictory(usersInfo[i])
+        const div = document.createElement('div')
+        div.classList.add('player-board')
+        div.innerHTML = `
             <div class="player-board">
             <div class="nickname__wrap flex-bs">
               <div class="avatar__wrap avatar__${color[i]} flex-bs">
@@ -277,7 +227,7 @@ export default class View {
               </div>
               <div class="nickname">${usersInfo[i].name}</div>
               <div class="player-score flex-bs">
-                <span>${usersInfo[i].settlements.length}</span>
+                <span>${victoryPoin}</span>
               </div>
             </div>
             <div class="player-miniboard flex-bs">
@@ -300,8 +250,8 @@ export default class View {
               </div>
             </div>
           </div>`;
-          list?.appendChild(div)
-          }
+        list?.appendChild(div)
+        }
   }
 
   resources(player: IPlayerInfo) {
@@ -319,6 +269,7 @@ export default class View {
       }
     }
   }
+
   buildingStock(player: IPlayerInfo) {
     const stock = {
       road: player.roadsStock,
@@ -327,6 +278,22 @@ export default class View {
     }
     for (let key in stock) {
       const div = document.querySelector(`.${key}__btn`);
+      const visual = div?.querySelectorAll('.player-stock__icon')
+      visual?.forEach((e)=>{
+        switch (e.id) {
+          case "build-road":
+            e.classList.add(`player-stock__road_${player.color}`);
+            break;
+          case "build-settlement":
+            e.classList.add(
+              `player-stock__settlement_${player.color}`
+            );
+            break;
+          case "build-city":
+            e.classList.add(`player-stock__city_${player.color}`);
+            break;
+        }
+      })
       const infStock = div?.querySelector('.player-stock__counter')
       if(stock[key as keyof IStock]) {
         div?.classList.remove('empty')
@@ -336,6 +303,7 @@ export default class View {
       if (infStock != null) infStock.innerHTML = `${stock[key as keyof IStock]}`;
     }
   }
+
   devCardStock(player: IPlayerInfo) {
     const development = player.hand.development
     for (let key in development) {
@@ -349,6 +317,7 @@ export default class View {
       if (infStock != null) infStock.innerHTML = `${development[key as keyof IDevCards]}`;
     }
   }
+
   constructionConst(player: IPlayerInfo) {
     const resources = player.hand.resources
     const costDiv = document.querySelector('.construction-cost')
@@ -363,12 +332,30 @@ export default class View {
     }
   }
 
-  SummCards(obj: IResources | IDevCards) {
+  summCards(obj: IResources | IDevCards) {
     let sum = 0;
     for (let cards of Object.values(obj)) {
       sum += cards;
     }
     return sum;
+  }
+
+  summVictory(player: IPlayerInfo) {
+    let sum = 0
+    sum +=player.settlements.length
+    sum += (player.cities.length*2)
+    if(player.longestRoad) sum +=2
+    if(player.largestArmy) sum +=2
+    if (sum+player.hand.development.victory >= 10) {
+      socket.emit('victory', localStorage.getItem('Room'), player)
+    }
+    return sum
+  }
+
+  victoryInfo() {
+    socket.on('victory-info', (player) =>{
+      victoryPopup(player)
+    })
   }
 }
 

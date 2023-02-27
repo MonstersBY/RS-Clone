@@ -1,9 +1,7 @@
-import { addHelper } from "./ingamePopupHelper/helper";
 export const modificatePage = () => {
   if (window.location.pathname === "/game") {
     document.body.style.background = "rgb(0, 145, 204)";
     changeHeader();
-    // addHelper();
     changeContainer();
     hiddenFooter();
   }

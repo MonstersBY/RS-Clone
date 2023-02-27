@@ -27,18 +27,6 @@ export default class State {
     this.foundingStage = true;
   }
 
-  // Turn based events
-
-  // setDiceRoll(roll) {
-  //   this.diceRoll = roll;
-  // }
-  /* setDiceRoll(roll) {
-    this.diceRoll = roll;
-    this.addResoursesThisTurn(roll[0]+roll[1]);
-  }
- */
-
-
   addResoursesThisTurn(dice, map, players) {
     if (map  && players) {
       let currentHexes = []
@@ -263,14 +251,6 @@ export default class State {
     }
   }
 
-  playKnigthCard(player) { }// !!!
-
-  playMonopolyCard(player) { }// !!!
-
-  playPlentyCard(player) { }// !!!
-
-  playRoadCard(player) { }// !!!
-
   // Tecnical checks and events
   #isAnyResourse(res) {
     return res.brick + res.grain + res.lumber + res.ore + res.wool;
@@ -300,6 +280,7 @@ export default class State {
       }
     }
   }
+
   deleteCard(player, sum) {
     const resources = ["grain", "wool", "ore", "lumber", "brick"];
     for (let i = 0; i < sum;) {
@@ -338,6 +319,7 @@ export default class State {
       }
     }
   }
+
   monopolyCard(players, player, resource){
     let sum = 0
     for (let i = 0; i < players.length; i++) {
@@ -345,32 +327,32 @@ export default class State {
         switch (resource) {
           case 'grain':
             if(players[i].hand.resources.grain) {
-              players[i].hand.resources.grain--
-              sum++
+              sum += players[i].hand.resources.grain
+              players[i].hand.resources.grain = 0
             }
             break;
           case 'wool':
             if(players[i].hand.resources.wool) {
-              players[i].hand.resources.wool--
-              sum++
+              sum += players[i].hand.resources.wool
+              players[i].hand.resources.wool = 0
             }
             break;
           case 'ore':
             if(players[i].hand.resources.ore) {
-              players[i].hand.resources.ore--
-              sum++
+              sum += players[i].hand.resources.ore
+              players[i].hand.resources.ore = 0
             }
             break;
           case 'lumber':
             if(players[i].hand.resources.lumber) {
-              players[i].hand.resources.lumber--
-              sum++
+              sum += players[i].hand.resources.lumber
+              players[i].hand.resources.lumber = 0
             }
             break;
           case 'brick':
             if(players[i].hand.resources.brick) {
-              players[i].hand.resources.brick--
-              sum++
+              sum += players[i].hand.resources.brick
+              players[i].hand.resources.brick = 0
             }
             break;
         }
@@ -395,6 +377,7 @@ export default class State {
         break;
     }
   }
+
   plentyCard(player, resources){
     player.hand.development.plenty--
     for (let i = 0; i < resources.length; i++) {
