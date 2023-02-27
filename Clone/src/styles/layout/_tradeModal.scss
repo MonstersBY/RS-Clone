@@ -1,17 +1,19 @@
 .modal-trade {
   @extend %transition;
   position: absolute;
-  top: 4%;
+  top: 0;
   left: -100%;
   visibility: hidden;
   z-index: 5;
   background: transparent;
+  height: 100%;
 }
 
 .modal-trade.modal {
   visibility: visible;
   left: 50%;
 }
+
 .trade__subtitle {
   @include font(1.6rem, 120%);
   width: 50%;
@@ -24,30 +26,34 @@
   height: 2vh;
   width: 4vh;
 }
+
 .arrow_left {
   background: url('../assets/images/ingame/arrow_ltr.png');
   background-size: 100% 100%;
 }
+
 .arrow_right {
   position: relative;
   left: -1rem;
   background: url('../assets/images/ingame/arrow_rtl.png');
   background-size: 100% 100%;
 }
+
 .resource__container {
   width: fit-content;
+  height: auto;
 }
+
 .trade__resource {
   .resource-counter {
     width: 3vh;
     height: 3vh;
   }
 }
-.trade__resource-icon {
-  width: 6vh;
-  height: 6vh;
-}
+
 .trade__btns {
+  display: flex;
+  flex-direction: column;
   justify-content: space-around;
   gap: 1rem;
   .status__icon {
@@ -65,6 +71,7 @@
   z-index: 5;
   background: transparent;
 }
+
 .modal-trade__counteroffer.modal {
   visibility: visible;
   left: 35%;
@@ -72,6 +79,7 @@
     left: 45%;
   }
 }
+
 .counteroffer {
   left: 35%;
 }
@@ -82,16 +90,32 @@
   width: 11rem;
   height: 2rem;
 }
+
 .trade__titles {
   width: 100%;
   justify-content: space-between;
   align-items: stretch;
 }
+
 .trade-container-counteroffer__wrap {
   justify-content: space-between;
   margin-bottom: 1rem;
 }
+
 .offer,
 .wish {
   transform: scale(1.2);
+}
+
+.trade-column {
+  display:flex;
+  flex-direction: column;
+}
+
+.cost_display {
+  display:flex;
+  height: 6.5vh;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
 }

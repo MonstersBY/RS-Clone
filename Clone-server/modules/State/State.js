@@ -188,6 +188,9 @@ export default class State {
 
     // add to playerInfo
     player.settlements.push(id);
+    if (this.mapObject[hex][hode].harbor) {
+      player.harbors.push(this.mapObject[hex][hode].harbor);
+    }
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
     player.avalible.push(...nearNodes);
