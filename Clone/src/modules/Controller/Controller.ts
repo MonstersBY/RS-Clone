@@ -45,7 +45,6 @@ export default class Controller {
 
       const nextBtn = document.getElementById("create-new-turn");
       nextBtn?.classList.remove("active");
-      this.addListenerDices();
     });
 
     socket.on("Change-playerInfo", (players) => {
@@ -62,6 +61,7 @@ export default class Controller {
 
     this.map = document.getElementById("map") as HTMLDivElement;
     
+    this.addListenerDices();
     this.addPlayCardsListener();
     this.addBuildAndTradeListeners();
     this.createNewTurn();
@@ -122,7 +122,7 @@ export default class Controller {
   }
 
   addListenerDices() {
-    if (this.canRoll && this.activePlayer) {
+    if (this.canRoll) {
       document.getElementById("roll-dice")?.addEventListener(
         "click",
         (e: Event) => {
