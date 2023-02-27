@@ -85,6 +85,12 @@ body ::-webkit-scrollbar-track {
     background-color: darken($color-btn-secondary, 20%);
 	}
 }
+.btn_primary {
+  background-color: $color-btn-primary;
+   &:hover {
+    background-color: darken($color-btn-primary, 10%);
+	}
+}
 .ico {
   padding: -2px;
 }
@@ -117,6 +123,10 @@ img {
 input[type="checkbox"] {
   cursor: pointer;
 }
+.not_rooms {
+  text-transform: uppercase;
+}
+
 .error {
   @include font(10rem, 150%, 700);
   justify-content: center;

@@ -6,10 +6,16 @@
 }
 .game-menu__wrap {
   position: relative;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
+  gap: 1rem;
   .menu__link {
+    @include font(2.2rem, 130%, 700);
+    width: 10rem;
+    height: 5rem;
     padding: 0;
+    text-align: center;
+    filter: drop-shadow(2px 4px 4px rgba(20, 20, 20, 0.4));
   }
 }
 .game-btns__wrapper {
