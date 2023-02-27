@@ -5,8 +5,6 @@ import Controller from "./Controller/Controller";
 import View from "./View/View";
 import { renderCore } from "./StartPage/templates/core";
 import { addHelper } from "./StartPage/templates/ingamePopupHelper/helper";
-import  Dice  from "./diceRoll/diceRoll";
-import createModal from "./StartPage/templates/gameOverPopup/gameOver";
 
 import socket from "./Socket";
 import { modificatePage } from "./StartPage/templates/modificateIngamePage";
@@ -16,11 +14,6 @@ export default class App {
     public router: Router = new Router(),
     public controller: Controller = new Controller(),
     public view: View = new View(),
-    // public dice: Dice = new Dice,
-
-    // public state: State = new State(),
-
-    public inGame: boolean = false, // unused
     ) {}
 
   init() {

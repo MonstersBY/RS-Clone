@@ -12,7 +12,7 @@ export const helperNode = `
         <li class="helper__li">2 points for "The largest army";</li>
         <li class="helper__li">1 point per victory point card (5 total);</li>
       </ul>
-    <h5 class="helper__title">Поле</h5>
+    <h5 class="helper__title">Field</h5>
     <p>The playing field consists of hexes: hills, forests, mountains, fields, pastures, desert, surrounded by the sea. They can be laid out randomly, or you can choose a layout.</p>
     <p>Numbers are randomly placed on resource hexes. Every time a hexa number is rolled, it brings resources to all adjacent settlements. The desert brings nothing.</p>
     <p>There are harbors along the coast. A player who has built a settlement near the harbor can exchange resources at a specified, more favorable rate.</p>
