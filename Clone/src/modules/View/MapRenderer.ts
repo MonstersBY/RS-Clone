@@ -35,6 +35,13 @@ export default class MapRenderer {
         hex.settlement_N.player ? `own own_${hex.settlement_N.player}` : ""} ${
         hex.settlement_N.city ? "city" : ""}" id="${hex.settlement_N.id}" data-next="${hex.settlement_N.nextNodes}">
       </div>` : "";
+      if(hex.settlement_N) {
+        if(Number(hex.settlement_N.id.split("_")[0]) !== i) {
+          console.log("WTF")
+          console.log(hex)
+        }
+      }
+
 
       const road_N = hex.road_N ?
         `<div class="hex_node hex__road_N${hex.road_N.player ? ` own own_${hex.road_N.player}` : ""}" id="${hex.road_N.id}" data-next="${hex.road_N.nextNodes}"></div>` : "";

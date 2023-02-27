@@ -18,8 +18,9 @@
     align-items:flex-start;
   }
   &__resource {
-    height: calc(6vh * 1.1);
-    width: calc(7vh * 1.5);
+    height: 6.6vh;
+    width: 10.5vh;
+    flex-grow: 1;
   }
 }
 .resource-icon {

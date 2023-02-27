@@ -46,8 +46,8 @@ export const room = `
                         </div>
                         <div class="option__body flex-bs">
                             <select id="gameMap" class="options__select">
-                                <option value="4Players" class="game__mode-option">Classic</option>
-                                <option value="1vs1" class="game__mode-option">Classic Random</option>
+                                <option value="newbie" class="game__mode-option">Classic</option>
+                                <option value="random" class="game__mode-option">Classic Random</option>
                             </select>
                         </div>
                     </div>
@@ -72,7 +72,7 @@ export const room = `
                 <p class="ready__span" hidden="">All players need to be ready for host to start the game.</p>
             </div>
             <div class="start">
-                <a id="start-game" href="/game" class="btn start__game flex-bs">START GAME</a>
+                <a id="start-game" class="btn start__game flex-bs">START GAME</a>
             </div>
         </div>
     </div>
@@ -88,7 +88,7 @@ export const room = `
                 <b>some:</b> Hi
             </div>
         </div>
-        <div id="chat-form" class="chat__form">
+        <div class="chat__form">
             <input type="text" autocomplete="off" placeholder="Say hello" maxlength='200' aria-label="Send message input" class="chat__input">
             <button class="form-send__btn" type="submit">
                 <img src="assets/images//icons/chat/icon__send.svg" alt="send icon" class="send__icon">

@@ -27,18 +27,6 @@ export default class State {
     this.foundingStage = true;
   }
 
-  // Turn based events
-
-  // setDiceRoll(roll) {
-  //   this.diceRoll = roll;
-  // }
-  /* setDiceRoll(roll) {
-    this.diceRoll = roll;
-    this.addResoursesThisTurn(roll[0]+roll[1]);
-  }
- */
-
-
   addResoursesThisTurn(dice, map, players) {
     if (map  && players) {
       let currentHexes = []
@@ -188,6 +176,9 @@ export default class State {
 
     // add to playerInfo
     player.settlements.push(id);
+    if (this.mapObject[hex][hode].harbor) {
+      player.harbors.push(this.mapObject[hex][hode].harbor);
+    }
     const nextHexes = this.mapObject[hex][hode].nextHexes;
     player.hexes.push(...nextHexes);
     player.avalible.push(...nearNodes);
@@ -227,8 +218,6 @@ export default class State {
     // add to playerInfo
     player.roads.push(id);
     player.avalible.push(...nearRoads, ...nearNodes);
-
-    // this.calculateRoadChain(player, id, nearNodes);
   }
 
   // Development
@@ -262,14 +251,6 @@ export default class State {
     }
   }
 
-  playKnigthCard(player) { }// !!!
-
-  playMonopolyCard(player) { }// !!!
-
-  playPlentyCard(player) { }// !!!
-
-  playRoadCard(player) { }// !!!
-
   // Tecnical checks and events
   #isAnyResourse(res) {
     return res.brick + res.grain + res.lumber + res.ore + res.wool;
@@ -281,11 +262,143 @@ export default class State {
     let chosen = 0;
     let i;
     do {
-      i = randomNumber(0, 4);
+      i = Math.floor(Math.random() * 5);
       chosen = res[resources[i]];
     }
     while (!chosen)
     return resources[i];
+  }
+
+  countCardRobber(players) {
+    for (let i = 0; i < players.length; i++) {
+      let sum = 0;
+      for (let cards of Object.values(players[i].hand.resources)) {
+        sum += cards;
+      }
+      if (sum > 7) {
+        this.deleteCard(players[i], Math.ceil(sum/2))
+      }
+    }
+  }
+
+  deleteCard(player, sum) {
+    const resources = ["grain", "wool", "ore", "lumber", "brick"];
+    for (let i = 0; i < sum;) {
+      const j = Math.floor(Math.random() * 5)
+      switch (resources[j]) {
+        case 'grain':
+          if(player.hand.resources.grain) {
+            player.hand.resources.grain--
+            i++
+          }
+          break;
+        case 'wool':
+          if(player.hand.resources.wool) {
+            player.hand.resources.wool--
+            i++
+          }
+          break;
+        case 'ore':
+          if(player.hand.resources.ore) {
+            player.hand.resources.ore--
+            i++
+          }
+          break;
+        case 'lumber':
+          if(player.hand.resources.lumber) {
+            player.hand.resources.lumber--
+            i++
+          }
+          break;
+        case 'brick':
+          if(player.hand.resources.brick) {
+            player.hand.resources.brick--
+            i++
+          }
+          break;
+      }
+    }
+  }
+
+  monopolyCard(players, player, resource){
+    let sum = 0
+    for (let i = 0; i < players.length; i++) {
+      if(players[i].name != player.name) {
+        switch (resource) {
+          case 'grain':
+            if(players[i].hand.resources.grain) {
+              sum += players[i].hand.resources.grain
+              players[i].hand.resources.grain = 0
+            }
+            break;
+          case 'wool':
+            if(players[i].hand.resources.wool) {
+              sum += players[i].hand.resources.wool
+              players[i].hand.resources.wool = 0
+            }
+            break;
+          case 'ore':
+            if(players[i].hand.resources.ore) {
+              sum += players[i].hand.resources.ore
+              players[i].hand.resources.ore = 0
+            }
+            break;
+          case 'lumber':
+            if(players[i].hand.resources.lumber) {
+              sum += players[i].hand.resources.lumber
+              players[i].hand.resources.lumber = 0
+            }
+            break;
+          case 'brick':
+            if(players[i].hand.resources.brick) {
+              sum += players[i].hand.resources.brick
+              players[i].hand.resources.brick = 0
+            }
+            break;
+        }
+      }
+    }
+    player.hand.development.monopoly--
+    switch (resource) {
+      case 'grain':
+        player.hand.resources.grain += sum
+        break;
+      case 'wool':
+        player.hand.resources.wool += sum
+        break;
+      case 'ore':
+        player.hand.resources.ore += sum
+        break;
+      case 'lumber':
+        player.hand.resources.lumber += sum
+        break;
+      case 'brick':
+        player.hand.resources.brick += sum
+        break;
+    }
+  }
+
+  plentyCard(player, resources){
+    player.hand.development.plenty--
+    for (let i = 0; i < resources.length; i++) {
+      switch (resources[i]) {
+        case 'grain':
+          player.hand.resources.grain++
+          break;
+        case 'wool':
+          player.hand.resources.wool++
+          break;
+        case 'ore':
+          player.hand.resources.ore++
+          break;
+        case 'lumber':
+          player.hand.resources.lumber++
+          break;
+        case 'brick':
+          player.hand.resources.brick++
+          break;
+      }
+    }
   }
 
   transferOneToAnother(player, victimColor) {
@@ -298,10 +411,6 @@ export default class State {
         };
       }
     }
-  }
-
-  calculateRoadChain(map, playerInfo, id) {
-    playerInfo.roadChain = roadCounter(map, playerInfo.color, id);
   }
 
   calculateMaxRoadChain(map, playersInfo) {

@@ -17,15 +17,26 @@ export default class Mode {
 
   ConnectSocket() {
     socket.on('connect', () => {
-        // console.log(socket.id);
         if (!localStorage.getItem('Name')){
           localStorage.setItem('Name', this.getRandomHash())
+          const divNick = document.querySelector('.random__nick')?.querySelector('span')
+          if (divNick != null) divNick.innerHTML = `${localStorage.getItem('Name')}`;
         }
     })
   }
 
   CreateName() {
-
+    const divNick = document.querySelector('.random__nick')?.querySelector('span')
+    const chatBtn = document.querySelector('.nick__form-btn')
+    const msg = <HTMLInputElement>document.getElementById('new__nick')
+    chatBtn?.addEventListener('click', e => {
+      if (msg?.value === '') return
+      localStorage.setItem('Name', msg?.value)
+      msg.value = ''
+      msg.focus()
+      if (divNick != null) divNick.innerHTML = `${localStorage.getItem('Name')}`;
+    })
+    if (divNick != null) divNick.innerHTML = `${localStorage.getItem('Name')}`;
   }
 
   RoomList() {

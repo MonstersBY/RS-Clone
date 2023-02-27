@@ -5,13 +5,13 @@ export default class Room {
   ) { }
 
   init() {
-    this.AllSockets()
     this.ChatMessages()
     this.CreateMessage()
     this.CreateRoom()
     this.CreateError()
     this.CheckReady()
     this.CreateGame()
+    this.changeGameSetting()
   }
 
   CreateRoom() {
@@ -29,10 +29,7 @@ export default class Room {
       document.querySelector('.room__header')?.append(text)
     })
 
-    // Users is array
-
     socket.on('all-user-room', users => {
-      // const need = users.filter((user: { room: string | null; }) => user.room === room)
       let list = document.querySelector('.player__list')
       while (list?.firstChild) {
         list.removeChild(list.firstChild);
@@ -74,6 +71,17 @@ export default class Room {
     })
   }
 
+  changeGameSetting() {
+    const infoMap = document.getElementById('gameMap')
+    infoMap?.addEventListener('change', (e) => {
+      console.log((e.target as HTMLInputElement).value)
+      socket.emit('change-settings-map', localStorage.getItem('Room'), (e.target as HTMLInputElement).value)
+    })
+    socket.on('see-map-changes', settings =>{
+      (infoMap as HTMLInputElement).value = settings
+    })
+  }
+
   getRandomHash() {
     let text = "";
     let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -82,21 +90,25 @@ export default class Room {
     return text
   }
 
-  AllSockets() {
-
-  }
-
-
   ChatMessages() {
     const room = localStorage.getItem('Room')
     const user = localStorage.getItem('Name')
-    const chatForm = document.querySelector('.form-send__btn')
-    chatForm?.addEventListener('click', e => {
-      const msg = <HTMLInputElement>document.querySelector('.chat__input')
+    const chatBtn = document.querySelector('.form-send__btn')
+    const msg = <HTMLInputElement>document.querySelector('.chat__input')
+    chatBtn?.addEventListener('click', e => {
       if (msg?.value === '') return
       socket.emit('chatMessage', msg?.value, room, user)
       msg.value = ''
       msg.focus()
+    })
+    msg?.addEventListener('keypress', (e) => {
+      if(e.key === 'Enter'){
+        const msg = <HTMLInputElement>document.querySelector('.chat__input')
+        if (msg?.value === '') return
+        socket.emit('chatMessage', msg?.value, room, user)
+        msg.value = ''
+        msg.focus()
+      }
     })
   }
 
