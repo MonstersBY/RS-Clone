@@ -687,21 +687,4 @@ export default class Controller {
       socket.emit('transfer-one-to-another', this.player,localStorage.getItem("Room"), colors[Math.floor(Math.random() * colors.length)])
     })
   }
-
-  choiceHandler() {
-    // add listener on "accept choice btn"
-    getElementBySelector("accept-choice-btn").addEventListener(
-      "click",
-      (e) => {
-        let res;
-        if (e.target instanceof HTMLDivElement) {
-          if (e.target.classList.contains("resourse-for-choice")) {
-            res = e.target.dataset.resource;
-          }
-        }
-      },
-      { once: true }
-    );
-    return "here will be string with resourse";
-  }
 }
