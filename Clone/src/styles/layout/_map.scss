@@ -341,10 +341,10 @@
   &::after {
     position: absolute;
     content: '';
-    width: 5vmin;
-    height: 5vmin;
-    top: calc(50% - 2.5vmin);
-    left: calc(50% - 2.5vmin);
+    width: 11vmin;
+    height: 11vmin;
+    top: calc(50% - 5.5vmin);
+    left: calc(50% - 5.5vmin);
     border-radius: 50%;
     animation: pulse 1s infinite alternate;
     transition: all 1s ease-in-out;
