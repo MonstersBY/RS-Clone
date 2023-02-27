@@ -90,7 +90,7 @@ export default class Controller {
       if(e.key === 'Enter') {
         const msg = <HTMLInputElement>document.querySelector('.chat__input')
         if (msg?.value === '') return
-        socket.emit('chatMessage', msg?.value, room, this.player?.name)
+        socket.emit('game-chatMessage', msg?.value, room, this.player?.name)
         msg.value = ''
         msg.focus()
       }
