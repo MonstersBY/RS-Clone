@@ -12,7 +12,7 @@ export default class View {
   init() {
     setTimeout(() => {
     this.victoryInfo()
-    socket.emit('updateMap', localStorage.getItem('Room'))
+    socket.emit('updateMapFirst', localStorage.getItem('Room'))
     this.renderFullMap();
     }, 0);
   }
