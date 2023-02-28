@@ -3,7 +3,7 @@ import { mode } from "./StartPage/templates/modePage";
 import { room } from "./StartPage/templates/roomPage";
 import { game } from "./StartPage/templates/gamePage";
 import { errorPage } from "./StartPage/templates/errorPage";
-import { getElementBySelector, Irouters } from "./types/types";
+import { getElementBySelector, IRouters } from "./types/types";
 
 class Router {
   constructor(
