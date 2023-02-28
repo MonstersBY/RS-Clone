@@ -3,11 +3,11 @@ import { mode } from "./StartPage/templates/modePage";
 import { room } from "./StartPage/templates/roomPage";
 import { game } from "./StartPage/templates/gamePage";
 import { errorPage } from "./StartPage/templates/errorPage";
-import { getElementBySelector } from "./types/types";
+import { getElementBySelector, Irouters } from "./types/types";
 
 class Router {
   constructor(
-    private routes: any = {
+    private routes: IRouters = {
       "/intro": {
         title: "Intro",
         template: intro,

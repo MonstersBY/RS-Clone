@@ -82,6 +82,13 @@ interface IStock {
   city: number,
 }
 
+interface IRouters {
+  [key: string]: {
+    title: string,
+    template: string,
+  }
+}
+
 function getElementBySelector<T extends HTMLElement>(
   selector: string,
   parent: HTMLElement | HTMLInputElement | DocumentFragment | Document = document
@@ -92,4 +99,4 @@ function getElementBySelector<T extends HTMLElement>(
   return element;
 }
 
-export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand, IResources, IDevCards, IOffer, IStock}
+export { IHex, ISettlement, IRoad, IPlayerInfo, getElementBySelector, IPlayerHand, IResources, IDevCards, IOffer, IStock, IRouters}
