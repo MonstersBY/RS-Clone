@@ -214,7 +214,10 @@ io.on("connection", (socket) => {
             allGame.get(room).calculateMaxArmySize(allGame.get(room), allGame.get(room).playersInfo)
         }
         io.to(room).emit('Change-playerInfo', allGame.get(room).playersInfo)
-        io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
+
+        // io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
+        io.to(room).emit('renderOneHex', allGame.get(room).mapObject[id.split("_")[1]], id.split("_")[1])
+
         socket.emit('take-one-res', settlementsToRob)
     })
 
@@ -239,6 +242,10 @@ io.on("connection", (socket) => {
 
     socket.on('updateMap', (room) => {
         io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
+    })
+
+    socket.on('updateOneHex', (room, hex) => {
+        io.to(room).emit('renderOneHex', allGame.get(room).mapObject[hex], hex);
     })
 
     socket.on('buy-develop-card', (player, room) => {

@@ -13,11 +13,13 @@ export default class View {
     setTimeout(() => {
     this.victoryInfo()
     socket.emit('updateMap', localStorage.getItem('Room'))
-    this.renderFullMap();
+    // socket.emit('updateOneHex', localStorage.getItem('Room'))
+    this.registerRenderFullMap();
+    this.registerRenderOneHex();
     }, 0);
   }
 
-  renderFullMap() {
+  registerRenderFullMap() {
     socket.on("renderFullMapView", (mapObj) => {
       const mapContainer = document.getElementById("map");
       if (mapContainer) {
@@ -30,6 +32,25 @@ export default class View {
         let mapLoadedEvent = new CustomEvent("mapLoaded");
         window.dispatchEvent(mapLoadedEvent);
       }
+    });
+  }
+
+  registerRenderOneHex() {
+    socket.on("renderOneHex", (hexObject, hexIndex) => {
+
+      const hexNode = document.getElementById(`hex_${hexIndex}`)
+      if (hexObject.robber) {
+        document.getElementById("robberIcon")?.remove()
+      }
+      if (hexNode) {
+        hexNode.innerHTML = "";
+        const newContent = this.renderer.getHexNodeContent(hexObject) as string;
+        hexNode.insertAdjacentHTML("afterbegin", newContent);
+      }
+
+      let mapLoadedEvent = new CustomEvent("mapLoaded");
+      console.log("mapLoaded");
+      window.dispatchEvent(mapLoadedEvent);
     });
   }
 

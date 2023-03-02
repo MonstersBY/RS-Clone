@@ -9,7 +9,7 @@ export default function roadCounter(map, player) {
 }
 
 function recursiveCounter(map, playerColor, id, initialChain = [], prevRoads = []) {
-
+  /* Получаем карту, цвет игрока, id текущей дороги, цепь её предков и соседей ближайшего предка, чтобы не ходить кругами */
   if (initialChain.includes(id)) {
     return [] // dead end
   }
@@ -21,7 +21,7 @@ function recursiveCounter(map, playerColor, id, initialChain = [], prevRoads = [
   if (map[hex][hode].player !== playerColor) { 
     return []; // dead end
   }
-
+  // Отсекаем тупики и моменты когда наступаем себе на хвост, кладём дорогу в цепь
   chain.push(id);
 
   const nearNodes = map[hex][hode].nextNodes;
@@ -34,14 +34,14 @@ function recursiveCounter(map, playerColor, id, initialChain = [], prevRoads = [
       nearRoadsSet.add(node);
     }
   }
-
+  // Находим ближайших соседей которые ведут в нужную сторону
   const nearRoadsToTransfer = [...nearRoadsSet];
   const nearRoadsToUse = []; 
   for (const node of prevRoads) {
     nearRoadsSet.delete(node);
   }
   nearRoadsToUse.push(...nearRoadsSet);
-
+  // И высчитываем для них цепь
  const allPaths = [];
   nearRoadsToUse.forEach((road) => {
     const path = recursiveCounter(map, playerColor, road, chain, nearRoadsToTransfer);

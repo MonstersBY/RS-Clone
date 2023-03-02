@@ -231,53 +231,58 @@ export default class Controller {
       (chousen.classList.contains("hex__settlement_N") ||
         chousen.classList.contains("hex__settlement_S"))
     ) {
-      if (
-        chousen.classList.contains("hex__settlement_N") ||
-        chousen.classList.contains("hex__settlement_S")
-      ) {
-        const places = [
-          ...document.querySelectorAll(".hex__settlement_N"),
-          ...document.querySelectorAll(".hex__settlement_S"),
-        ];
+      const places = [
+        ...document.querySelectorAll(".hex__settlement_N"),
+        ...document.querySelectorAll(".hex__settlement_S"),
+      ];
 
-        places.forEach((e) => {
-          e.classList.remove("select");
-        });
+      places.forEach((e) => {
+        e.classList.remove("select");
+      });
 
-        const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
-        audio.play();
-        socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
-        socket.emit('updateMap', localStorage.getItem('Room'))
-        socket.emit('give-room-list-players', localStorage.getItem("Room"))
+      const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
+      audio.play();
+      socket.emit("setNewSettlement", this.player, chousen.id, localStorage.getItem("Room"));
 
-        window.addEventListener("settlementSet", () => {
-          window.addEventListener("mapLoaded", () => {
-            this.buildFirstRoadMode(chousen.dataset.next || "")
-          }, {once: true})
+      // socket.emit('updateMap', localStorage.getItem('Room'))
+      socket.emit('updateOneHex', localStorage.getItem('Room'), Number(chousen.id.split("_")[0]))
+
+      socket.emit('give-room-list-players', localStorage.getItem("Room"))
+
+      window.addEventListener("settlementSet", () => {
+        window.addEventListener("mapLoaded", () => {
+          this.buildFirstRoadMode(chousen.dataset.next || "")
         }, {once: true})
+      }, {once: true})
 
-        let settlementSetEvent = new CustomEvent('settlementSet');
-        window.dispatchEvent(settlementSetEvent);
-      }
+      let settlementSetEvent = new CustomEvent('settlementSet');
+      window.dispatchEvent(settlementSetEvent);
     }
   }
 
   buildFirstRoadMode(next: string) {
-    next.split(",").forEach((e) => {
-      const road = document.getElementById(e) as HTMLDivElement;
+    next.split(",").forEach((id) => {
+      const road = document.getElementById(id) as HTMLDivElement;
       if (!road.classList.contains("own")) {
         road.classList.add("select");
-        road.addEventListener("click", () => {
-          const audio = new Audio('../../assets/files/Building_1.wav');
-          audio.play();
-          socket.emit("setNewRoad", this.player, road.id, localStorage.getItem("Room"));
-          socket.emit('updateMap', localStorage.getItem('Room'))
-          socket.emit('give-room-list-players', localStorage.getItem("Room"))
-          socket.emit('Next-person', localStorage.getItem('Room'))
-          if (this.map) this.map.onclick = null;
-        });
       }
     });
+
+    this.map?.addEventListener("click", (e: MouseEvent) => {
+      if (e.target instanceof HTMLDivElement && e.target.classList.contains("select")) {
+        const audio = new Audio('../../assets/files/Building_1.wav');
+        audio.play();
+        socket.emit("setNewRoad", this.player, e.target.id, localStorage.getItem("Room"));
+        socket.emit('updateOneHex', localStorage.getItem('Room'), Number(e.target.id.split("_")[0]))
+        socket.emit('give-room-list-players', localStorage.getItem("Room"))
+        socket.emit('Next-person', localStorage.getItem('Room'))
+        if (this.map) this.map.onclick = null;
+        next.split(",").forEach((id) => {
+          const road = document.getElementById(id) as HTMLDivElement;
+          road.classList.remove("select");
+        });
+      }
+    }, {once: true});
   }
 
   // Building
@@ -296,28 +301,29 @@ export default class Controller {
       brick: player.hand.resources.brick,
     };
     if (player.roadsStock) {
-      roads.forEach((e) => {
-        const road = document.getElementById(e);
+      roads.forEach((id) => {
+        const road = document.getElementById(id);
         if ((buildConst.lumber <= hand.lumber && buildConst.brick <= hand.brick) || isFree) {
           if (road && !road.classList.contains("own")) {
             road.classList.add("select");
-            road.addEventListener("click", (e) => {
-              socket.emit(
-                "setNewRoad",
-                this.player,
-                road.id,
-                localStorage.getItem("Room"),
-                isFree,
-              );
-              const audio = new Audio('../../assets/files/Building_1.wav');
-              audio.play();
-              socket.emit('updateMap', localStorage.getItem('Room'))
-              socket.emit('give-room-list-players', localStorage.getItem("Room"))
-
-              let roadBuildedEvent = new CustomEvent("road-builded");
-              document.dispatchEvent(roadBuildedEvent);
-            });
           }
+        }
+      });
+      this.map?.addEventListener("click", (e: MouseEvent) => {
+        if (e.target instanceof HTMLDivElement && e.target.classList.contains("select")) {
+          const audio = new Audio('../../assets/files/Building_1.wav');
+          audio.play();
+
+          socket.emit("setNewRoad", this.player, e.target.id, localStorage.getItem("Room"), isFree);
+          socket.emit('updateOneHex', localStorage.getItem('Room'), Number(e.target.id.split("_")[0]))
+          socket.emit('give-room-list-players', localStorage.getItem("Room"))
+
+          roads.forEach((id) => {
+            document.getElementById(id)?.classList.remove("select");
+          });
+
+          let roadBuildedEvent = new CustomEvent("road-builded");
+          document.dispatchEvent(roadBuildedEvent);
         }
       });
     }
@@ -342,8 +348,8 @@ export default class Controller {
       grain: player.hand.resources.grain,
     };
     if (player.settlementsStock) {
-      settlements.forEach((e) => {
-        const settlement = document.getElementById(e);
+      settlements.forEach((id) => {
+        const settlement = document.getElementById(id);
         if (
           buildConst.lumber <= hand.lumber &&
           buildConst.brick <= hand.brick &&
@@ -352,22 +358,44 @@ export default class Controller {
         ) {
           if (settlement && !settlement?.classList.contains("own")) {
             settlement.classList.add("select");
-            settlement.addEventListener("click", (x) => {
-              const chousen = x.target as HTMLDivElement;
-              socket.emit(
-                "setNewSettlement",
-                this.player,
-                chousen.id,
-                localStorage.getItem("Room")
-              );
-              const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
-              audio.play();
-              socket.emit('updateMap', localStorage.getItem('Room'))
-              socket.emit('give-room-list-players', localStorage.getItem("Room"))
-            });
           }
         }
       });
+
+      this.map?.addEventListener("click", (e: MouseEvent) => {
+        if (e.target instanceof HTMLDivElement && e.target.classList.contains("select")) {
+          const chousen = e.target as HTMLDivElement;
+          const id = chousen.id;
+          socket.emit("setNewSettlement", this.player, id, localStorage.getItem("Room"));
+          const audio = new Audio('../../assets/files/BuildingComplete_1.wav');
+          audio.play();
+          // socket.emit('updateMap', localStorage.getItem('Room'))
+          socket.emit('updateOneHex', localStorage.getItem('Room'), Number(id.split("_")[0]))
+          socket.emit('give-room-list-players', localStorage.getItem("Room"))
+
+          const nearSettlementsSet = new Set();
+          e.target.dataset.next?.split(",").forEach((roadId) => {
+            const nearSettlementsIds = document.getElementById(roadId)?.dataset.next?.split(",");
+            nearSettlementsIds?.forEach((settlementId) => {
+              nearSettlementsSet.add(settlementId);
+            })
+          })
+          console.log(nearSettlementsSet);
+          nearSettlementsSet.delete(id);
+          const nearSettlementsList = [...nearSettlementsSet];
+          console.log(nearSettlementsList);
+          nearSettlementsList.forEach((settlementId) => {
+            const settlementNode = document.getElementById(settlementId as string)
+            console.log(settlementNode);
+            settlementNode?.classList.add("own"); 
+            settlementNode?.classList.add("own_nobody");
+          });
+
+          settlements.forEach((id) => {
+            document.getElementById(id)?.classList.remove("select");
+          })
+        }
+      }, {once: true});
     }
   }
 
@@ -382,23 +410,27 @@ export default class Controller {
       grain: player.hand.resources.grain,
     };
     if (player.settlementsStock) {
-      settlements.forEach((e) => {
-        const settlement = document.getElementById(e) as HTMLDivElement;
-
+      settlements.forEach((id) => {
+        const settlement = document.getElementById(id) as HTMLDivElement;
         if (buildConst.ore <= hand.ore && buildConst.grain <= hand.grain) {
-          settlement.style.transform = "scale(1.5)";
-          settlement.addEventListener("click", (e) => {
-            if (e.target && e.target instanceof HTMLElement)
-              socket.emit(
-                "setNewCity",
-                this.player,
-                settlement.id,
-                localStorage.getItem("Room")
-              );
-              const audio = new Audio('../../assets/files/Upgrade_1.wav');
-              audio.play();
-              socket.emit('updateMap', localStorage.getItem('Room'))
-              socket.emit('give-room-list-players', localStorage.getItem("Room"))
+          settlement.classList.add("ready-to-upgrade");
+        }
+      });
+
+      this.map?.addEventListener("click", (e) => {
+        if (e.target instanceof HTMLElement && e.target.classList.contains("own")) {
+          socket.emit(
+            "setNewCity", this.player, e.target.id, localStorage.getItem("Room"));
+          const audio = new Audio('../../assets/files/Upgrade_1.wav');
+          audio.play();
+
+          // socket.emit('updateMap', localStorage.getItem('Room'))
+          socket.emit('updateOneHex', localStorage.getItem('Room'), Number(e.target.id.split("_")[0]))
+
+          socket.emit('give-room-list-players', localStorage.getItem("Room"))
+
+          settlements.forEach((id) => {
+            document.getElementById(id)?.classList.remove("ready-to-upgrade");
           });
         }
       });
@@ -619,28 +651,30 @@ export default class Controller {
   }
 
   setRobber(player: IPlayerInfo, knight: boolean) {
-    const hexs = document.querySelectorAll('.hex')
-    hexs.forEach((e) =>{
-      if (!e.querySelector('#robberIcon') && !e.classList.contains('hex_sea') && !e.classList.contains('hex_harbor')) {
-        e.classList.add('active_hex')
-        e.addEventListener('click', (e) =>{
-          if (e.target && e.target instanceof HTMLElement)
-          socket.emit(
-            "setRobber",
-            this.player,
-            (e.target as HTMLDivElement)?.id,
-            localStorage.getItem("Room"),
-            knight
-          );
-          const audio = new Audio(`${
-            knight ? '../../assets/files/Knight_1.wav' : '../../assets/files/Bandit_1.wav'
-          }`)
-          audio.play();
-          socket.emit('give-room-list-players', localStorage.getItem("Room"))
-          this.activePlayerPlay();
-        }, {once: true})
+    const hexes = document.querySelectorAll('.hex')
+    hexes.forEach((hex) =>{
+      if (!hex.querySelector('#robberIcon') && !hex.classList.contains('hex_sea') && !hex.classList.contains('hex_harbor')) {
+        hex.classList.add('active_hex')
       }
     })
+    this.map?.addEventListener('click', (e: Event) =>{
+      if (e.target instanceof HTMLElement && e.target.classList.contains("active_hex")) {
+        socket.emit("setRobber", this.player, e.target.id, localStorage.getItem("Room"), knight);
+        const audio = new Audio(`${
+          knight ? '../../assets/files/Knight_1.wav' : '../../assets/files/Bandit_1.wav'
+        }`)
+        audio.play();
+
+        // socket.emit('updateOneHex', localStorage.getItem('Room'), Number(e.target?.id.split("_")[0]))
+
+        socket.emit('give-room-list-players', localStorage.getItem("Room"))
+        this.activePlayerPlay();
+
+        hexes.forEach((hex) =>{
+          hex.classList.remove('active_hex');
+        })
+      }
+    }, {once: true})
   }
 
   observerOfPlayersToRob() {

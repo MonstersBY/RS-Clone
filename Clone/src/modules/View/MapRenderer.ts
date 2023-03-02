@@ -6,12 +6,12 @@ export default class MapRenderer {
     private position: Array<number> = [
             4,  6,  8, 10,
           3,  5,  7,  9, 11,
-          2,  4,  6,  8, 10, 12,
-        1,  3,  5,  7,  9, 11, 13,
-          2,  4,  6,  8, 10, 12,
+        2,  4,  6,  8, 10, 12,
+      1,  3,  5,  7,  9, 11, 13,
+        2,  4,  6,  8, 10, 12,
           3,  5,  7,  9, 11,
             4,  6,  8, 10,
-      ]
+    ]
     ) {}
 
   getMapAsNodeTree(mapObject: Array<IHex>) {
@@ -28,60 +28,62 @@ export default class MapRenderer {
     for (let i = 0; i < this.HEX_COUNT; i++) {
       const hex = mapObject[i];
 
-      const hexToken = hex.token ? `<div class="hex__num_tocken">${hex.token}</div>` : "";
-
-      const settlement_N = hex.settlement_N ?
-      `<div class="hex_node hex__settlement_N ${
-        hex.settlement_N.player ? `own own_${hex.settlement_N.player}` : ""} ${
-        hex.settlement_N.city ? "city" : ""}" id="${hex.settlement_N.id}" data-next="${hex.settlement_N.nextNodes}">
-      </div>` : "";
-
-      const road_N = hex.road_N ?
-        `<div class="hex_node hex__road_N${hex.road_N.player ? ` own own_${hex.road_N.player}` : ""}" id="${hex.road_N.id}" data-next="${hex.road_N.nextNodes}"></div>` : "";
-
-      const road_W = hex.road_W ?
-      `<div class="hex_node hex__road_W${hex.road_W.player ? ` own own_${hex.road_W.player}` : ""}" id="${hex.road_W.id}" data-next="${hex.road_W.nextNodes}"></div>` : "";
-
-      const road_S = hex.road_S ?
-      `<div class="hex_node hex__road_S${hex.road_S.player ? ` own own_${hex.road_S.player}` : ""}" id="${hex.road_S.id}" data-next="${hex.road_S.nextNodes}"></div>` : "";
-
-      const settlement_S = hex.settlement_S ?
-        `<div class="hex_node hex__settlement_S ${
-          hex.settlement_S.player ? `own own_${hex.settlement_S.player}` : ""} ${
-          hex.settlement_S.city ? "city" : ""}" id="${hex.settlement_S.id}" data-next="${hex.settlement_S.nextNodes}">
-        </div>` : "";
-
-      const robber = hex.robber ? `<div id="robberIcon" class="robber"></div>` : "";
-
       const hexNode = `
         <div class="hex hex_${hex.type} ${
           hex.type in types ? `version_${types[hex.type as keyof typeof types]}` : ""}${
           hex.harbor ? `harbor_${hex.harbor}` : ""}"
           id="hex_${i}"
           style="grid-column-start: ${this.position[i]};">
-          ${hexToken}
-          ${settlement_N}
-          ${road_N}
-          ${road_W}
-          ${road_S}
-          ${settlement_S}
-          ${robber}
+
+          ${this.getHexNodeContent(hex)}
+
         </div>
       `
+
       if (typeof types[hex.type as keyof typeof types] !== "undefined") {
         types[hex.type as keyof typeof types] += 1;
       }
+
       template += hexNode;
     }
+
     return `${template}`;
   }
 
-  lineCounter(str: string) {
-    const lines = str
-    let i = 0;
-    return function() {
-      (i + 1 > 37) ? i = 0 : i;
-      return lines[i++];
-    }
+  getHexNodeContent(hex: IHex) {
+    const hexToken = hex.token ? `<div class="hex__num_tocken">${hex.token}</div>` : "";
+
+    const settlement_N = hex.settlement_N ?
+    `<div class="hex_node hex__settlement_N ${
+      hex.settlement_N.player ? `own own_${hex.settlement_N.player}` : ""} ${
+      hex.settlement_N.city ? "city" : ""}" id="${hex.settlement_N.id}" data-next="${hex.settlement_N.nextNodes}">
+    </div>` : "";
+
+    const road_N = hex.road_N ?
+      `<div class="hex_node hex__road_N${hex.road_N.player ? ` own own_${hex.road_N.player}` : ""}" id="${hex.road_N.id}" data-next="${hex.road_N.nextNodes}"></div>` : "";
+
+    const road_W = hex.road_W ?
+    `<div class="hex_node hex__road_W${hex.road_W.player ? ` own own_${hex.road_W.player}` : ""}" id="${hex.road_W.id}" data-next="${hex.road_W.nextNodes}"></div>` : "";
+
+    const road_S = hex.road_S ?
+    `<div class="hex_node hex__road_S${hex.road_S.player ? ` own own_${hex.road_S.player}` : ""}" id="${hex.road_S.id}" data-next="${hex.road_S.nextNodes}"></div>` : "";
+
+    const settlement_S = hex.settlement_S ?
+      `<div class="hex_node hex__settlement_S ${
+        hex.settlement_S.player ? `own own_${hex.settlement_S.player}` : ""} ${
+        hex.settlement_S.city ? "city" : ""}" id="${hex.settlement_S.id}" data-next="${hex.settlement_S.nextNodes}">
+      </div>` : "";
+
+    const robber = hex.robber ? `<div id="robberIcon" class="robber"></div>` : "";
+
+    return `
+      ${hexToken}
+      ${settlement_N}
+      ${road_N}
+      ${road_W}
+      ${road_S}
+      ${settlement_S}
+      ${robber}
+    `
   }
 }
