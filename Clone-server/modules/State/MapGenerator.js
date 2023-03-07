@@ -1,16 +1,26 @@
-import newbieMap from "./newbieMap.js"
-import { getEmptyPlayer } from "./emptyPlayer.js"
+import newbieMap from "./newbieMap.js";
+import { getEmptyPlayer } from "./emptyPlayer.js";
 
 export default class MapGenerator {
-  constructor(){
+  constructor() {
     this.tokens = [3, 4, 5, 6, 8, 9, 10, 11];
     this.hexes = ["hills", "forest", "mountains", "fields", "pasture"];
-    this.harbors = ["all", "all", "all", "all", "brick", "grain", "lumber", "ore", "wool"];
+    this.harbors = [
+      "all",
+      "all",
+      "all",
+      "all",
+      "brick",
+      "grain",
+      "lumber",
+      "ore",
+      "wool",
+    ];
     this.HEX_COUNT = 37;
   }
 
-  generateMap(map) {
-    return map === "newbie" ? this.#getNewbieMap() : this.#getRandomMap();
+  generateMap(type) {
+    return type === "newbie" ? this.#getNewbieMap() : this.#getRandomMap();
   }
 
   generatePlayers(players) {
@@ -34,10 +44,17 @@ export default class MapGenerator {
   }
 
   #getRandomMap() {
-    const newMap = newbieMap;
+    const newMap = [...newbieMap];
 
     const tokens = this.#shuffle([...this.tokens, ...this.tokens, 2, 12]);
-    const types = this.#shuffle([...this.hexes, ...this.hexes, ...this.hexes, "forest", "fields", "pasture"]);
+    const types = this.#shuffle([
+      ...this.hexes,
+      ...this.hexes,
+      ...this.hexes,
+      "forest",
+      "fields",
+      "pasture",
+    ]);
 
     const desertIndex = this.#randomNumber(0, 18);
     tokens.splice(desertIndex, 0, 0);
@@ -51,7 +68,7 @@ export default class MapGenerator {
       if (newMap[i].type === "harbor") {
         newMap[i].harbor = harbors[h];
         h++;
-      } else if(newMap[i].type !== "sea") {
+      } else if (newMap[i].type !== "sea") {
         newMap[i].token = tokens[t];
         newMap[i].type = types[t];
         newMap[i].robber = false;
@@ -62,40 +79,30 @@ export default class MapGenerator {
       }
     }
 
-    newMap[0].settlement_S.harbor = newMap[0].harbor;
-    newMap[5].settlement_N.harbor = newMap[0].harbor;
-
-    newMap[6].settlement_N.harbor = newMap[2].harbor;
-    newMap[2].settlement_S.harbor = newMap[2].harbor;
-    newMap[7].settlement_N.harbor = newMap[2].harbor;
-
-    newMap[3].settlement_S.harbor = newMap[8].harbor;
-    newMap[13].settlement_N.harbor = newMap[8].harbor;
-    newMap[8].settlement_S.harbor = newMap[8].harbor;
-
-    newMap[14].settlement_S.harbor = newMap[21].harbor;
-    newMap[27].settlement_N.harbor = newMap[21].harbor;
-
-    newMap[32].settlement_N.harbor = newMap[32].harbor;
-    newMap[26].settlement_S.harbor = newMap[32].harbor;
-    newMap[36].settlement_N.harbor = newMap[32].harbor;
-
-    newMap[35].settlement_N.harbor = newMap[35].harbor;
-    newMap[31].settlement_S.harbor = newMap[35].harbor;
-    newMap[30].settlement_S.harbor = newMap[35].harbor;
-
-    newMap[33].settlement_N.harbor = newMap[33].harbor;
-    newMap[29].settlement_S.harbor = newMap[33].harbor;
-
-    newMap[22].settlement_N.harbor = newMap[22].harbor;
-    newMap[28].settlement_N.harbor = newMap[22].harbor;
-    newMap[16].settlement_S.harbor = newMap[22].harbor;
-
-    newMap[9].settlement_S.harbor = newMap[9].harbor;
-    newMap[16].settlement_N.harbor = newMap[9].harbor;
-    newMap[4].settlement_S.harbor = newMap[9].harbor;
+    this.#addHarborsToSettlementNodes(newMap);
 
     return newMap;
+  }
+
+  #addHarborsToSettlementNodes(map) {
+    const dependencies = {
+      0: ["0_S", "5_N"],
+      2: ["2_S", "6_N", "7_N"],
+      8: ["8_S", "3_S", "13_N"],
+      9: ["9_S", "16_N", "4_S"],
+      21: ["14_S", "27_N"],
+      22: ["22_N", "28_N", "16_S"],
+      32: ["32_N", "26_S", "36_N"],
+      33: ["33_N", "29_S"],
+      35: ["35_N", "30_S", "31_S"],
+    };
+
+    for (const [hex, nodes] of Object.entries(dependencies)) {
+      for (const hode of nodes) {
+        map[hode.split("_")[0]][`settlement_${hode.split("_")[1]}`].harbor =
+          map[hex].harbor;
+      }
+    }
   }
 
   #randomNumber(min, max) {
