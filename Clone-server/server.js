@@ -113,7 +113,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("chatMessage", (msg, room, user) => {
+  socket.on("chatMessage", (room, user, msg) => {
     io.to(room).emit("message", user, msg);
   });
 
@@ -145,7 +145,7 @@ io.on("connection", (socket) => {
   });
 
   // Game events
-  socket.on("game-chatMessage", (msg, room, user) => {
+  socket.on("game-chatMessage", (room, msg, user) => {
     io.to(room).emit("game-message", user, msg);
   });
 
@@ -218,7 +218,7 @@ io.on("connection", (socket) => {
     io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
   });
 
-  socket.on("transfer-one-to-another", (player, room, color) => {
+  socket.on("transfer-one-to-another", (room, player, color) => {
     const index = allGame
       .get(room)
       .playersInfo.findIndex((findUser) => findUser.name === player.name);
@@ -255,7 +255,7 @@ io.on("connection", (socket) => {
     socket.to(room).emit("displayDiceState", roll);
   });
 
-  socket.on("player:setRobber", (player, id, room, knights) => {
+  socket.on("player:setRobber", (room, player, id, knights) => {
     const settlementsToRob = allGame
       .get(room)
       .setRobber(allGame.get(room).mapObject, id);
@@ -280,7 +280,7 @@ io.on("connection", (socket) => {
   });
 
   // Build
-  socket.on("player:setSettlement", (player, id, room) => {
+  socket.on("player:setSettlement", (room, player, id) => {
     allGame.get(room).setNewSettlement(player, id);
     const index = allGame
       .get(room)
@@ -305,7 +305,7 @@ io.on("connection", (socket) => {
     io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
   });
 
-  socket.on("player:setRoad", (player, id, room, isFree) => {
+  socket.on("player:setRoad", (room, player, id, isFree) => {
     allGame.get(room).setNewRoad(player, id);
     const index = allGame
       .get(room)
@@ -325,7 +325,7 @@ io.on("connection", (socket) => {
     io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
   });
 
-  socket.on("player:setCity", (player, id, room) => {
+  socket.on("player:setCity", (room, player, id) => {
     allGame.get(room).setNewCity(player, id);
     const index = allGame
       .get(room)
@@ -341,7 +341,7 @@ io.on("connection", (socket) => {
   });
 
   // Trade
-  socket.on("player:updateAfterDeal", (player, room) => {
+  socket.on("player:updateAfterDeal", (room, player) => {
     const index = allGame
       .get(room)
       .playersInfo.findIndex((findUser) => findUser.name === player.name);

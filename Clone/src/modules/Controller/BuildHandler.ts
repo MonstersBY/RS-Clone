@@ -29,9 +29,9 @@ export default class BuildHandler {
 
           socket.emit(
             "player:setRoad",
+            localStorage.getItem("Room"),
             player,
             chousen.id,
-            localStorage.getItem("Room"),
             isFree
           );
 
@@ -81,9 +81,9 @@ export default class BuildHandler {
 
           socket.emit(
             "player:setSettlement",
+            localStorage.getItem("Room"),
             player,
-            chousen.id,
-            localStorage.getItem("Room")
+            chousen.id
           );
 
           socket.emit(
@@ -139,9 +139,9 @@ export default class BuildHandler {
 
           socket.emit(
             "player:setCity",
+            localStorage.getItem("Room"),
             player,
-            chousen.id,
-            localStorage.getItem("Room")
+            chousen.id
           );
 
           socket.emit(

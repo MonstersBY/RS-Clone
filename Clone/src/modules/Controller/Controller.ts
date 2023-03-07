@@ -96,7 +96,7 @@ export default class Controller {
     const msg = <HTMLInputElement>document.querySelector(".chat__input");
     chatBtn?.addEventListener("click", (e) => {
       if (msg?.value === "") return;
-      socket.emit("game-chatMessage", msg?.value, room, this.player?.name);
+      socket.emit("game-chatMessage", room, msg?.value, this.player?.name);
       msg.value = "";
       msg.focus();
     });
@@ -104,7 +104,7 @@ export default class Controller {
       if (e.key === "Enter") {
         const msg = <HTMLInputElement>document.querySelector(".chat__input");
         if (msg?.value === "") return;
-        socket.emit("game-chatMessage", msg?.value, room, this.player?.name);
+        socket.emit("game-chatMessage", room, msg?.value, this.player?.name);
         msg.value = "";
         msg.focus();
       }
@@ -258,9 +258,9 @@ export default class Controller {
       audio.play();
       socket.emit(
         "player:setSettlement",
+        localStorage.getItem("Room"),
         this.player,
-        chousen.id,
-        localStorage.getItem("Room")
+        chousen.id
       );
 
       socket.emit(
@@ -309,9 +309,9 @@ export default class Controller {
           audio.play();
           socket.emit(
             "player:setRoad",
+            localStorage.getItem("Room"),
             this.player,
-            e.target.id,
-            localStorage.getItem("Room")
+            e.target.id
           );
           socket.emit(
             "map:renderHex",
@@ -482,8 +482,8 @@ export default class Controller {
       this.view?.showTradePopup(this.player as IPlayerInfo);
       socket.emit(
         "player:updateAfterDeal",
-        player,
-        localStorage.getItem("Room")
+        localStorage.getItem("Room"),
+        player
       );
     } else {
       alert("Deal is not fair! Add more");
@@ -648,9 +648,9 @@ export default class Controller {
         ) {
           socket.emit(
             "player:setRobber",
+            localStorage.getItem("Room"),
             this.player,
             e.target.id,
-            localStorage.getItem("Room"),
             knight
           );
           new Audio(
@@ -689,8 +689,8 @@ export default class Controller {
       });
       socket.emit(
         "transfer-one-to-another",
-        this.player,
         localStorage.getItem("Room"),
+        this.player,
         colors[Math.floor(Math.random() * colors.length)]
       );
     });
