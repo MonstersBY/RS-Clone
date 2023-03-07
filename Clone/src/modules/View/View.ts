@@ -12,8 +12,7 @@ export default class View {
   init() {
     setTimeout(() => {
     this.victoryInfo()
-    socket.emit('updateMap', localStorage.getItem('Room'))
-    // socket.emit('updateOneHex', localStorage.getItem('Room'))
+    socket.emit('map:renderAll', localStorage.getItem('Room'))
     this.registerRenderFullMap();
     this.registerRenderOneHex();
     }, 0);
@@ -367,8 +366,8 @@ export default class View {
   }
 
   victoryInfo() {
-    socket.on('victory-info', (player) =>{
-      victoryPopup(player)
+    socket.on('game:displayWinner', (player) =>{
+      victoryPopup(player);
     })
   }
 

@@ -144,7 +144,7 @@ io.on("connection", (socket) => {
     if (ready) io.to(room).emit("ChangeToGamePage");
   });
 
-  // game
+  // Game events
   socket.on("game-chatMessage", (msg, room, user) => {
     io.to(room).emit("game-message", user, msg);
   });
@@ -158,7 +158,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("give-room-list-players", (room) => {
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
   });
 
   socket.on("isYouTurnPlayer", (room, name) => {
@@ -181,133 +181,6 @@ io.on("connection", (socket) => {
         active
       );
     }
-  });
-
-  socket.on("setNewSettlement", (player, id, room) => {
-    allGame.get(room).setNewSettlement(player, id);
-    const index = allGame
-      .get(room)
-      .playersInfo.findIndex((findUser) => findUser.name === player.name);
-    allGame.get(room).playersInfo[index] = player;
-    allGame.get(room).playersInfo[index].settlementsStock--;
-
-    if (allGame.get(room).turn == 0) {
-      allGame
-        .get(room)
-        .addResoursesFirstSettlement(
-          allGame.get(room).mapObject,
-          allGame.get(room).playersInfo[index]
-        );
-    }
-    if (allGame.get(room).turn > 0) {
-      allGame.get(room).playersInfo[index].hand.resources.lumber -= 1;
-      allGame.get(room).playersInfo[index].hand.resources.brick -= 1;
-      allGame.get(room).playersInfo[index].hand.resources.wool -= 1;
-      allGame.get(room).playersInfo[index].hand.resources.grain -= 1;
-    }
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
-  });
-
-  socket.on("setNewRoad", (player, id, room, isFree) => {
-    allGame.get(room).setNewRoad(player, id);
-    const index = allGame
-      .get(room)
-      .playersInfo.findIndex((findUser) => findUser.name === player.name);
-    allGame.get(room).playersInfo[index] = player;
-    allGame.get(room).playersInfo[index].roadsStock--;
-    if (allGame.get(room).turn > 0) {
-      if (!isFree) {
-        allGame.get(room).playersInfo[index].hand.resources.lumber -= 1;
-        allGame.get(room).playersInfo[index].hand.resources.brick -= 1;
-      }
-    }
-    allGame.get(room).playersInfo[index].roadChain = roadCounter(
-      allGame.get(room).mapObject,
-      player
-    );
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
-  });
-
-  socket.on("setNewCity", (player, id, room) => {
-    allGame.get(room).setNewCity(player, id);
-    const index = allGame
-      .get(room)
-      .playersInfo.findIndex((findUser) => findUser.name === player.name);
-    allGame.get(room).playersInfo[index] = player;
-    allGame.get(room).playersInfo[index].settlementsStock++;
-    allGame.get(room).playersInfo[index].citiesStock--;
-
-    allGame.get(room).playersInfo[index].hand.resources.ore -= 3;
-    allGame.get(room).playersInfo[index].hand.resources.grain -= 2;
-
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
-  });
-
-  socket.on("setRobber", (player, id, room, knights) => {
-    const settlementsToRob = allGame
-      .get(room)
-      .setRobber(allGame.get(room).mapObject, id);
-    const index = allGame
-      .get(room)
-      .playersInfo.findIndex((findUser) => findUser.name === player.name);
-    if (knights) {
-      allGame.get(room).playersInfo[index].hand.development.knights -= 1;
-      allGame.get(room).playersInfo[index].armySize += 1;
-      allGame
-        .get(room)
-        .calculateMaxArmySize(allGame.get(room), allGame.get(room).playersInfo);
-    }
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
-
-    // io.to(room).emit('renderFullMapView', allGame.get(room).mapObject)
-    io.to(room).emit(
-      "renderOneHex",
-      allGame.get(room).mapObject[id.split("_")[1]],
-      id.split("_")[1]
-    );
-
-    socket.emit("take-one-res", settlementsToRob);
-  });
-
-  socket.on("robberCheckCards", (room) => {
-    allGame.get(room).countCardRobber(allGame.get(room).playersInfo);
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
-  });
-
-  socket.on("transfer-one-to-another", (player, room, color) => {
-    const index = allGame
-      .get(room)
-      .playersInfo.findIndex((findUser) => findUser.name === player.name);
-    allGame.get(room).transferOneToAnother(player, color);
-    allGame.get(room).playersInfo[index] = player;
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
-  });
-
-  socket.on("updateHand", (player, room) => {
-    const index = allGame
-      .get(room)
-      .playersInfo.findIndex((findUser) => findUser.name === player.name);
-    allGame.get(room).playersInfo[index] = player;
-
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
-  });
-
-  socket.on("updateMap", (room) => {
-    io.to(room).emit("renderFullMapView", allGame.get(room).mapObject);
-  });
-
-  socket.on("updateOneHex", (room, hex) => {
-    io.to(room).emit("renderOneHex", allGame.get(room).mapObject[hex], hex);
-  });
-
-  socket.on("buy-develop-card", (player, room) => {
-    allGame.get(room).buyDevelopmentCard(player);
-    const index = allGame
-      .get(room)
-      .playersInfo.findIndex((findUser) => findUser.name === player.name);
-    allGame.get(room).playersInfo[index] = player;
-
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
   });
 
   socket.on("Next-person", (room) => {
@@ -340,7 +213,37 @@ io.on("connection", (socket) => {
     io.to(room).emit("Client-turn");
   });
 
-  socket.on("weRollDice", (room, roll) => {
+  socket.on("robberCheckCards", (room) => {
+    allGame.get(room).countCardRobber(allGame.get(room).playersInfo);
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
+  });
+
+  socket.on("transfer-one-to-another", (player, room, color) => {
+    const index = allGame
+      .get(room)
+      .playersInfo.findIndex((findUser) => findUser.name === player.name);
+    allGame.get(room).transferOneToAnother(player, color);
+    allGame.get(room).playersInfo[index] = player;
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
+  });
+
+  socket.on("game:victory", (room, player) => {
+    io.to(room).emit("game:displayWinner", player);
+  });
+
+  // Map events
+  socket.on("map:renderAll", (room) => {
+    io.to(room).emit("renderFullMapView", allGame.get(room).mapObject);
+  });
+
+  socket.on("map:renderHex", (room, hex) => {
+    io.to(room).emit("renderOneHex", allGame.get(room).mapObject[hex], hex);
+  });
+
+
+  // Player actions
+  // Robb & Roll
+  socket.on("player:roll", (room, roll) => {
     allGame.get(room).diceRoll = roll;
     allGame
       .get(room)
@@ -352,7 +255,113 @@ io.on("connection", (socket) => {
     socket.to(room).emit("displayDiceState", roll);
   });
 
-  socket.on("playMonopolyCard", (room, player, resource) => {
+  socket.on("player:setRobber", (player, id, room, knights) => {
+    const settlementsToRob = allGame
+      .get(room)
+      .setRobber(allGame.get(room).mapObject, id);
+    const index = allGame
+      .get(room)
+      .playersInfo.findIndex((findUser) => findUser.name === player.name);
+    if (knights) {
+      allGame.get(room).playersInfo[index].hand.development.knights -= 1;
+      allGame.get(room).playersInfo[index].armySize += 1;
+      allGame
+        .get(room)
+        .calculateMaxArmySize(allGame.get(room), allGame.get(room).playersInfo);
+    }
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
+    io.to(room).emit(
+      "renderOneHex",
+      allGame.get(room).mapObject[id.split("_")[1]],
+      id.split("_")[1]
+    );
+
+    socket.emit("take-one-res", settlementsToRob);
+  });
+
+  // Build
+  socket.on("player:setSettlement", (player, id, room) => {
+    allGame.get(room).setNewSettlement(player, id);
+    const index = allGame
+      .get(room)
+      .playersInfo.findIndex((findUser) => findUser.name === player.name);
+    allGame.get(room).playersInfo[index] = player;
+    allGame.get(room).playersInfo[index].settlementsStock--;
+
+    if (allGame.get(room).turn == 0) {
+      allGame
+        .get(room)
+        .addResoursesFirstSettlement(
+          allGame.get(room).mapObject,
+          allGame.get(room).playersInfo[index]
+        );
+    }
+    if (allGame.get(room).turn > 0) {
+      allGame.get(room).playersInfo[index].hand.resources.lumber -= 1;
+      allGame.get(room).playersInfo[index].hand.resources.brick -= 1;
+      allGame.get(room).playersInfo[index].hand.resources.wool -= 1;
+      allGame.get(room).playersInfo[index].hand.resources.grain -= 1;
+    }
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
+  });
+
+  socket.on("player:setRoad", (player, id, room, isFree) => {
+    allGame.get(room).setNewRoad(player, id);
+    const index = allGame
+      .get(room)
+      .playersInfo.findIndex((findUser) => findUser.name === player.name);
+    allGame.get(room).playersInfo[index] = player;
+    allGame.get(room).playersInfo[index].roadsStock--;
+    if (allGame.get(room).turn > 0) {
+      if (!isFree) {
+        allGame.get(room).playersInfo[index].hand.resources.lumber -= 1;
+        allGame.get(room).playersInfo[index].hand.resources.brick -= 1;
+      }
+    }
+    allGame.get(room).playersInfo[index].roadChain = roadCounter(
+      allGame.get(room).mapObject,
+      player
+    );
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
+  });
+
+  socket.on("player:setCity", (player, id, room) => {
+    allGame.get(room).setNewCity(player, id);
+    const index = allGame
+      .get(room)
+      .playersInfo.findIndex((findUser) => findUser.name === player.name);
+    allGame.get(room).playersInfo[index] = player;
+    allGame.get(room).playersInfo[index].settlementsStock++;
+    allGame.get(room).playersInfo[index].citiesStock--;
+
+    allGame.get(room).playersInfo[index].hand.resources.ore -= 3;
+    allGame.get(room).playersInfo[index].hand.resources.grain -= 2;
+
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
+  });
+
+  // Trade
+  socket.on("player:updateAfterDeal", (player, room) => {
+    const index = allGame
+      .get(room)
+      .playersInfo.findIndex((findUser) => findUser.name === player.name);
+    allGame.get(room).playersInfo[index] = player;
+
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
+  });
+
+  // Cards
+  socket.on("player:buyDevCard", (room, player) => {
+    allGame.get(room).buyDevelopmentCard(player);
+    const index = allGame
+      .get(room)
+      .playersInfo.findIndex((findUser) => findUser.name === player.name);
+    allGame.get(room).playersInfo[index] = player;
+
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
+  });
+
+  socket.on("player:playMonopolyCard", (room, player, resource) => {
     const index = allGame
       .get(room)
       .playersInfo.findIndex((findUser) => findUser.name === player.name);
@@ -364,9 +373,10 @@ io.on("connection", (socket) => {
         resource
       );
 
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
   });
-  socket.on("playPlentyCard", (room, player, resource) => {
+
+  socket.on("player:playPlentyCard", (room, player, resource) => {
     const index = allGame
       .get(room)
       .playersInfo.findIndex((findUser) => findUser.name === player.name);
@@ -374,18 +384,15 @@ io.on("connection", (socket) => {
       .get(room)
       .plentyCard(allGame.get(room).playersInfo[index], resource);
 
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
   });
 
-  socket.on("playDevelopRoads", (room, player) => {
+  socket.on("player:playRoadsCard", (room, player) => {
     const index = allGame
       .get(room)
       .playersInfo.findIndex((findUser) => findUser.name === player.name);
     allGame.get(room).playersInfo[index].hand.development.road--;
-    io.to(room).emit("Change-playerInfo", allGame.get(room).playersInfo);
-  });
-  socket.on("victory", (room, player) => {
-    io.to(room).emit("victory-info", player);
+    io.to(room).emit("game:updatePlayerInfo", allGame.get(room).playersInfo);
   });
 
   socket.on("disconnect", () => {});

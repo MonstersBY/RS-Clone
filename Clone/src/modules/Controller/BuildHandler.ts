@@ -28,7 +28,7 @@ export default class BuildHandler {
           const chousen = e.target as HTMLDivElement;
 
           socket.emit(
-            "setNewRoad",
+            "player:setRoad",
             player,
             chousen.id,
             localStorage.getItem("Room"),
@@ -36,7 +36,7 @@ export default class BuildHandler {
           );
 
           socket.emit(
-            "updateOneHex",
+            "map:renderHex",
             localStorage.getItem("Room"),
             Number(chousen.id.split("_")[0])
           );
@@ -80,14 +80,14 @@ export default class BuildHandler {
           new Audio("../../assets/files/BuildingComplete_1.wav").play();
 
           socket.emit(
-            "setNewSettlement",
+            "player:setSettlement",
             player,
             chousen.id,
             localStorage.getItem("Room")
           );
 
           socket.emit(
-            "updateOneHex",
+            "map:renderHex",
             localStorage.getItem("Room"),
             Number(chousen.id.split("_")[0])
           );
@@ -138,14 +138,14 @@ export default class BuildHandler {
           const chousen = e.target as HTMLDivElement;
 
           socket.emit(
-            "setNewCity",
+            "player:setCity",
             player,
             chousen.id,
             localStorage.getItem("Room")
           );
 
           socket.emit(
-            "updateOneHex",
+            "map:renderHex",
             localStorage.getItem("Room"),
             Number(chousen.id.split("_")[0])
           );

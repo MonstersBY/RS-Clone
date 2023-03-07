@@ -63,7 +63,7 @@ export default class Controller {
       this.addListenerDices();
       this.observerOfPlayersToRob();
 
-      socket.on("Change-playerInfo", (players) => {
+      socket.on("game:updatePlayerInfo", (players) => {
         const indexUser = players.findIndex(
           (findUser: { name: string | undefined }) =>
             findUser.name === this.player?.name
@@ -161,7 +161,7 @@ export default class Controller {
             const roll = this.dice.randomDiceRoll();
             this.dice.audio.play();
             this.canRoll = false;
-            socket.emit("weRollDice", localStorage.getItem("Room"), roll);
+            socket.emit("player:roll", localStorage.getItem("Room"), roll);
             socket.emit("give-room-list-players", localStorage.getItem("Room"));
 
             if (roll[0] + roll[1] === 7) {
@@ -257,15 +257,14 @@ export default class Controller {
       const audio = new Audio("../../assets/files/BuildingComplete_1.wav");
       audio.play();
       socket.emit(
-        "setNewSettlement",
+        "player:setSettlement",
         this.player,
         chousen.id,
         localStorage.getItem("Room")
       );
 
-      // socket.emit('updateMap', localStorage.getItem('Room'))
       socket.emit(
-        "updateOneHex",
+        "map:renderHex",
         localStorage.getItem("Room"),
         Number(chousen.id.split("_")[0])
       );
@@ -309,13 +308,13 @@ export default class Controller {
           const audio = new Audio("../../assets/files/Building_1.wav");
           audio.play();
           socket.emit(
-            "setNewRoad",
+            "player:setRoad",
             this.player,
             e.target.id,
             localStorage.getItem("Room")
           );
           socket.emit(
-            "updateOneHex",
+            "map:renderHex",
             localStorage.getItem("Room"),
             Number(e.target.id.split("_")[0])
           );
@@ -472,7 +471,7 @@ export default class Controller {
       },
     };
 
-    if (this.isTheDealFair(player, currentOffer)) {
+    if (this.#isTheDealFair(player, currentOffer)) {
       for (const [resource, count] of Object.entries(currentOffer.have)) {
         player.hand.resources[resource as keyof IResources] -= count;
       }
@@ -481,13 +480,17 @@ export default class Controller {
         player.hand.resources[resource as keyof IResources] += count;
       }
       this.view?.showTradePopup(this.player as IPlayerInfo);
-      socket.emit("updateHand", player, localStorage.getItem("Room"));
+      socket.emit(
+        "player:updateAfterDeal",
+        player,
+        localStorage.getItem("Room")
+      );
     } else {
       alert("Deal is not fair! Add more");
     }
   }
 
-  isTheDealFair(player: IPlayerInfo, offer: IOffer) {
+  #isTheDealFair(player: IPlayerInfo, offer: IOffer) {
     let giveValue = 0;
     let wishValue = 0;
     const allCost = player.harbors.includes("all") ? 3 : 4;
@@ -520,12 +523,13 @@ export default class Controller {
       buildConst.grain <= hand.grain &&
       buildConst.wool <= hand.wool
     ) {
-      socket.emit("buy-develop-card", player, localStorage.getItem("Room"));
+      socket.emit("player:buyDevCard", localStorage.getItem("Room"), player);
     }
   }
 
   addPlayCardsListener() {
-    document.getElementById("develop-card-list")
+    document
+      .getElementById("develop-card-list")
       ?.addEventListener("click", (e) => {
         if (
           e.target instanceof HTMLElement &&
@@ -556,12 +560,27 @@ export default class Controller {
               case "road-develop__btn":
                 if (this.player?.hand.development.road) {
                   this.enableBuildRoadMode(this.player as IPlayerInfo, true);
-                  document.addEventListener("road-builded", () => {
-                    window.addEventListener("mapLoaded", () => {
-                      this.enableBuildRoadMode(this.player as IPlayerInfo, true);
-                    }, { once: true });
-                  },{ once: true });
-                  socket.emit("playDevelopRoads", localStorage.getItem("Room"),this.player);
+                  document.addEventListener(
+                    "road-builded",
+                    () => {
+                      window.addEventListener(
+                        "mapLoaded",
+                        () => {
+                          this.enableBuildRoadMode(
+                            this.player as IPlayerInfo,
+                            true
+                          );
+                        },
+                        { once: true }
+                      );
+                    },
+                    { once: true }
+                  );
+                  socket.emit(
+                    "player:playRoadsCard",
+                    localStorage.getItem("Room"),
+                    this.player
+                  );
                 }
                 break;
             }
@@ -578,7 +597,7 @@ export default class Controller {
         "input.choose-checkbox:checked"
       );
       socket.emit(
-        "playMonopolyCard",
+        "player:playMonopolyCard",
         localStorage.getItem("Room"),
         player,
         checkedInputs?.value
@@ -598,7 +617,7 @@ export default class Controller {
       if (checkedInputs) {
         const resources = [checkedInputs[0].value, checkedInputs[1].value];
         socket.emit(
-          "playPlentyCard",
+          "player:playPlentyCard",
           localStorage.getItem("Room"),
           player,
           resources
@@ -628,22 +647,19 @@ export default class Controller {
           e.target.classList.contains("active_hex")
         ) {
           socket.emit(
-            "setRobber",
+            "player:setRobber",
             this.player,
             e.target.id,
             localStorage.getItem("Room"),
             knight
           );
-          const audio = new Audio(
+          new Audio(
             `${
               knight
                 ? "../../assets/files/Knight_1.wav"
                 : "../../assets/files/Bandit_1.wav"
             }`
-          );
-          audio.play();
-
-          // socket.emit('updateOneHex', localStorage.getItem('Room'), Number(e.target?.id.split("_")[0]))
+          ).play();
 
           socket.emit("give-room-list-players", localStorage.getItem("Room"));
           this.activePlayerPlay();
