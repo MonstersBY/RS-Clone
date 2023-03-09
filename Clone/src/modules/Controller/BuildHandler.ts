@@ -1,50 +1,24 @@
-import socket from "../Socket";
 import { IPlayerInfo } from "../types/types";
+import SocketHandler from "./SoketHandler";
 
 export default class BuildHandler {
-  constructor() {}
+  constructor(public socket: SocketHandler) {}
 
   addRoadPointer(player: IPlayerInfo, isFree = false) {
-    const availablePlaces = [
-      ...new Set(
-        player?.avalible.filter((node: string) => node.split("_")[1] === "road")
-      ),
-    ];
-
-    availablePlaces.forEach((id: string) => {
-      const road = document.getElementById(id);
-      if (road && !road.classList.contains("own")) {
-        road.classList.add("select");
-      }
-    });
+    this.#markAvalibleNodesOf(player, "road");
 
     document.getElementById("map")?.addEventListener(
       "click",
       (e: MouseEvent) => {
-        if (
-          e.target instanceof HTMLDivElement &&
-          e.target.classList.contains("select")
-        ) {
+        if (this.#isDivHaveClass(e.target, "select")) {
           const chousen = e.target as HTMLDivElement;
 
-          socket.emit(
-            "player:setRoad",
-            localStorage.getItem("Room"),
-            player,
-            chousen.id,
-            isFree
-          );
+          this.socket.setRoad(player, Number(chousen.id), isFree);
+          this.socket.renderHex(Number(chousen.id.split("_")[0]));
+          this.socket.giveRoomListPlayers();
 
-          socket.emit(
-            "map:renderHex",
-            localStorage.getItem("Room"),
-            Number(chousen.id.split("_")[0])
-          );
-
-          socket.emit("give-room-list-players", localStorage.getItem("Room"));
-
-          new Audio("../../assets/files/Building_1.wav").play();
           this.#deleteClassOnAllNodes("select");
+          new Audio("../../assets/files/Building_1.wav").play();
 
           let roadBuildedEvent = new CustomEvent("road-builded");
           document.dispatchEvent(roadBuildedEvent);
@@ -55,66 +29,21 @@ export default class BuildHandler {
   }
 
   addSettlementPointer(player: IPlayerInfo) {
-    const availablePlaces = [
-      ...new Set(
-        player.avalible.filter((node) => node.split("_")[1] === "settlement")
-      ),
-    ];
-
-    availablePlaces.forEach((id: string) => {
-      const settlement = document.getElementById(id);
-      if (settlement && !settlement?.classList.contains("own")) {
-        settlement.classList.add("select");
-      }
-    });
+    this.#markAvalibleNodesOf(player, "settlement");
 
     document.getElementById("map")?.addEventListener(
       "click",
       (e: MouseEvent) => {
-        if (
-          e.target instanceof HTMLDivElement &&
-          e.target.classList.contains("select")
-        ) {
+        if (this.#isDivHaveClass(e.target, "select")) {
           const chousen = e.target as HTMLDivElement;
 
-          new Audio("../../assets/files/BuildingComplete_1.wav").play();
+          this.socket.setSettlement(player, Number(chousen.id));
+          this.socket.renderHex(Number(chousen.id.split("_")[0]));
+          this.socket.giveRoomListPlayers();
 
-          socket.emit(
-            "player:setSettlement",
-            localStorage.getItem("Room"),
-            player,
-            chousen.id
-          );
-
-          socket.emit(
-            "map:renderHex",
-            localStorage.getItem("Room"),
-            Number(chousen.id.split("_")[0])
-          );
-
-          socket.emit("give-room-list-players", localStorage.getItem("Room"));
-
-          const nearSettlementsSet = new Set();
-          chousen.dataset.next?.split(",").forEach((roadId) => {
-            const nearSettlementsIds = document
-              .getElementById(roadId)
-              ?.dataset.next?.split(",");
-            nearSettlementsIds?.forEach((settlementId) => {
-              nearSettlementsSet.add(settlementId);
-            });
-          });
-          nearSettlementsSet.delete(chousen.id);
-
-          const nearSettlementsList = [...nearSettlementsSet];
-          nearSettlementsList.forEach((settlementId) => {
-            const settlementNode = document.getElementById(
-              settlementId as string
-            );
-            settlementNode?.classList.add("own");
-            settlementNode?.classList.add("own_nobody");
-          });
-
+          this.#blockNearSettlements(chousen);
           this.#deleteClassOnAllNodes("select");
+          new Audio("../../assets/files/BuildingComplete_1.wav").play();
         }
       },
       { once: true }
@@ -131,33 +60,60 @@ export default class BuildHandler {
     document.getElementById("map")?.addEventListener(
       "click",
       (e: MouseEvent) => {
-        if (
-          e.target instanceof HTMLElement &&
-          e.target.classList.contains("own")
-        ) {
+        if (this.#isDivHaveClass(e.target, "ready-to-upgrade")) {
           const chousen = e.target as HTMLDivElement;
 
-          socket.emit(
-            "player:setCity",
-            localStorage.getItem("Room"),
-            player,
-            chousen.id
-          );
+          this.socket.setCity(player, chousen.id);
+          this.socket.renderHex(Number(chousen.id.split("_")[0]));
+          this.socket.giveRoomListPlayers();
 
-          socket.emit(
-            "map:renderHex",
-            localStorage.getItem("Room"),
-            Number(chousen.id.split("_")[0])
-          );
-
-          socket.emit("give-room-list-players", localStorage.getItem("Room"));
-
-          new Audio("../../assets/files/Upgrade_1.wav").play();
           this.#deleteClassOnAllNodes("ready-to-upgrade");
+          new Audio("../../assets/files/Upgrade_1.wav").play();
         }
       },
       { once: true }
     );
+  }
+
+  #isDivHaveClass(target: EventTarget | null, className: string) {
+    return (
+      target instanceof HTMLDivElement && target.classList.contains(className)
+    );
+  }
+
+  #markAvalibleNodesOf(player: IPlayerInfo, type: string) {
+    const availablePlaces = [
+      ...new Set(
+        player?.avalible.filter((node: string) => node.split("_")[1] === type)
+      ),
+    ];
+
+    availablePlaces.forEach((id: string) => {
+      const node = document.getElementById(id);
+      if (node && !node.classList.contains("own")) {
+        node.classList.add("select");
+      }
+    });
+  }
+
+  #blockNearSettlements(node: HTMLDivElement) {
+    const nearSettlementsSet = new Set();
+    node.dataset.next?.split(",").forEach((roadId) => {
+      const nearSettlementsIds = document
+        .getElementById(roadId)
+        ?.dataset.next?.split(",");
+      nearSettlementsIds?.forEach((settlementId) => {
+        nearSettlementsSet.add(settlementId);
+      });
+    });
+    nearSettlementsSet.delete(node.id);
+
+    const nearSettlementsList = [...nearSettlementsSet];
+    nearSettlementsList.forEach((settlementId) => {
+      const settlementNode = document.getElementById(settlementId as string);
+      settlementNode?.classList.add("own");
+      settlementNode?.classList.add("own_nobody");
+    });
   }
 
   #deleteClassOnAllNodes = (className: string) => {

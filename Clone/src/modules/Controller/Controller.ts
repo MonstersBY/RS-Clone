@@ -8,12 +8,14 @@ import {
   IOffer,
 } from "../types/types";
 import socket from "../Socket";
+import SocketHandler from "./SoketHandler"; 
 
 export default class Controller {
   constructor(
     public view?: View,
     public dice: Dice = new Dice(),
-    public buildHandler: BuildHandler = new BuildHandler(),
+    public socketHandler: SocketHandler = new SocketHandler(),
+    public buildHandler?: BuildHandler,
     public player?: IPlayerInfo,
     public map?: HTMLDivElement,
     public activePlayer?: boolean,
@@ -24,6 +26,7 @@ export default class Controller {
     this.dice.init();
     this.chatMessages();
     this.createMessage();
+    this.buildHandler = new BuildHandler(this.socketHandler);
 
     socket.emit("give-room-list-players", localStorage.getItem("Room"));
 
@@ -354,30 +357,31 @@ export default class Controller {
     }
   };
 
-  enableBuildRoadMode(player: IPlayerInfo, isFree = false) {
-    if (
-      player.roadsStock &&
-      (this.#isResousesEnoughFor("road", player.hand.resources) || isFree)
-    ) {
-      this.buildHandler.addRoadPointer(player);
+  #isPlayerStockEnough(playerStock: number): boolean {
+    return playerStock > 0;
+  }
+
+  enableBuildRoadMode(player: IPlayerInfo, isFree = false): void {
+    if (this.#isPlayerStockEnough(player.roadsStock)) {
+      if (this.#isResousesEnoughFor("road", player.hand.resources) || isFree) {
+        this.buildHandler?.addRoadPointer(player);
+      }
     }
   }
 
-  enableBuildSettlementMode(player: IPlayerInfo) {
-    if (
-      player.settlementsStock &&
-      this.#isResousesEnoughFor("settlement", player.hand.resources)
-    ) {
-      this.buildHandler.addSettlementPointer(player);
+  enableBuildSettlementMode(player: IPlayerInfo): void {
+    if (this.#isPlayerStockEnough(player.settlementsStock)) {
+      if (this.#isResousesEnoughFor("settlement", player.hand.resources)) {
+        this.buildHandler?.addSettlementPointer(player);
+      }
     }
   }
 
-  enableBuildCityMode(player: IPlayerInfo) {
-    if (
-      player.citiesStock &&
-      this.#isResousesEnoughFor("city", player.hand.resources)
-    ) {
-      this.buildHandler.addCityPointer(player);
+  enableBuildCityMode(player: IPlayerInfo): void {
+    if (this.#isPlayerStockEnough(player.citiesStock)) {
+      if (this.#isResousesEnoughFor("city", player.hand.resources)) {
+        this.buildHandler?.addCityPointer(player);
+      }
     }
   }
 
